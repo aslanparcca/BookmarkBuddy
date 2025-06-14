@@ -110,7 +110,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-pro" });
+      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-2.5-flash" });
 
       // Create prompt based on titles, settings, and focus keywords
       const keywordsText = focusKeywords && focusKeywords.length > 0 
@@ -160,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Bulk upload
-  app.post('/api/bulk-upload', isAuthenticated, upload.single('file'), async (req: any, res) => {
+  app.post('/api/bulk-upload', isAuthenticated, upload.single('excelFile'), async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const file = req.file;

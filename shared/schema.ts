@@ -86,7 +86,7 @@ export const userSettings = pgTable("user_settings", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   geminiApiKey: text("gemini_api_key"),
-  geminiModel: varchar("gemini_model", { length: 50 }).default("gemini-1.5-pro"),
+  geminiModel: varchar("gemini_model", { length: 50 }).default("gemini-2.5-flash"),
   wordpressUrl: text("wordpress_url"),
   wordpressUsername: varchar("wordpress_username"),
   wordpressAppPassword: text("wordpress_app_password"),
