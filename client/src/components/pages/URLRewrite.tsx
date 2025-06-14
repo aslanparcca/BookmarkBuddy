@@ -222,12 +222,13 @@ export default function URLRewrite() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Gemini 2.5 Flash Preview">
-                      Gemini 2.5 Flash Preview
-                      <Badge variant="secondary" className="ml-2 text-xs">1 kelime: 1 kredi</Badge>
-                    </SelectItem>
-                    <SelectItem value="GPT-4">GPT-4</SelectItem>
-                    <SelectItem value="Claude">Claude</SelectItem>
+                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
+                    <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro (Deep Think)</SelectItem>
+                    <SelectItem value="gemini_2.0_flash">Gemini 2.0 Flash</SelectItem>
+                    <SelectItem value="gemini_2.0_flash_lite">Gemini 2.0 Flash Lite</SelectItem>
+                    <SelectItem value="gemini_2.0_flash_thinking">Gemini 2.0 Flash Thinking (Deneysel)</SelectItem>
+                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash (Emekli Edilecek)</SelectItem>
+                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro (Emekli Edilecek)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
