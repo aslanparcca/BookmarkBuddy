@@ -196,6 +196,36 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       return;
     }
 
+    // Custom title processing - no API call needed
+    if (selectedGenerateType === "4") {
+      const customTitles = settings.customTitle
+        .split('\n')
+        .filter(title => title.trim() !== '')
+        .slice(0, 40) // Max 40 titles
+        .map(title => ({
+          title: title.trim(),
+          focusKeyword: title.trim(),
+          imageKeyword: title.trim()
+        }));
+      
+      if (customTitles.length === 0) {
+        toast({
+          title: "Hata",
+          description: "Lütfen en az bir başlık giriniz",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setGeneratedTitles(customTitles);
+      setShowStep2(true);
+      toast({
+        title: "Başarılı!",
+        description: `${customTitles.length} adet başlık işlendi.`,
+      });
+      return;
+    }
+
     setLoading(true);
     generateTitlesMutation.mutate({
       ...settings,
@@ -396,6 +426,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     placeholder="Lütfen her satıra sadece 1 adet başlık yazınız"
                     value={settings.customTitle}
                     onChange={(e) => setSettings({...settings, customTitle: e.target.value})}
+                    className="resize-none"
                   />
                   <div className="text-sm text-muted-foreground mt-2">
                     <p>* Lütfen <span className="underline">her satıra sadece 1 adet başlık</span> yazınız.</p>
@@ -444,7 +475,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                   disabled={generateTitlesMutation.isPending}
                   className="font-medium"
                 >
-                  {generateTitlesMutation.isPending ? "Oluşturuluyor..." : "Başlık Oluştur"}
+                  {generateTitlesMutation.isPending ? "Oluşturuluyor..." : 
+                   selectedGenerateType === "4" ? "Yukarıdaki Başlıkları Kullan" : "Başlık Oluştur"}
                 </Button>
               </div>
             </div>
