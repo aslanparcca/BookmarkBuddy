@@ -90,6 +90,41 @@ export default function URLRewrite() {
     links: false
   });
 
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const urlRewriteMutation = useMutation({
+    mutationFn: async (settings: URLRewriteSettings) => {
+      return await apiRequest("/api/url-rewrite", "POST", settings);
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Başarılı",
+        description: "URL içeriği başarıyla yeniden yazıldı!",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/articles"] });
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Oturum Süresi Doldu",
+          description: "Lütfen tekrar giriş yapın",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      
+      toast({
+        title: "Hata",
+        description: error.message || "URL yeniden yazma işlemi başarısız oldu",
+        variant: "destructive",
+      });
+    },
+  });
+
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections(prev => ({
       ...prev,
@@ -98,8 +133,16 @@ export default function URLRewrite() {
   };
 
   const handleGenerate = () => {
-    console.log("URL Rewrite settings:", settings);
-    // TODO: API call implementation
+    if (!settings.url) {
+      toast({
+        title: "Hata",
+        description: "Lütfen bir URL girin",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    urlRewriteMutation.mutate(settings);
   };
 
   return (
@@ -536,10 +579,19 @@ export default function URLRewrite() {
         <Button 
           onClick={handleGenerate}
           className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg"
-          disabled={!settings.url}
+          disabled={!settings.url || urlRewriteMutation.isPending}
         >
-          <span className="mr-2">🔄</span>
-          Yeniden Yazdır
+          {urlRewriteMutation.isPending ? (
+            <>
+              <span className="mr-2 animate-spin">⟳</span>
+              İşleniyor...
+            </>
+          ) : (
+            <>
+              <span className="mr-2">🔄</span>
+              Yeniden Yazdır
+            </>
+          )}
         </Button>
       </div>
     </div>

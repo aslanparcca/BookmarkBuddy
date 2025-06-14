@@ -141,6 +141,8 @@ Changelog:
 - June 14, 2025. Implemented WP Makalesi V2 with advanced multi-section interface including Genel Ayarlar, Başlık Ayarları, Güncel Bilgiler, Anahtar Kelimeler, Alt Başlıklar, Görsel Seçenekleri, İçerik Özellikleri, Yayınlama, and İç & Dış Linkler sections
 - June 14, 2025. Added comprehensive WordPress V2 backend API with detailed content generation based on all section settings and preferences
 - June 14, 2025. Removed "Yeni Özellik Önerin" menu item from sidebar navigation and updated routing system
+- June 14, 2025. Implemented URL Rewrite functionality with complete interface matching reference design including URL input, Genel Ayarlar, Görsel Seçenekleri, İçerik Özellikleri, Yayınlama, and İç & Dış Linkler sections
+- June 14, 2025. Added backend API endpoint for URL content fetching, HTML parsing, and AI-powered content rewriting using Gemini 2.5-flash model
 ```
 
 ## User Preferences

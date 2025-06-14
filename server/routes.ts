@@ -13,6 +13,9 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
+// Initialize Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
@@ -557,7 +560,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .trim();
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: settings.aiModel || "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       // Create comprehensive prompt for URL rewriting
       let prompt = `Sen deneyimli bir içerik editörü ve yazarsın. Aşağıdaki metni tamamen yeniden yazman gerekiyor.
