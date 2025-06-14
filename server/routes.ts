@@ -569,6 +569,12 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
         articles: validData,
         count: validData.length,
         aiPrompt: aiPrompt,
+        debug: {
+          excelColumns: data.length > 0 ? Object.keys(data[0] as any) : [],
+          firstRowSubheadings: validData.length > 0 ? validData[0].subheadings : [],
+          subheadingCounts: validData.map(item => ({ title: item.title, subheadingCount: item.subheadings.length })),
+          rawFirstRow: data.length > 0 ? data[0] : null
+        },
         message: `${validData.length} makale şablonu başarıyla işlendi ve AI prompt hazırlandı`
       });
 

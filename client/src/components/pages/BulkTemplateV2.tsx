@@ -258,6 +258,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       
       const data = await response.json();
       console.log("Excel processing response:", data);
+      console.log("Excel Debug Info:", data.debug);
       
       if (data.success && data.articles) {
         // Excel'den gelen verileri başlık listesi olarak kaydet
