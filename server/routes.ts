@@ -499,12 +499,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const processedData = data.map((row: any) => {
         // Alt başlıkları topla (Alt Başlık 1'den Alt Başlık 20'ye kadar)
         const subheadings = [];
+        console.log('Excel row keys:', Object.keys(row));
+        console.log('Excel row sample data:', {
+          'Makale Başlığı': row['Makale Başlığı'],
+          'Alt Başlık 1': row['Alt Başlık 1'],
+          'Alt Başlık 2': row['Alt Başlık 2'],
+          'Alt Başlık 3': row['Alt Başlık 3']
+        });
+        
         for (let i = 1; i <= 20; i++) {
           const subheading = row[`Alt Başlık ${i}`] || row[`Alt Başlık${i}`] || '';
           if (subheading && subheading.trim() !== '') {
             subheadings.push(subheading.trim());
           }
         }
+        
+        console.log(`Found ${subheadings.length} subheadings for "${row['Makale Başlığı']}":`, subheadings);
 
         return {
           title: row['Makale Başlığı'] || '',
@@ -1443,6 +1453,13 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
           // Check if Excel subheadings are provided
           const hasExcelSubheadings = titleData.subheadings && Array.isArray(titleData.subheadings) && titleData.subheadings.length > 0;
+          
+          // Debug log to see what we're getting
+          console.log(`Excel Subheadings Debug for "${titleData.title}":`, {
+            hasSubheadings: hasExcelSubheadings,
+            subheadings: titleData.subheadings,
+            subheadingsLength: titleData.subheadings ? titleData.subheadings.length : 0
+          });
           
           const promptParts = [
             'Create a Turkish SEO-focused article. Never use markdown code blocks. Return only clean HTML.',
