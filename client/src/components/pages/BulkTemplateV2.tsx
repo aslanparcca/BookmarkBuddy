@@ -617,10 +617,13 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="gpt4o_mini">GPT-4o mini</SelectItem>
-                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash</SelectItem>
-                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash</SelectItem>
-                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro</SelectItem>
+                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
+                    <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro (Deep Think)</SelectItem>
+                    <SelectItem value="gemini_2.0_flash">Gemini 2.0 Flash</SelectItem>
+                    <SelectItem value="gemini_2.0_flash_lite">Gemini 2.0 Flash Lite</SelectItem>
+                    <SelectItem value="gemini_2.0_flash_thinking">Gemini 2.0 Flash Thinking (Deneysel)</SelectItem>
+                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash (Emekli Edilecek)</SelectItem>
+                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro (Emekli Edilecek)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

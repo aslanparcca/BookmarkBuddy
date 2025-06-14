@@ -1306,8 +1306,14 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
-        'gpt4o_mini': 'gemini-1.5-flash', // Fallback to Gemini since we don't have OpenAI
-        'gemini_2.5_flash': 'gemini-2.0-flash-exp',
+        // 2.5 Series (Most Current)
+        'gemini_2.5_flash': 'gemini-2.5-flash-preview',
+        'gemini_2.5_pro': 'gemini-2.5-pro-preview',
+        // 2.0 Series
+        'gemini_2.0_flash': 'gemini-2.0-flash',
+        'gemini_2.0_flash_lite': 'gemini-2.0-flash-lite',
+        'gemini_2.0_flash_thinking': 'gemini-2.0-flash-thinking',
+        // 1.5 Series (Being Retired)
         'gemini_1.5_flash': 'gemini-1.5-flash',
         'gemini_1.5_pro': 'gemini-1.5-pro'
       };
