@@ -56,6 +56,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
       setLoading(true);
     },
     onSuccess: (data: any) => {
+      console.log("Excel processing response:", data);
       setProcessedArticles(data.articles || []);
       setStep(2);
       toast({
@@ -88,6 +89,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
 
   const generateArticlesMutation = useMutation({
     mutationFn: async (articles: ProcessedArticle[]) => {
+      console.log("Sending articles to backend:", articles.length, articles);
       return await apiRequest("POST", "/api/generate-from-excel-template", {
         articles,
         settings: { publishStatus: 'draft' }
