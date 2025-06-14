@@ -244,7 +244,87 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                     </div>
                   )}
 
+                  {/* SEO Plugin Codes Section */}
+                  {selectedType === "1" && (form.watch("seo_plugin") === "rank_math_seo" || form.watch("seo_plugin") === "yoast_seo") && (
+                    <div className="mt-4">
+                      <div className="nav-align-top">
+                        <ul className="nav nav-pills mb-3 flex space-x-2" role="tablist">
+                          <li className="nav-item" role="presentation">
+                            <button 
+                              type="button" 
+                              className={`px-3 py-1 text-sm rounded ${form.watch("seo_plugin") === "rank_math_seo" ? "bg-purple-100 text-purple-700 border border-purple-300" : "bg-gray-100 text-gray-600"}`}
+                              onClick={() => {/* Rank Math tab logic */}}
+                            >
+                              Rank Math SEO
+                            </button>
+                          </li>
+                          <li className="nav-item" role="presentation">
+                            <button 
+                              type="button" 
+                              className={`px-3 py-1 text-sm rounded ${form.watch("seo_plugin") === "yoast_seo" ? "bg-pink-100 text-pink-700 border border-pink-300" : "bg-gray-100 text-gray-600"}`}
+                              onClick={() => {/* Yoast tab logic */}}
+                            >
+                              Yoast SEO
+                            </button>
+                          </li>
+                        </ul>
 
+                        <div className="tab-content">
+                          {form.watch("seo_plugin") === "rank_math_seo" && (
+                            <div className="tab-pane">
+                              <div className="mb-3">
+                                <strong className="text-purple-700">Rank Math SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code className="bg-gray-100 px-1 rounded"><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+                              </div>
+                              <div className="cursor-pointer border p-3 rounded bg-gray-50">
+                                <pre className="text-sm overflow-x-auto text-gray-800">
+{`add_action('rest_api_init', function() {
+    register_meta('post', 'rank_math_focus_keyword', array(
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function(){return true;}
+    ));
+    register_meta('post', 'rank_math_description', array(
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function(){return true;}
+    ));
+});`}
+                                </pre>
+                              </div>
+                            </div>
+                          )}
+
+                          {form.watch("seo_plugin") === "yoast_seo" && (
+                            <div className="tab-pane">
+                              <div className="mb-3">
+                                <strong className="text-pink-700">Yoast SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code className="bg-gray-100 px-1 rounded"><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+                              </div>
+                              <div className="cursor-pointer border p-3 rounded bg-gray-50">
+                                <pre className="text-sm overflow-x-auto text-gray-800">
+{`add_action('rest_api_init', function() {
+    register_meta('post', '_yoast_wpseo_focuskw', array(
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function(){return true;}
+    ));
+    register_meta('post', '_yoast_wpseo_metadesc', array(
+        'show_in_rest'  => true,
+        'single'        => true,
+        'type'          => 'string',
+        'auth_callback' => function(){return true;}
+    ));
+});`}
+                                </pre>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {selectedType === "3" && (
                     <div className="website-type-cont">
