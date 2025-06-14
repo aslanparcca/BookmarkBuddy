@@ -154,6 +154,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     retry: false,
   });
 
+  const websites = websitesQuery.data || [];
+
   // Fetch categories for selected website using useMemo
   const categories = useMemo(() => {
     const selectedWebsite = websites.find(w => w.id.toString() === settings.websiteId);
@@ -789,6 +791,186 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectItem value="informative">Bilgilendirici</SelectItem>
                     <SelectItem value="academic">Akademik</SelectItem>
                     <SelectItem value="professional">Profesyonel</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Güncel Bilgiler */}
+      {showStep2 && (
+        <Card className="border-2 border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Info className="w-5 h-5 text-primary" />
+              Güncel Bilgiler
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="currentInfo">Güncel Bilgiler</Label>
+                <Select 
+                  value={currentInfoEnabled ? "1" : "0"} 
+                  onValueChange={(value) => {
+                    const enabled = value === "1";
+                    setCurrentInfoEnabled(enabled);
+                    setSettings({...settings, currentInfo: enabled});
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Evet (Ekstra Kredi)</SelectItem>
+                    <SelectItem value="1">Hayır</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Bu özelliği etkinleştirdiğinizde içerik oluşturulurken önce webde güncel bilgiler aranır, sonra doğrulaması yapılan veriler toplanır ve bu bilgiler kullanılarak içerik üretilir. Bu sayede oluşturulan içerikler en yeni ve en doğru bilgileri içerir.
+                </p>
+              </div>
+
+              {currentInfoEnabled && (
+                <>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="webSearchSource">Arama Kaynağı</Label>
+                      <Select value={settings.webSearchSource} onValueChange={(value) => setSettings({...settings, webSearchSource: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Google Organik Arama" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="google">Google Organik Arama</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="searchQuery">Arama Sorgusu</Label>
+                      <Input
+                        id="searchQuery"
+                        placeholder="Odak anahtar kelime kullanılsın"
+                        value={settings.webSearchSource}
+                        onChange={(e) => setSettings({...settings, webSearchSource: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="searchCountry">Arama Yapılacak Ülke</Label>
+                      <Select value={settings.excludedUrls} onValueChange={(value) => setSettings({...settings, excludedUrls: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Türkiye" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="tr">Türkiye</SelectItem>
+                          <SelectItem value="us">Amerika</SelectItem>
+                          <SelectItem value="uk">İngiltere</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="searchLanguage">Arama Dili</Label>
+                      <Select value={settings.customUrls} onValueChange={(value) => setSettings({...settings, customUrls: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Hepsi" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Hepsi</SelectItem>
+                          <SelectItem value="tr">Türkçe</SelectItem>
+                          <SelectItem value="en">İngilizce</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="excludedLinks">Hariç Tutulacak Linkler</Label>
+                    <Input
+                      id="excludedLinks"
+                      placeholder="Yok"
+                      value={settings.excludedUrls}
+                      onChange={(e) => setSettings({...settings, excludedUrls: e.target.value})}
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Linkler Makale Sonuna Eklemesin mi?
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="linkEffect"
+                        checked={false}
+                        onCheckedChange={() => {}}
+                      />
+                      <Label htmlFor="linkEffect" className="font-medium">Etkinleşmesin</Label>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="linkStructure">Link Yapısı</Label>
+                      <Select value="nofollow" onValueChange={() => {}}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="NoFollow (Tavsiye edilir)" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="nofollow">NoFollow (Tavsiye edilir)</SelectItem>
+                          <SelectItem value="follow">Follow</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* İç & Dış Linkler */}
+      {showStep2 && (
+        <Card className="border-2 border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Link className="w-5 h-5 text-primary" />
+              İç & Dış Linkler
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="internalLinks">İç Linkler</Label>
+                <Select value={settings.internalLinks} onValueChange={(value) => setSettings({...settings, internalLinks: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Yok">Yok</SelectItem>
+                    <SelectItem value="Az">Az</SelectItem>
+                    <SelectItem value="Orta">Orta</SelectItem>
+                    <SelectItem value="Çok">Çok</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="externalLinks">Dış Linkler</Label>
+                <Select value={settings.externalLinks} onValueChange={(value) => setSettings({...settings, externalLinks: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Yok">Yok</SelectItem>
+                    <SelectItem value="Az">Az</SelectItem>
+                    <SelectItem value="Orta">Orta</SelectItem>
+                    <SelectItem value="Çok">Çok</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

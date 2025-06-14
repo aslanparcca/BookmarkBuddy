@@ -176,6 +176,7 @@ Changelog:
 - June 14, 2025. Fixed "Toplu Makale Oluştur V2" Excel upload functionality: removed 501 error from backend, implemented proper Excel processing workflow in frontend, Excel files now automatically load titles and bypass manual title generation, corrected focus keyword extraction to use first keyword only for cleaner SEO implementation
 - June 14, 2025. Fixed Excel article generation database saving issue: corrected field mapping from article.keywords to article.otherKeywords, added focusKeyword field, implemented comprehensive error logging in both routes and storage layers to track article creation process
 - June 14, 2025. Enhanced Excel workflow user experience: changed Excel upload behavior from automatic article generation to manual control - Excel files now load titles into Step 2 where users can configure quality settings (AI model, writing style, content features) before manually triggering article generation
+- June 14, 2025. Completed BulkTemplateV2 interface enhancements: fixed category auto-update when website is selected, added comprehensive Güncel Bilgiler section with search configuration options, implemented İç & Dış Linkler section with internal/external link density controls, resolved all JavaScript errors including category.id undefined issues with proper error handling
 ```
 
 ## User Preferences
