@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import AIEditor from "@/components/pages/AIEditor";
 import WordPressEditor from "@/components/pages/WordPressEditor";
 import WordPressEditorV2 from "@/components/pages/WordPressEditorV2";
+import URLRewrite from "@/components/pages/URLRewrite";
 import BulkEditor from "@/components/pages/BulkEditor";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
@@ -58,7 +59,7 @@ export default function Dashboard() {
       case 'settings':
         return <WordPressEditorV2 setLoading={setLoading} />;
       case 'url-rewrite':
-        return <PlaceholderPage title="URL Rewrite" description="URL yeniden yazma ve SEO optimizasyonu araçları" icon="fas fa-link" iconColor="text-green-600" isComingSoon={true} />;
+        return <URLRewrite />;
       case 'bulk-articles':
         return <PlaceholderPage title="Toplu Oluşturulan Makaleler" description="Toplu olarak oluşturduğunuz makaleleri görüntüleyin ve yönetin" icon="fas fa-file-alt" iconColor="text-blue-600" />;
       case 'bulk-template-v1':

@@ -530,6 +530,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // URL Rewrite endpoint
+  app.post('/api/url-rewrite', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const settings = req.body;
+
+      if (!settings.url) {
+        return res.status(400).json({ message: "URL is required" });
+      }
+
+      // Fetch content from URL
+      const urlResponse = await fetch(settings.url);
+      if (!urlResponse.ok) {
+        return res.status(400).json({ message: "Failed to fetch URL content" });
+      }
+      
+      const html = await urlResponse.text();
+      
+      // Extract text content from HTML (simple extraction)
+      const textContent = html
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      // Initialize Gemini model
+      const model = genAI.getGenerativeModel({ model: settings.aiModel || "gemini-2.5-flash" });
+
+      // Create comprehensive prompt for URL rewriting
+      let prompt = `Sen deneyimli bir içerik editörü ve yazarsın. Aşağıdaki metni tamamen yeniden yazman gerekiyor.
+
+KAYNAK METİN:
+${textContent.substring(0, 4000)}
+
+YAZIM PARAMETRELERİ:
+- Dil: ${settings.language}
+- Yazı Stili: ${settings.writingStyle || 'Genel'}
+- Hedef Kitle: ${settings.targetAudience}
+- Anlatıcı: ${settings.narrator}
+
+GEREKSINIMLER:
+1. Metni tamamen yeniden yaz, orijinal anlamı koruyarak
+2. SEO uyumlu ve akıcı bir dil kullan
+3. ${settings.boldText ? 'Önemli kelimeleri **kalın** yap' : ''}
+4. ${settings.italicText ? 'Vurgulanması gereken yerleri *italik* yap' : ''}
+5. ${settings.table ? 'Uygun yerlerde tablo ekle' : ''}
+6. ${settings.list ? 'Uygun yerlerde liste kullan' : ''}
+7. ${settings.quote ? 'Alıntı blokları ekle' : ''}
+
+Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
+
+      const result = await model.generateContent(prompt);
+      let content = result.response.text();
+      
+      // Extract title from rewritten content
+      const title = content.split('\n')[0].replace(/[#*]/g, '').trim();
+      
+      // Generate additional content based on settings
+      let metaDescription = '';
+      let summary = '';
+      
+      if (settings.metaDescription) {
+        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
+        metaDescription = metaResult.response.text().trim();
+      }
+      
+      if (settings.articleSummary) {
+        const summaryResult = await model.generateContent(`Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
+        summary = summaryResult.response.text().trim();
+      }
+
+      // Add FAQ if requested
+      if (settings.faqNormal || settings.faqSchema) {
+        const faqResult = await model.generateContent(`Bu makale konusu için 5 adet sıkça sorulan soru ve cevap oluştur: "${title}". ${settings.faqSchema ? 'JSON-LD schema formatında' : 'Normal formatta'} döndür.`);
+        const faqContent = faqResult.response.text();
+        content += '\n\n## Sıkça Sorulan Sorular\n\n' + faqContent;
+      }
+
+      // Calculate metrics
+      const wordCount = content.split(' ').length;
+      const readingTime = Math.ceil(wordCount / 200);
+
+      // Save article to database
+      const article = await storage.createArticle({
+        userId,
+        title,
+        content,
+        keywords: [settings.url],
+        status: 'draft',
+        wordCount,
+        readingTime
+      });
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, wordCount);
+
+      res.json({ 
+        success: true,
+        article: {
+          ...article,
+          metaDescription,
+          summary
+        }
+      });
+    } catch (error) {
+      console.error("URL rewrite error:", error);
+      res.status(500).json({ message: "Failed to rewrite URL content" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
