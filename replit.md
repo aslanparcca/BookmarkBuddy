@@ -172,6 +172,7 @@ Changelog:
 - June 14, 2025. Added comprehensive article publishing system: tekli ve toplu siteye gönderme with checkbox selection, bulk sending dialog, individual article send buttons, WordPress REST API integration for category mapping and post creation, XenForo support framework, and complete backend endpoint for article-to-website publishing workflow
 - June 14, 2025. Implemented real WordPress API integration: replaced simulation with actual HTTP Basic Auth using WordPress Application Passwords, added WordPress credentials fields to website form (wp_username, wp_app_password), integrated real category fetching and post creation to WordPress sites via /wp-json/wp/v2/ endpoints with proper authentication and error handling
 - June 14, 2025. Cleaned up duplicate WordPress credential fields in website form, kept only wp_username and wp_app_password fields, added default site (https://bestwebstudio.com.tr) with Yoast SEO configuration, implemented dynamic SEO plugin code display showing Rank Math SEO or Yoast SEO functions.php code snippets based on user selection
+- June 14, 2025. Enhanced WordPress API integration with comprehensive SEO meta field population: system now automatically populates both Yoast SEO (_yoast_wpseo_focuskw, _yoast_wpseo_metadesc) and Rank Math SEO (rank_math_focus_keyword, rank_math_description) meta fields when sending articles to WordPress sites, ensuring proper SEO optimization regardless of which plugin is used
 ```
 
 ## User Preferences

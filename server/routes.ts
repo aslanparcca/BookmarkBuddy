@@ -1780,7 +1780,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               console.error("Category fetch error:", catError);
             }
 
-            // Prepare post data
+            // Prepare post data with SEO meta fields
             const postData = {
               title: article.title,
               content: article.htmlContent || article.content,
@@ -1788,8 +1788,12 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               categories: [categoryId],
               excerpt: article.summary || '',
               meta: {
+                // Yoast SEO fields
                 _yoast_wpseo_metadesc: article.metaDescription || '',
-                _yoast_wpseo_focuskw: article.keywords?.[0] || ''
+                _yoast_wpseo_focuskw: article.keywords?.[0] || '',
+                // Rank Math SEO fields
+                rank_math_focus_keyword: article.keywords?.[0] || '',
+                rank_math_description: article.metaDescription || ''
               }
             };
 
