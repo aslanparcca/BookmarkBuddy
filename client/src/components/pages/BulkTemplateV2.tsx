@@ -239,7 +239,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         
         toast({
           title: "Başarılı",
-          description: `${titles.length} adet makale Excel'den yüklendi!`,
+          description: `${titles.length} adet başlık Excel'den yüklendi!`,
         });
       }
     } catch (error) {
@@ -570,25 +570,27 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
               )}
 
               {/* Title Count and Generate Button */}
-              <div className="mt-6 flex items-center gap-2">
-                <Input
-                  type="number"
-                  placeholder="Adet"
-                  min="1"
-                  max="40"
-                  value={settings.titleCount}
-                  onChange={(e) => setSettings({...settings, titleCount: parseInt(e.target.value) || 10})}
-                  className="w-20"
-                />
-                <Button 
-                  onClick={handleGenerateTitles}
-                  disabled={generateTitlesMutation.isPending}
-                  className="font-medium"
-                >
-                  {generateTitlesMutation.isPending ? "Oluşturuluyor..." : 
-                   selectedGenerateType === "4" ? "Yukarıdaki Başlıkları Kullan" : "Başlık Oluştur"}
-                </Button>
-              </div>
+              {selectedGenerateType !== "excel" && (
+                <div className="mt-6 flex items-center gap-2">
+                  <Input
+                    type="number"
+                    placeholder="Adet"
+                    min="1"
+                    max="40"
+                    value={settings.titleCount}
+                    onChange={(e) => setSettings({...settings, titleCount: parseInt(e.target.value) || 10})}
+                    className="w-20"
+                  />
+                  <Button 
+                    onClick={handleGenerateTitles}
+                    disabled={generateTitlesMutation.isPending}
+                    className="font-medium"
+                  >
+                    {generateTitlesMutation.isPending ? "Oluşturuluyor..." : 
+                     selectedGenerateType === "4" ? "Yukarıdaki Başlıkları Kullan" : "Başlık Oluştur"}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
