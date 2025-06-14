@@ -1143,13 +1143,17 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     }
   });
 
+  // In-memory storage for websites per user
+  const userWebsites: Record<string, any[]> = {};
+
   // Website management endpoints
   app.get('/api/websites', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
 
-      // Return empty websites list - users will add their own
-      res.json([]);
+      // Return user's websites or empty array
+      const websites = userWebsites[userId] || [];
+      res.json(websites);
     } catch (error) {
       console.error("Website list error:", error);
       res.status(500).json({ message: "Web sitesi listesi alınamadı" });
@@ -1172,6 +1176,14 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                    websiteData.seo_plugin === "rank_math_seo" ? "Rank Math SEO" : "Yok",
         gscConnected: false
       };
+
+      // Initialize user's websites array if it doesn't exist
+      if (!userWebsites[userId]) {
+        userWebsites[userId] = [];
+      }
+
+      // Add new website to user's list
+      userWebsites[userId].push(newWebsite);
 
       res.json({
         success: true,
@@ -1205,10 +1217,15 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
   app.delete('/api/websites/:id', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const websiteId = req.params.id;
+      const websiteId = parseInt(req.params.id);
 
       // Simulate website deletion
       await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Remove website from user's list
+      if (userWebsites[userId]) {
+        userWebsites[userId] = userWebsites[userId].filter(website => website.id !== websiteId);
+      }
 
       res.json({ 
         success: true,
