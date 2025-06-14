@@ -75,8 +75,27 @@ export class DatabaseStorage implements IStorage {
 
   // Article operations
   async createArticle(article: InsertArticle): Promise<Article> {
-    const [newArticle] = await db.insert(articles).values(article).returning();
-    return newArticle;
+    try {
+      console.log("Creating article in database:", {
+        userId: article.userId,
+        title: article.title,
+        status: article.status,
+        category: article.category
+      });
+      
+      const [newArticle] = await db.insert(articles).values(article).returning();
+      
+      console.log("Article created successfully in database:", {
+        id: newArticle.id,
+        title: newArticle.title,
+        userId: newArticle.userId
+      });
+      
+      return newArticle;
+    } catch (error) {
+      console.error("Database article creation error:", error);
+      throw error;
+    }
   }
 
   async getArticlesByUserId(userId: string, limit = 20, offset = 0): Promise<Article[]> {

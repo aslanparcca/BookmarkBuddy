@@ -612,6 +612,12 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       for (const article of articles) {
         try {
           console.log("Processing article:", article.title);
+          console.log("Article data:", {
+            title: article.title,
+            focusKeyword: article.focusKeyword,
+            otherKeywords: article.otherKeywords,
+            category: article.category
+          });
           
           const subheadingsText = article.subheadings && article.subheadings.length > 0 
             ? `Şu alt başlıkları kullanın: ${article.subheadings.join(', ')}` 
@@ -710,6 +716,18 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
           const readingTime = Math.ceil(wordCount / 200);
 
           // Makaleyi veritabanına kaydet
+          console.log("Saving article to database...", {
+            userId,
+            title: article.title,
+            contentLength: content.length,
+            wordCount,
+            readingTime,
+            category: article.category || 'Genel',
+            keywords: article.otherKeywords ? article.otherKeywords.split(',').map((k: string) => k.trim()) : [],
+            focusKeyword: article.focusKeyword,
+            status: settings?.publishStatus || 'draft',
+          });
+          
           const savedArticle = await storage.createArticle({
             userId,
             title: article.title,
@@ -718,8 +736,15 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
             wordCount,
             readingTime,
             category: article.category || 'Genel',
-            keywords: article.keywords ? article.keywords.split(',').map((k: string) => k.trim()) : [],
+            keywords: article.otherKeywords ? article.otherKeywords.split(',').map((k: string) => k.trim()) : [],
+            focusKeyword: article.focusKeyword,
             status: settings?.publishStatus || 'draft',
+          });
+          
+          console.log("Article saved successfully:", {
+            id: savedArticle.id,
+            title: savedArticle.title,
+            status: savedArticle.status
           });
 
           results.push({
@@ -738,7 +763,7 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
           results.push({
             title: article.title,
             status: 'failed',
-            error: error.message
+            error: error instanceof Error ? error.message : 'Unknown error'
           });
         }
       }
