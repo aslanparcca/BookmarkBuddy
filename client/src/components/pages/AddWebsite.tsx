@@ -22,7 +22,11 @@ const websiteSchema = z.object({
 
 type WebsiteFormData = z.infer<typeof websiteSchema>;
 
-export default function AddWebsite() {
+interface AddWebsiteProps {
+  setCurrentPage?: (page: any) => void;
+}
+
+export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedType, setSelectedType] = useState("1");
@@ -47,7 +51,7 @@ export default function AddWebsite() {
 
   const addWebsiteMutation = useMutation({
     mutationFn: async (data: WebsiteFormData) => {
-      return await apiRequest("/api/websites", "POST", data);
+      return await apiRequest("POST", "/api/websites", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/websites"] });
@@ -115,7 +119,11 @@ export default function AddWebsite() {
                   <i className="fas fa-play-circle text-xl text-gray-400 hover:text-red-600 ml-1 cursor-pointer" title="Yardım Videosu"></i>
                 </h5>
                 <div className="d-flex flex-row align-items-center">
-                  <button className="btn btn-outline-primary btn-sm" title="Web Sitelerim">
+                  <button 
+                    className="btn btn-outline-primary btn-sm" 
+                    title="Web Sitelerim"
+                    onClick={() => setCurrentPage && setCurrentPage('websites')}
+                  >
                     Web Sitelerim
                   </button>
                 </div>

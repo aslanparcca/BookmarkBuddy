@@ -98,7 +98,7 @@ export default function Dashboard() {
       case 'websites':
         return <WebSites setCurrentPage={setCurrentPage} />;
       case 'add-website':
-        return <AddWebsite />;
+        return <AddWebsite setCurrentPage={setCurrentPage} />;
       default:
         return <AIEditor setLoading={setLoading} />;
     }
