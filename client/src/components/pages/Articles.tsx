@@ -31,6 +31,7 @@ export default function Articles() {
   const [isSendDialogOpen, setIsSendDialogOpen] = useState(false);
   const [selectedWebsite, setSelectedWebsite] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [publishStatus, setPublishStatus] = useState<string>("draft");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -72,7 +73,7 @@ export default function Articles() {
   });
 
   const sendToWebsiteMutation = useMutation({
-    mutationFn: async (data: { articleIds: number[], websiteId: string, category: string }) => {
+    mutationFn: async (data: { articleIds: number[], websiteId: string, category: string, publishStatus: string }) => {
       return await apiRequest("POST", "/api/articles/send-to-website", data);
     },
     onSuccess: (data) => {
@@ -140,7 +141,8 @@ export default function Articles() {
     sendToWebsiteMutation.mutate({
       articleIds: selectedArticles,
       websiteId: selectedWebsite,
-      category: selectedCategory
+      category: selectedCategory,
+      publishStatus: publishStatus
     });
   };
 
@@ -254,6 +256,20 @@ export default function Articles() {
                       </Select>
                     </div>
                   )}
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Yayınlama Durumu</label>
+                    <Select value={publishStatus} onValueChange={setPublishStatus}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Durum seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Taslak</SelectItem>
+                        <SelectItem value="publish">Yayınla</SelectItem>
+                        <SelectItem value="future">Zamanla</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline" onClick={() => setIsSendDialogOpen(false)}>

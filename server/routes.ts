@@ -1853,7 +1853,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
   app.post('/api/articles/send-to-website', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { articleIds, websiteId, category } = req.body;
+      const { articleIds, websiteId, category, publishStatus = 'draft' } = req.body;
 
       if (!articleIds || !websiteId || !category) {
         return res.status(400).json({ message: "Eksik parametreler" });
@@ -1921,7 +1921,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
             const postData = {
               title: article.title,
               content: article.htmlContent || article.content,
-              status: 'draft', // Always send as draft first
+              status: publishStatus, // Use the selected publish status
               categories: [categoryId],
               excerpt: article.summary || '',
               meta: {
