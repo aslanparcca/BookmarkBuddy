@@ -60,7 +60,8 @@ export default function ArticlesNew() {
       if (searchQuery.trim()) {
         params.append('search', searchQuery);
       }
-      return await apiRequest('GET', `/api/articles?${params}`);
+      const response = await apiRequest('GET', `/api/articles?${params}`);
+      return response as ArticleResponse;
     },
     enabled: true,
   });

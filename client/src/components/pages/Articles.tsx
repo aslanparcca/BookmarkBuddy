@@ -22,6 +22,16 @@ interface Website {
   categories?: string[];
 }
 
+interface ArticleResponse {
+  articles: any[];
+  pagination: {
+    limit: number;
+    offset: number;
+    total: number;
+    hasMore: boolean;
+  };
+}
+
 export default function Articles() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
@@ -32,13 +42,31 @@ export default function Articles() {
   const [selectedWebsite, setSelectedWebsite] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [publishStatus, setPublishStatus] = useState<string>("draft");
+  const [perPage, setPerPage] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showFilters, setShowFilters] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: articles = [], isLoading } = useQuery<any[]>({
-    queryKey: ['/api/articles'],
+  const offset = (currentPage - 1) * perPage;
+
+  const { data: responseData, isLoading } = useQuery<ArticleResponse>({
+    queryKey: ['/api/articles', { limit: perPage, offset, search: searchQuery }],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        limit: perPage.toString(),
+        offset: offset.toString(),
+      });
+      if (searchQuery.trim()) {
+        params.append('search', searchQuery);
+      }
+      return await apiRequest('GET', `/api/articles?${params}`) as any;
+    },
     enabled: true,
   });
+
+  const articles = responseData?.articles || [];
+  const pagination = responseData?.pagination || { limit: 25, offset: 0, total: 0, hasMore: false };
 
   // Fetch websites
   const { data: websites = [] } = useQuery<Website[]>({
@@ -98,6 +126,31 @@ export default function Articles() {
       toast({
         title: "Hata",
         description: error.message || "Makaleler silinirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const bulkDeleteSelectedMutation = useMutation({
+    mutationFn: async (articleIds: number[]) => {
+      // Delete selected articles one by one
+      const results = await Promise.allSettled(
+        articleIds.map(id => apiRequest('DELETE', `/api/articles/${id}`))
+      );
+      return results.filter(r => r.status === 'fulfilled').length;
+    },
+    onSuccess: (deletedCount: number) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+      setSelectedArticles([]);
+      toast({
+        title: "Seçili Makaleler Silindi",
+        description: `${deletedCount} makale başarıyla silindi.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Seçili makaleler silinirken bir hata oluştu.",
         variant: "destructive",
       });
     },
@@ -188,23 +241,7 @@ export default function Articles() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const getCategoryBadge = (category: string) => {
-    const colors = [
-      'bg-blue-100 text-blue-800',
-      'bg-purple-100 text-purple-800',
-      'bg-indigo-100 text-indigo-800',
-      'bg-emerald-100 text-emerald-800',
-      'bg-orange-100 text-orange-800',
-    ];
-    
-    const colorIndex = category ? category.length % colors.length : 0;
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[colorIndex]}`}>
-        {category || 'Kategori Yok'}
-      </span>
-    );
-  };
+  const totalPages = Math.ceil(pagination.total / perPage);
 
   if (isLoading) {
     return (
@@ -222,316 +259,372 @@ export default function Articles() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">İçeriklerim</h2>
-          <p className="text-slate-600 text-sm">Oluşturduğunuz tüm makaleler</p>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Makale ara..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64"
-            />
-            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+      {/* Header */}
+      <div className="border-b border-slate-200 p-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          {/* Left side - Title and dropdown */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Button variant="outline" className="justify-start min-w-[200px]">
+                <i className="fas fa-folder-open mr-2"></i>
+                Tüm İçeriklerim ({pagination.total})
+              </Button>
+            </div>
           </div>
-          
-          {articles.length > 0 && (
-            <Button 
-              variant="outline" 
-              className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
-              onClick={() => {
-                if (window.confirm(`Tüm makalelerinizi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`)) {
-                  bulkDeleteMutation.mutate();
-                }
-              }}
-              disabled={bulkDeleteMutation.isPending}
-            >
-              <i className="fas fa-trash mr-2"></i>
-              {bulkDeleteMutation.isPending ? 'Siliniyor...' : 'Tümünü Sil'}
-            </Button>
-          )}
-          
-          {selectedArticles.length > 0 && (
-            <Dialog open={isSendDialogOpen} onOpenChange={setIsSendDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">
-                  <i className="fas fa-paper-plane mr-2"></i>
-                  Siteye Gönder ({selectedArticles.length})
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Siteye Gönder</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Web Sitesi</label>
-                    <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Site seçin" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {websites.map((website) => (
-                          <SelectItem key={website.id} value={website.id.toString()}>
-                            {website.url}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {selectedWebsite && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Kategori</label>
-                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Kategori seçin" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category, index) => (
-                            <SelectItem key={index} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Yayınlama Durumu</label>
-                    <Select value={publishStatus} onValueChange={setPublishStatus}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Durum seçin" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Taslak</SelectItem>
-                        <SelectItem value="publish">Yayınla</SelectItem>
-                        <SelectItem value="future">Zamanla</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="flex justify-end space-x-2">
-                    <Button variant="outline" onClick={() => setIsSendDialogOpen(false)}>
-                      İptal
-                    </Button>
-                    <Button 
-                      onClick={handleSendToWebsite}
-                      disabled={sendToWebsiteMutation.isPending || !selectedWebsite || !selectedCategory}
-                    >
-                      {sendToWebsiteMutation.isPending ? "Gönderiliyor..." : "Gönder"}
-                    </Button>
-                  </div>
+
+          {/* Right side - Search and controls */}
+          <div className="flex flex-row gap-2 items-center">
+            {/* Search */}
+            <div className="flex items-center">
+              <Input
+                type="text"
+                placeholder="Gelişmiş Arama"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="rounded-r-none border-r-0 min-w-[200px]"
+              />
+              <Button
+                variant="outline"
+                className="rounded-l-none border-l-0 px-3"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <i className="fas fa-filter"></i>
+              </Button>
+            </div>
+
+            {/* Per page selector */}
+            <Select value={perPage.toString()} onValueChange={(value) => {
+              setPerPage(parseInt(value));
+              setCurrentPage(1);
+            }}>
+              <SelectTrigger className="w-20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="200">200</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Actions dropdown */}
+            <div className="relative">
+              <Button variant="ghost" size="sm" className="p-1">
+                <i className="fas fa-ellipsis-v text-lg"></i>
+                <span className="sr-only md:not-sr-only md:ml-1 text-xs">İşlemler</span>
+              </Button>
+              
+              {/* Actions menu - show when there are selected articles */}
+              {selectedArticles.length > 0 && (
+                <div className="absolute right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg p-2 z-10 min-w-[200px]">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-blue-600 hover:bg-blue-50"
+                    onClick={() => setIsSendDialogOpen(true)}
+                  >
+                    <i className="fas fa-paper-plane mr-2"></i>
+                    Seçilenleri Web Sitemde Yayınla
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-red-600 hover:bg-red-50"
+                    onClick={() => {
+                      if (window.confirm(`${selectedArticles.length} makaleyi silmek istediğinizden emin misiniz?`)) {
+                        bulkDeleteSelectedMutation.mutate(selectedArticles);
+                      }
+                    }}
+                    disabled={bulkDeleteSelectedMutation.isPending}
+                  >
+                    <i className="fas fa-trash mr-2"></i>
+                    Seçilenleri Sil
+                  </Button>
                 </div>
-              </DialogContent>
-            </Dialog>
-          )}
-          
-          <Button className="bg-primary-600 hover:bg-primary-700">
-            <i className="fas fa-plus mr-2"></i>
-            Yeni Makale
-          </Button>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Filters section */}
+        {showFilters && (
+          <div className="mt-4 p-4 bg-slate-50 rounded-lg border">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Başlık</label>
+                <Input placeholder="Başlık" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Durum</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Hepsi" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Hepsi</SelectItem>
+                    <SelectItem value="draft">Taslak Durumundakiler</SelectItem>
+                    <SelectItem value="published">Tamamlananlar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Yayın Durumu</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Hepsi" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Hepsi</SelectItem>
+                    <SelectItem value="published">Herhangi bir siteye gönderilmiş</SelectItem>
+                    <SelectItem value="unpublished">Hiçbir siteye gönderilmemiş</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end">
+                <Button variant="outline" className="w-full">
+                  <i className="fas fa-search mr-2"></i>
+                  Ara
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {filteredArticles.length === 0 ? (
-        <div className="text-center py-12">
-          <i className="fas fa-file-alt text-slate-300 text-4xl mb-4"></i>
-          <h3 className="text-lg font-medium text-slate-900 mb-2">
-            {searchQuery ? 'Arama sonucu bulunamadı' : 'Henüz makale yok'}
-          </h3>
-          <p className="text-slate-500">
-            {searchQuery ? 'Farklı bir arama terimi deneyin.' : 'İlk makalenizi oluşturmak için AI editörünü kullanın.'}
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className="overflow-x-auto">
+      {/* Table */}
+      <div className="overflow-x-auto">
+        {articles.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-slate-400 mb-4">
+              <i className="fas fa-file-alt text-4xl"></i>
+            </div>
+            <h3 className="text-lg font-medium text-slate-600 mb-2">Henüz makale yok</h3>
+            <p className="text-slate-500">İlk makalenizi oluşturmak için AI Editor'ü kullanın.</p>
+          </div>
+        ) : (
+          <>
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
+                <TableRow className="bg-slate-50">
+                  <TableHead className="w-12 font-bold">#</TableHead>
+                  <TableHead className="w-12 text-center">
                     <Checkbox
                       checked={selectedArticles.length === filteredArticles.length && filteredArticles.length > 0}
-                      onCheckedChange={handleSelectAll}
+                      onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
                     />
                   </TableHead>
-                  <TableHead>Başlık</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Durum</TableHead>
-                  <TableHead>Tarih</TableHead>
-                  <TableHead>İşlemler</TableHead>
+                  <TableHead className="font-bold">İçerik</TableHead>
+                  <TableHead className="font-bold">Şablon</TableHead>
+                  <TableHead className="font-bold text-center w-20">Kelime</TableHead>
+                  <TableHead className="font-bold text-center w-20">Kredi</TableHead>
+                  <TableHead className="font-bold text-center">Tarih</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredArticles.map((article: any) => (
+                {filteredArticles.map((article: any, index: number) => (
                   <TableRow key={article.id} className="hover:bg-slate-50">
-                    <TableCell>
+                    <TableCell className="font-bold text-sm py-3">
+                      {offset + index + 1}
+                    </TableCell>
+                    <TableCell className="text-center">
                       <Checkbox
                         checked={selectedArticles.includes(article.id)}
                         onCheckedChange={(checked) => handleSelectArticle(article.id, checked as boolean)}
                       />
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <h4 className="font-medium text-slate-900">{article.title}</h4>
-                        <p className="text-slate-500 text-sm">
-                          {article.wordCount || 0} kelime • {article.readingTime || 0} dk okuma
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <button className="text-slate-400 hover:text-yellow-500">
+                          <i className="fas fa-star"></i>
+                        </button>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-1 mb-1">
+                            {article.category && (
+                              <>
+                                <Badge variant="outline" className="text-xs">
+                                  <i className="fas fa-folder mr-1"></i>
+                                  {article.category}
+                                </Badge>
+                                <span className="text-slate-400">/</span>
+                              </>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => {
+                              setSelectedArticle(article);
+                              setIsViewModalOpen(true);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 font-medium text-left"
+                          >
+                            {article.title}
+                          </button>
+                        </div>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {getCategoryBadge(article.category)}
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(article.status)}
-                    </TableCell>
-                    <TableCell className="text-slate-600 text-sm">
-                      {article.createdAt ? format(new Date(article.createdAt), 'dd MMMM yyyy', { locale: tr }) : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-slate-400 hover:text-primary-600"
-                          onClick={() => {
-                            setSelectedArticle(article);
-                            setIsEditModalOpen(true);
-                          }}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-slate-400 hover:text-emerald-600"
-                          onClick={() => {
-                            setSelectedArticle(article);
-                            setIsViewModalOpen(true);
-                          }}
-                        >
-                          <i className="fas fa-eye"></i>
-                        </Button>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-slate-400 hover:text-blue-600"
-                              onClick={() => {
-                                setSelectedArticles([article.id]);
-                                setSelectedWebsite("");
-                                setSelectedCategory("");
-                              }}
-                            >
-                              <i className="fas fa-paper-plane"></i>
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>Siteye Gönder</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4 py-4">
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Makale</label>
-                                <div className="p-2 bg-gray-50 rounded text-sm">
-                                  {article.title}
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Web Sitesi</label>
-                                <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Site seçin" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {websites.map((website) => (
-                                      <SelectItem key={website.id} value={website.id.toString()}>
-                                        {website.url}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              {selectedWebsite && (
-                                <div className="space-y-2">
-                                  <label className="text-sm font-medium">Kategori</label>
-                                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Kategori seçin" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {categories.map((category, index) => (
-                                        <SelectItem key={index} value={category}>
-                                          {category}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                              )}
-                              
-                              <div className="flex justify-end space-x-2">
-                                <DialogTrigger asChild>
-                                  <Button variant="outline">İptal</Button>
-                                </DialogTrigger>
-                                <Button 
-                                  onClick={handleSendToWebsite}
-                                  disabled={sendToWebsiteMutation.isPending || !selectedWebsite || !selectedCategory}
-                                >
-                                  {sendToWebsiteMutation.isPending ? "Gönderiliyor..." : "Gönder"}
-                                </Button>
-                              </div>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteMutation.mutate(article.id)}
-                          disabled={deleteMutation.isPending}
-                          className="text-slate-400 hover:text-red-600"
-                        >
-                          <i className="fas fa-trash"></i>
-                        </Button>
-                      </div>
+                    <TableCell className="text-sm">WordPress Makalesi V2</TableCell>
+                    <TableCell className="text-center text-sm">{article.wordCount || 0}</TableCell>
+                    <TableCell className="text-center text-sm">{article.wordCount || 0}</TableCell>
+                    <TableCell className="text-center text-sm">
+                      {article.createdAt && format(new Date(article.createdAt), "dd.MM.yyyy HH:mm", { locale: tr })}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </div>
 
-          {/* Pagination placeholder */}
-          <div className="flex items-center justify-between mt-6 pt-6 border-t border-slate-200">
-            <p className="text-slate-600 text-sm">
-              Toplam {filteredArticles.length} makale gösteriliyor
-            </p>
-            
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" disabled>
-                <i className="fas fa-chevron-left"></i>
+            {/* Pagination */}
+            <div className="flex items-center justify-between p-4 border-t border-slate-200">
+              <p className="text-slate-600 text-sm">
+                Toplam {pagination.total} makale gösteriliyor ({offset + 1}-{Math.min(offset + perPage, pagination.total)})
+              </p>
+              
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </Button>
+                
+                {/* Page numbers */}
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                  if (pageNum > totalPages) return null;
+                  
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={currentPage === pageNum ? "bg-blue-600 text-white" : ""}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Bulk Actions Floating Panel */}
+      {selectedArticles.length > 0 && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border border-slate-200 rounded-lg shadow-lg p-3 flex items-center gap-3 z-50">
+          <span className="text-sm font-medium">{selectedArticles.length} makale seçildi</span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-blue-600 border-blue-200 hover:bg-blue-50"
+            onClick={() => setIsSendDialogOpen(true)}
+          >
+            <i className="fas fa-paper-plane mr-1"></i>
+            Siteye Gönder
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-red-600 border-red-200 hover:bg-red-50"
+            onClick={() => {
+              if (window.confirm(`${selectedArticles.length} makaleyi silmek istediğinizden emin misiniz?`)) {
+                bulkDeleteSelectedMutation.mutate(selectedArticles);
+              }
+            }}
+            disabled={bulkDeleteSelectedMutation.isPending}
+          >
+            <i className="fas fa-trash mr-1"></i>
+            Sil
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setSelectedArticles([])}
+          >
+            <i className="fas fa-times"></i>
+          </Button>
+        </div>
+      )}
+
+      {/* Send to Website Dialog */}
+      <Dialog open={isSendDialogOpen} onOpenChange={setIsSendDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Siteye Gönder</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Web Sitesi</label>
+              <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Web sitesi seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {websites.map((website) => (
+                    <SelectItem key={website.id} value={website.id.toString()}>
+                      {website.url}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Kategori</label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory} disabled={!selectedWebsite}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Kategori seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category, index) => (
+                    <SelectItem key={index} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Yayın Durumu</label>
+              <Select value={publishStatus} onValueChange={setPublishStatus}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Taslak</SelectItem>
+                  <SelectItem value="publish">Yayınla</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsSendDialogOpen(false)}>
+                İptal
               </Button>
-              <Button variant="outline" size="sm" className="bg-primary-600 text-white">
-                1
-              </Button>
-              <Button variant="outline" size="sm" disabled>
-                <i className="fas fa-chevron-right"></i>
+              <Button
+                onClick={handleSendToWebsite}
+                disabled={sendToWebsiteMutation.isPending || !selectedWebsite || !selectedCategory}
+              >
+                {sendToWebsiteMutation.isPending ? "Gönderiliyor..." : "Gönder"}
               </Button>
             </div>
           </div>
-        </>
-      )}
+        </DialogContent>
+      </Dialog>
 
       {/* Modals */}
       <ArticleViewModal

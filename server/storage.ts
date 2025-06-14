@@ -100,7 +100,25 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getArticlesByUserId(userId: string, limit = 25, offset = 0): Promise<Article[]> {
+  async getArticlesByUserId(userId: string, limit = 25, offset = 0, search?: string): Promise<Article[]> {
+    if (search && search.trim()) {
+      return await db
+        .select()
+        .from(articles)
+        .where(
+          and(
+            eq(articles.userId, userId),
+            or(
+              like(articles.title, `%${search}%`),
+              like(articles.content, `%${search}%`)
+            )
+          )
+        )
+        .orderBy(desc(articles.updatedAt))
+        .limit(limit)
+        .offset(offset);
+    }
+
     return await db
       .select()
       .from(articles)
@@ -110,11 +128,30 @@ export class DatabaseStorage implements IStorage {
       .offset(offset);
   }
 
-  async getArticlesCountByUserId(userId: string): Promise<number> {
-    const result = await db
-      .select({ count: sql`count(*)` })
-      .from(articles)
-      .where(eq(articles.userId, userId));
+  async getArticlesCountByUserId(userId: string, search?: string): Promise<number> {
+    let query;
+    
+    if (search && search.trim()) {
+      query = db
+        .select({ count: sql`count(*)` })
+        .from(articles)
+        .where(
+          and(
+            eq(articles.userId, userId),
+            or(
+              like(articles.title, `%${search}%`),
+              like(articles.content, `%${search}%`)
+            )
+          )
+        );
+    } else {
+      query = db
+        .select({ count: sql`count(*)` })
+        .from(articles)
+        .where(eq(articles.userId, userId));
+    }
+
+    const result = await query;
     return Number(result[0]?.count || 0);
   }
 
