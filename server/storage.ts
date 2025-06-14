@@ -15,7 +15,7 @@ import {
   type ApiUsage,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, sql, like, or } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
@@ -25,7 +25,8 @@ export interface IStorage {
   
   // Article operations
   createArticle(article: InsertArticle): Promise<Article>;
-  getArticlesByUserId(userId: string, limit?: number, offset?: number): Promise<Article[]>;
+  getArticlesByUserId(userId: string, limit?: number, offset?: number, search?: string): Promise<Article[]>;
+  getArticlesCountByUserId(userId: string, search?: string): Promise<number>;
   getArticleById(id: number, userId: string): Promise<Article | undefined>;
   updateArticle(id: number, userId: string, updates: Partial<InsertArticle>): Promise<Article | undefined>;
   deleteArticle(id: number, userId: string): Promise<boolean>;
@@ -99,7 +100,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getArticlesByUserId(userId: string, limit = 100, offset = 0): Promise<Article[]> {
+  async getArticlesByUserId(userId: string, limit = 25, offset = 0): Promise<Article[]> {
     return await db
       .select()
       .from(articles)
@@ -107,6 +108,14 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(articles.updatedAt))
       .limit(limit)
       .offset(offset);
+  }
+
+  async getArticlesCountByUserId(userId: string): Promise<number> {
+    const result = await db
+      .select({ count: sql`count(*)` })
+      .from(articles)
+      .where(eq(articles.userId, userId));
+    return Number(result[0]?.count || 0);
   }
 
   async getArticleById(id: number, userId: string): Promise<Article | undefined> {

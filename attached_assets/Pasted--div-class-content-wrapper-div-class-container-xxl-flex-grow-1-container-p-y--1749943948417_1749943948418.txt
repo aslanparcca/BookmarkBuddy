@@ -1,0 +1,874 @@
+<div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    
+                    
+                    <div class="card">
+        <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between py-3">
+            <div class="d-flex flex-row">
+    <div class="btn-group border radius me-2 mb-2 mb-md-0">
+        <button type="button" class="btn dropdown-toggle fw-medium" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" id="cf-list-dropdown-btn"><i class="bx bx-folder-open me-2"></i> Tüm İçeriklerim (438)</button>
+        <ul class="dropdown-menu pb-0" id="cf-list" style="min-width: 280px;">
+            <li id="cf-list-item-all"><a class="dropdown-item" href="https://app.contety.com/content"><i class="bx  bx-folder-open  me-2"></i> Tüm İçeriklerim (438)</a></li>
+                            <li class="cf-list-item" id="cf-link-cont-11275">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275">
+                        <span><i class="bx  bx-folder  me-2"></i> Akyurt Nakliyat (25)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11275" data-name="Akyurt Nakliyat" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11163">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11163">
+                        <span><i class="bx  bx-folder  me-2"></i> Ankara Özpolat (0)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11163" data-name="Ankara Özpolat" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11108">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11108">
+                        <span><i class="bx  bx-folder  me-2"></i> Asansörlü Nakliyat (0)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11108" data-name="Asansörlü Nakliyat" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11259">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11259">
+                        <span><i class="bx  bx-folder  me-2"></i> Boztaş Nakliyat (122)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11259" data-name="Boztaş Nakliyat" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11054">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11054">
+                        <span><i class="bx  bx-folder  me-2"></i> Çağrı (45)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11054" data-name="Çağrı" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11267">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11267">
+                        <span><i class="bx  bx-folder  me-2"></i> Ev Taşıma Firması (179)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11267" data-name="Ev Taşıma Firması" title="Sil"></i>
+                    </a>
+                </li>
+                            <li class="cf-list-item" id="cf-link-cont-11248">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="https://app.contety.com/content?filter%5Bfolder_id%5D=11248">
+                        <span><i class="bx  bx-folder  me-2"></i> Hare Kuaför (67)</span>
+                        <i class="bx bx-trash-alt cursor-pointer fs-5 cf-del-icon" data-id="11248" data-name="Hare Kuaför" title="Sil"></i>
+                    </a>
+                </li>
+                        <li class="p-3 border-top mt-0">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="new-content-folder-name" placeholder="Yeni Klasör Ekle" aria-label="Yeni Klasör Ekle" aria-describedby="new-content-folder-btn">
+                    <button class="btn btn ib-spn-btnv2 btn-outline-primary bg-label-primary" type="button" id="new-content-folder-btn">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Ekle</span>
+</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="d-flex flex-row">
+    <form class="dropdown d-flex flex-row me-2 mb-2 mb-md-0">
+        <label for="cff-title-2" class="d-none">Başlıklarda Ara</label>
+        <input type="text" name="filter[title]" id="cff-title-2" class="form-control input2 rounded-0 rounded-start border-end-0" placeholder="Gelişmiş Arama" value="">
+        <span class="input-group-text rounded-0 border-start-0 rounded-end cursor-pointer ps-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#content-filter-form" aria-expanded="false" aria-controls="content-filter-form"><i class="bx bx-filter fs-5"></i></span>
+
+        <label for="cff-pp" class="d-none">Sayfadaki İçerik Sayısı</label>
+        <select class="form-select pp-selectbox w-auto ms-2 cursor-pointer" name="pp" id="cff-pp"><option value="25" selected="selected">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select>
+    </form>
+
+    <div class="btn-group">
+        <button class="btn fs-4 p-0" type="button" id="content-actions" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-dots-vertical-rounded"></i> <span class="fs085 d-inline-block d-md-none">İşlemler</span></button>
+
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="content-actions" style="">
+            <li>
+                <a class="dropdown-item bulk-publish-contents-btn fw-medium" href="javascript:void(0);" title="Seçilen İçerikleri Yayınlayın">
+                    <i class="bx bx-paper-plane me-2 bxv2"></i><span class="align-middle">Seçilenleri Web Sitemde Yayınla</span>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item bulk-move-contents-btn fw-medium" href="javascript:void(0);" title="Seçilen İçerikleri Klasöre Taşı">
+                    <i class="bx bx-folder-open me-2 bxv2"></i><span class="align-middle">Seçilenleri Klasöre Taşı</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item bulk-download-contents-btn fw-medium" data-format="html" href="javascript:void(0);" title="Seçilen İçerikleri HTML Olarak İndir">
+                    <i class="bx bx-download me-2 bxv2"></i><span class="align-middle">Seçilenleri İndir <small>(HTML)</small></span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item bulk-download-contents-btn fw-medium" data-format="txt" href="javascript:void(0);" title="Seçilen İçerikleri TXT Olarak İndir">
+                    <i class="bx bx-download me-2 bxv2"></i><span class="align-middle">Seçilenleri İndir <small>(TXT)</small></span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item text-danger bulk-del-contents-btn fw-medium" href="javascript:void(0);" title="Seçilen İçerikleri Sil">
+                    <i class="bx bx-trash me-2 bxv2"></i><span class="align-middle">Seçilenleri Sil</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+        </div>
+
+        <div class="card-body p-0">
+            <form action="" method="GET" class="bg-body collapse border-bottom" id="content-filter-form">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-title">
+    Başlık </label>
+                <input type="text" name="filter[title]" id="cff-title" class="form-control" placeholder="Başlık" value="">
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-folder_id">
+    Klasör </label>
+                <select class="form-select" name="filter[folder_id]" id="cff-folder_id"><option value="-1">Hepsi</option><option value="11275">Akyurt Nakliyat</option><option value="11163">Ankara Özpolat</option><option value="11108">Asansörlü Nakliyat</option><option value="11259">Boztaş Nakliyat</option><option value="11054">Çağrı</option><option value="11267">Ev Taşıma Firması</option><option value="11248">Hare Kuaför</option></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-template">
+    Şablon </label>
+                <select class="form-select" name="filter[template]" id="cff-template"><option value="-1">Hepsi</option><optgroup label="SEO"><option value="2">Makale Başlığı</option><option value="3">Makale Alt Başlıkları</option><option value="12">Anahtar Kelime</option></optgroup><optgroup label="İçerik"><option value="1">Makale</option><option value="10">Rüya Tabiri</option><option value="13">Çeviri</option><option value="19">Hizmet Açıklaması</option><option value="20">Ürün Açıklaması</option><option value="23">Sık Sorulan Sorular</option><option value="26">Metin Özgünleştirme</option></optgroup><optgroup label="WordPress"><option value="7">WordPress Makalesi</option><option value="11">Rüya Tabiri Makalesi</option><option value="14">Yemek Tarifi</option><option value="27">WordPress Makalesi V2</option><option value="28">URL Rewrite</option></optgroup><optgroup label="Google"><option value="15">Google Ads Başlık</option><option value="16">Google Ads Açıklama</option></optgroup><optgroup label="Facebook"><option value="17">Facebook Ads Başlık</option><option value="18">Facebook Ads Ana Metin</option></optgroup><optgroup label="Web Siteleri"><option value="21">Hakkımızda Sayfası Yazısı</option><option value="22">Ana Sayfa Yazısı</option><option value="24">İletişim Sayfası Yazısı</option><option value="25">Müşteri Yorumu</option></optgroup></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-language">
+    İçerik Dili </label>
+                <select class="form-select" name="filter[language]" id="cff-language"><option value="-1">Hepsi</option><option value="1">Türkçe</option><option value="2">İngilizce</option><option value="5">Almanca</option><option value="31">Arnavutça</option><option value="39">Azerice</option><option value="33">Boşnakça</option><option value="18">Bulgarca</option><option value="13">Çekçe</option><option value="8">Danca</option><option value="41">Endonezce</option><option value="21">Estonca</option><option value="10">Felemenkçe</option><option value="9">Fince</option><option value="3">Fransızca</option><option value="28">Hırvatça</option><option value="6">İspanyolca</option><option value="12">İsveççe</option><option value="7">İtalyanca</option><option value="40">Katalanca</option><option value="11">Lehçe</option><option value="25">Letonca</option><option value="24">Litvanca</option><option value="16">Macarca</option><option value="30">Makedonca</option><option value="14">Norveççe</option><option value="26">Portekizce</option><option value="17">Rumence</option><option value="22">Rusça</option><option value="29">Sırpça</option><option value="19">Slovakça</option><option value="20">Slovence</option><option value="48">Tayca</option><option value="47">Vietnamca</option></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-status">
+    Durum </label>
+                <select class="form-select" name="filter[status]" id="cff-status"><option value="-1">Hepsi</option><option value="0">Taslak Durumundakiler</option><option value="1">Oluşturulma Aşamasındakiler</option><option value="2">Tamamlananlar</option><option value="3">Hatalı Olanlar</option></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-favorite">
+    Favori </label>
+                <select class="form-select" name="filter[favorite]" id="cff-favorite"><option value="-1">Hepsi</option><option value="1">Favorilere Eklenenler</option><option value="0">Favorilere Eklenmeyenler</option></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <label class="form-label" for="cff-publish_status">
+    Yayın Durumu </label>
+                <select class="form-select" name="filter[publish_status]" id="cff-publish_status"><option value="-1">Hepsi</option><option value="1">Herhangi bir siteye gönderilmiş</option><option value="0">Hiçbir siteye gönderilmemiş</option></select>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-xxl-3 mb-4">
+                <div class="form-label">&nbsp;</div>
+                <button class="btn btn ib-spn-btnv2 btn btn-label-primary shadow-none fw-medium" type="submit">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label"><i class="bx bx-search-alt me-1"></i>Ara</span>
+</button>
+                                <input name="pp" type="hidden" value="25">
+            </div>
+        </div>
+    </div>
+</form>
+
+
+                            <div class="table-responsive">
+                    <table class="table table-light-border table-hover" id="content-list-table">
+    <thead class="bg-light">
+    <tr class="text-nowrap">
+        <th class="fw-bold w-px-20">#</th>
+        <th class="text-center w-px-20"><input type="checkbox" class="form-check-input c-check-all" data-check-target=".c-tr-cb"></th>
+        <th class="fw-bold ps-0">İçerik</th>
+        <th class="fw-bold">Şablon</th>
+        <th class="fw-bold text-center w-px-20">Kelime</th>
+        <th class="fw-bold text-center w-px-20">Kredi</th>
+                <th class="fw-bold text-center">Tarih</th>
+    </tr>
+    </thead>
+    <tbody>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">1</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883837" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883837" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883837" title="İçerik Bilgileri">Şereflikoçhisar Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7360</td>
+            <td class="text-center fs085">7360</td>
+                        <td class="text-center fs085">30.05.2025 16:35</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">2</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883836" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883836" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883836" title="İçerik Bilgileri">Polatlı Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7569</td>
+            <td class="text-center fs085">7569</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">3</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883835" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883835" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883835" title="İçerik Bilgileri">Nallıhan Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7433</td>
+            <td class="text-center fs085">7433</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">4</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883834" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883834" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883834" title="İçerik Bilgileri">Kızılcahamam Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7466</td>
+            <td class="text-center fs085">7466</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">5</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883833" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883833" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883833" title="İçerik Bilgileri">Kalecik Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7517</td>
+            <td class="text-center fs085">7517</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">6</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883832" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883832" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883832" title="İçerik Bilgileri">Kahramankazan Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7372</td>
+            <td class="text-center fs085">7372</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">7</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883831" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883831" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883831" title="İçerik Bilgileri">Haymana Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7309</td>
+            <td class="text-center fs085">7309</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">8</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883830" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883830" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883830" title="İçerik Bilgileri">Güdül Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7598</td>
+            <td class="text-center fs085">7598</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">9</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883829" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883829" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883829" title="İçerik Bilgileri">Evren Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7361</td>
+            <td class="text-center fs085">7361</td>
+                        <td class="text-center fs085">30.05.2025 16:34</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">10</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883828" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883828" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883828" title="İçerik Bilgileri">Elmadağ Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7480</td>
+            <td class="text-center fs085">7480</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">11</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883827" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883827" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883827" title="İçerik Bilgileri">Çubuk Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7492</td>
+            <td class="text-center fs085">7492</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">12</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883826" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883826" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883826" title="İçerik Bilgileri">Çamlıdere Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7316</td>
+            <td class="text-center fs085">7316</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">13</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883825" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883825" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883825" title="İçerik Bilgileri">Beypazarı Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7227</td>
+            <td class="text-center fs085">7227</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">14</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883824" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883824" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883824" title="İçerik Bilgileri">Bala Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7809</td>
+            <td class="text-center fs085">7809</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">15</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883823" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883823" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883823" title="İçerik Bilgileri">Ayaş Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7429</td>
+            <td class="text-center fs085">7429</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">16</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883822" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883822" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883822" title="İçerik Bilgileri">Akyurt Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7545</td>
+            <td class="text-center fs085">7545</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">17</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883821" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883821" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883821" title="İçerik Bilgileri">Yenimahalle Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7385</td>
+            <td class="text-center fs085">7385</td>
+                        <td class="text-center fs085">30.05.2025 16:33</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">18</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883820" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883820" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883820" title="İçerik Bilgileri">Sincan Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7460</td>
+            <td class="text-center fs085">7460</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">19</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883819" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883819" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883819" title="İçerik Bilgileri">Pursaklar Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7340</td>
+            <td class="text-center fs085">7340</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">20</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883818" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883818" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883818" title="İçerik Bilgileri">Mamak Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7613</td>
+            <td class="text-center fs085">7613</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">21</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883817" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883817" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883817" title="İçerik Bilgileri">Keçiören Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7395</td>
+            <td class="text-center fs085">7395</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">22</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883816" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883816" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883816" title="İçerik Bilgileri">Gölbaşı Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7482</td>
+            <td class="text-center fs085">7482</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">23</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883815" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883815" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883815" title="İçerik Bilgileri">Etimesgut Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7500</td>
+            <td class="text-center fs085">7500</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">24</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883814" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883814" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883814" title="İçerik Bilgileri">Çankaya Nakliyat</a>
+                                                                    <br>                                         <span class="fs085 text-success mt-1 me-2">akyurtnakliyat.org.tr</span>
+                                                                                                </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7469</td>
+            <td class="text-center fs085">7469</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+            <tr>
+            <td class="fw-bold fs085 py-3 ps-4 pe-0">25</td>
+            <td class="text-center"><input type="checkbox" class="form-check-input c-tr-cb" value="883813" name="content_ids[]"></td>
+            <td class="ps-0">
+                <div class="d-flex flex-row align-items-center align-content-center">
+                    <div class="me-2">
+                                                    <i class="bx bx-star fs-5 me-1 cursor-pointer text-black-50 c-favi mt-1" data-id="883813" data-status="0"></i>
+                                            </div>
+                    <div class="flex-grow-1 d-flex flex-row align-items-start">
+                        
+                        
+                                                    <a href="https://app.contety.com/content?filter%5Bfolder_id%5D=11275" title="Klasörü görüntüle" class="badge bg-label-dribbble fs-tiny me-1"><i class="bx bx-folder"></i> Akyurt Nakliyat</a><span class="me-1">/</span>
+                        
+                                                    <div>
+                                <a href="https://app.contety.com/content/883813" title="İçerik Bilgileri">Altındağ Nakliyat</a>
+                                                                    <br>                                                             </div>
+                                                                    </div>
+                </div>
+            </td>
+            <td class="fs085">WordPress Makalesi V2</td>
+            <td class="text-center fs085">7505</td>
+            <td class="text-center fs085">7505</td>
+                        <td class="text-center fs085">30.05.2025 16:32</td>
+        </tr>
+        </tbody>
+</table>
+                </div>
+                    </div>
+
+                    <div class="card-footer">
+                <nav class="d-flex justify-items-center justify-content-between">
+        <div class="d-flex justify-content-between flex-fill d-sm-none">
+            <ul class="pagination">
+                
+                                    <li class="page-item disabled" aria-disabled="true">
+                        <span class="page-link">« Önceki</span>
+                    </li>
+                
+                
+                                    <li class="page-item">
+                        <a class="page-link" href="https://app.contety.com/content?page=2" rel="next">Sonraki »</a>
+                    </li>
+                            </ul>
+        </div>
+
+        <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+            <div>
+                            </div>
+
+            <div>
+                <ul class="pagination mb-0">
+                    
+                                            <li class="page-item disabled" aria-disabled="true" aria-label="« Önceki">
+                            <span class="page-link" aria-hidden="true">‹</span>
+                        </li>
+                    
+                    
+                                            
+                        
+                        
+                                                                                                                        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=2">2</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=3">3</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=4">4</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=5">5</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=6">6</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=7">7</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=8">8</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=9">9</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=10">10</a></li>
+                                                                                                                                
+                                                    <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
+                        
+                        
+                                                                    
+                        
+                        
+                                                                                                                        <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=17">17</a></li>
+                                                                                                                                <li class="page-item"><a class="page-link" href="https://app.contety.com/content?page=18">18</a></li>
+                                                                                                        
+                    
+                                            <li class="page-item">
+                            <a class="page-link" href="https://app.contety.com/content?page=2" rel="next" aria-label="Sonraki »">›</a>
+                        </li>
+                                    </ul>
+            </div>
+        </div>
+    </nav>
+
+            </div>
+            </div>
+                </div>
+
+                <footer class="content-footer footer bg-footer-theme">
+    <div class="d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column container-fluid">
+        <div class="mb-2 mb-md-0">
+            © 2025 <a href="https://contety.com" target="_blank">contety</a> versiyon 2.5
+        </div>
+
+        <div class="d-none d-lg-inline-block">
+            <a href="https://app.contety.com/contact" class="footer-link fs085 me-4" title="İletişim">İletişim</a>
+            <a href="https://app.contety.com/api/intro" class="footer-link fs085 me-4" title="contety API">contety API</a>
+            <a href="https://contety.com/sozlesmeler/kullanici-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Kullanıcı Sözleşmesi">Kullanıcı Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/gizlilik-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Gizlilik Sözleşmesi">Gizlilik Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/cerez-politikasi" class="footer-link fs085 me-4" target="_blank" title="Çerez Politikası">Çerez Politikası</a>
+        </div>
+    </div>
+</footer>
+
+                <div class="content-backdrop fade"></div>
+            </div>
