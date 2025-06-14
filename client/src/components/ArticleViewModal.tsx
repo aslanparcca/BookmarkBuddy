@@ -100,7 +100,21 @@ export default function ArticleViewModal({ article, isOpen, onClose, onEdit }: A
 
             {article.metaDescription && (
               <div className="mt-4">
-                <span className="font-medium text-slate-700">Meta Açıklama:</span>
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-slate-700">Meta Açıklama:</span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      article.metaDescription.length >= 140 && article.metaDescription.length <= 160
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {article.metaDescription.length} karakter
+                    </span>
+                    {article.metaDescription.length >= 140 && article.metaDescription.length <= 160 && (
+                      <span className="text-xs text-green-600">✓ SEO Uyumlu</span>
+                    )}
+                  </div>
+                </div>
                 <div className="mt-1 text-slate-600 text-sm">{article.metaDescription}</div>
               </div>
             )}

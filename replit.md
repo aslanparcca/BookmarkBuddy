@@ -162,6 +162,9 @@ Changelog:
 - June 14, 2025. Created Excel Template system for bulk article generation with advanced column mapping supporting "Makale Başlığı", "Odak Anahtar Kelime", "Diğer Anahtar Kelimeler", "Alt Başlık 1-20" structure matching user's provided Excel template
 - June 14, 2025. Implemented comprehensive Excel processing backend API with intelligent column detection, 20 sub-heading support, and advanced AI prompt generation for bulk article creation with Gemini 2.5-flash integration
 - June 14, 2025. Added Excel Template to sidebar navigation with dedicated interface featuring 3-step workflow: file upload → article review → generation results with detailed progress tracking and error handling
+- June 14, 2025. Fixed content generation issues: removed article title from content body, enhanced content features implementation (tables, lists, bold, italic, quotes), separated article summary from main content
+- June 14, 2025. Improved AI model selection to properly use Gemini 2.5 Flash when selected, updated section length handling including "Çok Uzun" option for 2,000-2,500 words
+- June 14, 2025. Enhanced meta description generation with SEO optimization: 140-160 character limit, focus keyword placement, power words usage, and SEO compliance indicators in frontend
 ```
 
 ## User Preferences

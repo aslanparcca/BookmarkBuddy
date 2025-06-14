@@ -1427,6 +1427,39 @@ Example format: "Bu makale [focus keyword] hakkında kapsamlı bilgiler sunar. [
           const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
           const readingTime = Math.ceil(wordCount / 200);
 
+          // Generate SEO-optimized meta description if requested
+          let seoMetaDescription = null;
+          if (settings.metaDescription) {
+            const metaPrompt = `Create an SEO-optimized meta description in Turkish for the article: "${titleData.title}". Focus keyword: "${titleData.focusKeyword}".
+
+Requirements:
+- 140-160 characters exactly
+- Start with focus keyword naturally
+- Include a clear benefit/value proposition
+- Use active language with call-to-action
+- Use power words (keşfedin, öğrenin, inceleyin, uzman, detaylı, kapsamlı)
+- Be specific and informative
+- Natural, not keyword-stuffed
+- Match the article content
+
+Format: Return only the meta description text, no quotes or explanations.
+
+Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, pratik ipuçları ve güncel önerilerle ${titleData.focusKeyword.toLowerCase()} konusunu keşfedin."`;
+
+            try {
+              const metaResult = await model.generateContent(metaPrompt);
+              seoMetaDescription = metaResult.response.text().trim().replace(/["']/g, '');
+              
+              // Ensure it's within character limit
+              if (seoMetaDescription.length > 160) {
+                seoMetaDescription = seoMetaDescription.substring(0, 157) + '...';
+              }
+            } catch (error) {
+              console.log('Meta description generation failed, using fallback');
+              seoMetaDescription = `${titleData.focusKeyword} hakkında detaylı bilgiler. Uzman rehberi ile ${titleData.focusKeyword.toLowerCase()} konusunu keşfedin.`;
+            }
+          }
+
           // Save article to database
           const savedArticle = await storage.createArticle({
             userId,
@@ -1437,7 +1470,7 @@ Example format: "Bu makale [focus keyword] hakkında kapsamlı bilgiler sunar. [
             readingTime,
             status: settings.publishStatus || 'draft',
             focusKeyword: titleData.focusKeyword,
-            metaDescription: settings.metaDescription ? `${titleData.title} hakkında kapsamlı bilgiler. ${titleData.focusKeyword} ile ilgili detayları öğrenin.` : null,
+            metaDescription: seoMetaDescription,
             summary: articleSummary,
           });
 
