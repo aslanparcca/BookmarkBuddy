@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube } from "lucide-react";
+import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
 
 interface BulkTemplateV2Props {
@@ -64,9 +64,13 @@ interface BulkV2Settings {
   // Yayınlama
   website: string;
   category: string;
+  categoryId: string;
   tags: string;
   publishStatus: string;
   publishDate: string;
+  
+  // İçerik Özellikleri (Array)
+  contentFeatures: string[];
 }
 
 interface GeneratedTitle {
@@ -80,7 +84,12 @@ interface Website {
   url: string;
   name: string;
   platform: string;
-  categories?: string[];
+  categories?: Category[];
+}
+
+interface Category {
+  id: number;
+  name: string;
 }
 
 export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
@@ -111,7 +120,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     webSearchSource: "",
     excludedUrls: "",
     customUrls: "",
-    imageSource: "0",
+    imageSource: "none",
     faqNormal: false,
     faqSchema: false,
     metaDescription: false,
@@ -126,9 +135,11 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     customHtmlPosition: "none",
     website: "",
     category: "",
+    categoryId: "",
     tags: "",
     publishStatus: "draft",
-    publishDate: ""
+    publishDate: "",
+    contentFeatures: [] as string[]
   });
 
   // Fetch websites
@@ -1065,7 +1076,330 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         </Card>
       )}
 
-      {/* Step 7: Final Action */}
+      {/* Görsel Seçenekleri */}
+      {showStep2 && (
+        <Card className="border-2 border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Image className="w-5 h-5" />
+              Görsel Seçenekleri
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="image-source">Makale Resmi</Label>
+                <Select value={settings.imageSource} onValueChange={(value) => setSettings({...settings, imageSource: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Lütfen bir seçim yapınız" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Görsel istemiyorum</SelectItem>
+                    <SelectItem value="unsplash">Unsplash (Ücretsiz)</SelectItem>
+                    <SelectItem value="pexels">Pexels (Ücretsiz)</SelectItem>
+                    <SelectItem value="pixabay">Pixabay (Ücretsiz)</SelectItem>
+                    <SelectItem value="google">Google (Ücretsiz)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            {settings.imageSource !== 'none' && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">Resim Anahtar Kelimesi Hakkında:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Lütfen yukarıdaki formda her makale için resim anahtar kelimesi giriniz</li>
+                  <li>• Bu servis ücretsiz bir stok görsel servisidir ve her anahtar kelimeniz için görsel bulunamayabilir</li>
+                  <li>• Lütfen İngilizce bir anahtar kelime giriniz</li>
+                  <li>• Lütfen makale başlığınızı resim anahtar kelimesi olarak yazmayınız</li>
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* İçerik Özellikleri */}
+      {showStep2 && (
+        <Card className="border-2 border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              İçerik Özellikleri
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="faq-normal"
+                    checked={settings.contentFeatures.includes('faq_normal')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'faq_normal']
+                          : prev.contentFeatures.filter(f => f !== 'faq_normal')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="faq-normal" className="font-medium">Sıkça Sorulan Sorular (Normal)</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="faq-schema"
+                    checked={settings.contentFeatures.includes('faq_schema')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'faq_schema']
+                          : prev.contentFeatures.filter(f => f !== 'faq_schema')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="faq-schema" className="font-medium">Sıkça Sorulan Sorular (Normal + Schema)</Label>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="meta-description"
+                    checked={settings.contentFeatures.includes('meta_description')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'meta_description']
+                          : prev.contentFeatures.filter(f => f !== 'meta_description')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="meta-description" className="font-medium">Meta Açıklama</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="excerpt"
+                    checked={settings.contentFeatures.includes('excerpt')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'excerpt']
+                          : prev.contentFeatures.filter(f => f !== 'excerpt')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="excerpt" className="font-medium">Makale Özeti</Label>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="h3-subheadings"
+                    checked={settings.contentFeatures.includes('h3')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'h3']
+                          : prev.contentFeatures.filter(f => f !== 'h3')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="h3-subheadings" className="font-medium">H3 Alt Başlıklar</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="tables"
+                    checked={settings.contentFeatures.includes('table')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'table']
+                          : prev.contentFeatures.filter(f => f !== 'table')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="tables" className="font-medium">Tablo</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="lists"
+                    checked={settings.contentFeatures.includes('list')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'list']
+                          : prev.contentFeatures.filter(f => f !== 'list')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="lists" className="font-medium">Liste</Label>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="bold"
+                    checked={settings.contentFeatures.includes('bold')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'bold']
+                          : prev.contentFeatures.filter(f => f !== 'bold')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="bold" className="font-medium">Kalın Yazılar</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="italics"
+                    checked={settings.contentFeatures.includes('italics')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'italics']
+                          : prev.contentFeatures.filter(f => f !== 'italics')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="italics" className="font-medium">İtalik Yazılar</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="quote"
+                    checked={settings.contentFeatures.includes('quote')}
+                    onCheckedChange={(checked) => {
+                      setSettings(prev => ({
+                        ...prev,
+                        contentFeatures: checked 
+                          ? [...prev.contentFeatures, 'quote']
+                          : prev.contentFeatures.filter(f => f !== 'quote')
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="quote" className="font-medium">Alıntı</Label>
+                </div>
+              </div>
+            </div>
+
+            <hr className="my-6 border-dashed" />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="custom-html">Özel HTML</Label>
+                <Select value={settings.customHtmlPosition} onValueChange={(value) => setSettings({...settings, customHtmlPosition: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Lütfen bir seçim yapınız" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Eklenmesin</SelectItem>
+                    <SelectItem value="start">Makalelerin En Başına</SelectItem>
+                    <SelectItem value="middle">Makalelerin Ortalarına</SelectItem>
+                    <SelectItem value="end">Makalelerin En Sonuna</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Sitenizde Yayınlama */}
+      {showStep2 && (
+        <Card className="border-2 border-primary">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Send className="w-5 h-5" />
+              Sitenizde Yayınlama
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="website">Web Siteniz</Label>
+                <Select value={settings.websiteId} onValueChange={(value) => setSettings({...settings, websiteId: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Seçiniz</SelectItem>
+                    {websites.map((website) => (
+                      <SelectItem key={website.id} value={website.id.toString()}>
+                        {website.url}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-gray-600 mt-1">
+                  Bu seçenek sadece WordPress sistemler için çalışmaktadır.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="category">Kategori</Label>
+                <Select value={settings.categoryId} onValueChange={(value) => setSettings({...settings, categoryId: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Lütfen bir kategori seçiniz" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Kategori seçiniz</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id.toString()}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="publish-status">Yayınlama Durumu</Label>
+                <Select value={settings.publishStatus} onValueChange={(value) => setSettings({...settings, publishStatus: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Durum seçiniz" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Taslak</SelectItem>
+                    <SelectItem value="publish">Yayınla</SelectItem>
+                    <SelectItem value="private">Özel</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="tags">Etiketler</Label>
+                <Input
+                  id="tags"
+                  placeholder="Etiketleri virgül ile ayırarak giriniz"
+                  value={settings.tags}
+                  onChange={(e) => setSettings({...settings, tags: e.target.value})}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Final Action */}
       {showStep2 && (
         <Card className="border-2 border-primary">
           <CardContent className="pt-6">

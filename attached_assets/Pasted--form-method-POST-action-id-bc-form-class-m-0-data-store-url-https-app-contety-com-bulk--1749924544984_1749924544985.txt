@@ -1,0 +1,868 @@
+<form method="POST" action="" id="bc-form" class="m-0" data-store-url="https://app.contety.com/bulk-content-v2" data-request-url="https://app.contety.com/bulk-content/request" spellcheck="false">
+        <input type="hidden" name="_token" value="gflezAIcOZkzwm3mF98Pd62rxEfe59HSRKFqf1Pt" autocomplete="off">
+        <div class="card mb-5 border border-label-primary shadow-none" style="border-width: 2px !important;" id="bc-form-step-1">
+            <div class="card-header d-flex align-items-center justify-content-between pt-4 pb-1">
+                <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-layer-plus me-2"></i><span>Toplu Makale Oluştur V2</span></h5>
+
+                <div class="p-0 m-0 d-flex flex-row align-content-center">
+                    <button type="button" class="btn btn-sm bg-label-secondary border-0 fw-medium me-2" title="Bilgilendirme" data-bs-toggle="modal" data-bs-target="#generate-title-modal"><i class="bx bx-info-circle fs-5 text-s me-1"></i> Bilgilendirme</button>
+                </div>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="d-flex flex-column flex-md-row">
+    <div class="w-100 w-md-40 w-lg-30 w-xxl-25 pe-0 me-0 pe-md-5 me-md-5 border-end">
+        <div class="form-check mb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="1" id="generateType1" data-target="#keywordContainer" data-btn-id="bcr-create-btn" checked="">
+            <label class="form-check-label" for="generateType1">
+                <span class="fw-bold">Anahtar Kelime</span>
+                <small class="d-block">Girilen anahtar kelimelere göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom border-top border-dashed border-start-0 border-end-0 py-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="2" id="generateType2" data-target="#websiteContainer" data-btn-id="bcr-create-btn">
+            <label class="form-check-label" for="generateType2">
+                <span class="fw-bold">Web Siteniz</span>
+                <small class="d-block">Kayıtlı web sitelerinize göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom  border-dashed border-start-0 border-end-0 border-top-0 pb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="3" id="generateType3" data-target="#competitorContainer" data-btn-id="bcr-create-btn">
+            <label class="form-check-label" for="generateType3">
+                <span class="fw-bold">Rakip Siteler</span>
+                <small class="d-block">Rakip sitelerin içeriklerine göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom  border-dashed border-start-0 border-end-0 border-top-0 pb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="4" id="generateType4" data-target="#manualTitleContainer" data-btn-id="bcr-create-btn">
+            <label class="form-check-label" for="generateType4">
+                <span class="fw-bold">Başlıkları Kendim Gireceğim</span>
+                <small class="d-block">Başlıkları kendiniz yazabilir veya kopyala/yapıştır yapabilirsiniz</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-4">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="excel" id="generateTypeExcel" data-target="#excelUploadContainer" data-btn-id="bcr-create-btn">
+            <label class="form-check-label" for="generateTypeExcel">
+                <span class="fw-bold">Excel Dosyası Yükleyeceğim</span>
+                <small class="d-block">Başlık ve alt başlıkları Excel dosyası olarak yükleyebilirsiniz</small>
+            </label>
+        </div>
+    </div>
+
+    <div class="w-100 w-md-60 w-lg-70 w-xxl-75 mt-4 mt-md-0">
+        
+        
+        <div class="position-relative mb-4">
+            <label class="form-label" for="language_id">
+    Dil </label>
+<select class="select2 form-select select2-hidden-accessible" name="language_id" id="language_id" data-show-html="1" data-is-lang="1" data-placeholder="Lütfen bir dil seçiniz" data-allow-clear="false" data-select2-id="language_id" tabindex="-1" aria-hidden="true"><option value="1" data-select2-id="2">Türkçe</option><option value="2" data-select2-id="3">İngilizce</option><option value="5" data-select2-id="4">Almanca</option><option value="31" data-select2-id="5">Arnavutça</option><option value="39" data-select2-id="6">Azerice</option><option value="33" data-select2-id="7">Boşnakça</option><option value="18" data-select2-id="8">Bulgarca</option><option value="13" data-select2-id="9">Çekçe</option><option value="8" data-select2-id="10">Danca</option><option value="41" data-select2-id="11">Endonezce</option><option value="21" data-select2-id="12">Estonca</option><option value="10" data-select2-id="13">Felemenkçe</option><option value="9" data-select2-id="14">Fince</option><option value="3" data-select2-id="15">Fransızca</option><option value="28" data-select2-id="16">Hırvatça</option><option value="6" data-select2-id="17">İspanyolca</option><option value="12" data-select2-id="18">İsveççe</option><option value="7" data-select2-id="19">İtalyanca</option><option value="40" data-select2-id="20">Katalanca</option><option value="11" data-select2-id="21">Lehçe</option><option value="25" data-select2-id="22">Letonca</option><option value="24" data-select2-id="23">Litvanca</option><option value="16" data-select2-id="24">Macarca</option><option value="30" data-select2-id="25">Makedonca</option><option value="14" data-select2-id="26">Norveççe</option><option value="26" data-select2-id="27">Portekizce</option><option value="17" data-select2-id="28">Rumence</option><option value="22" data-select2-id="29">Rusça</option><option value="29" data-select2-id="30">Sırpça</option><option value="19" data-select2-id="31">Slovakça</option><option value="20" data-select2-id="32">Slovence</option><option value="48" data-select2-id="33">Tayca</option><option value="47" data-select2-id="34">Vietnamca</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 586.75px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-language_id-container"><span class="select2-selection__rendered" id="select2-language_id-container" role="textbox" aria-readonly="true" title="Türkçe"><span><img src="//static.contety.com/img/flags/4x3/tr.svg" width="16" loading="lazy" class="align-baseline">&nbsp;&nbsp;Türkçe</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+        </div>
+
+        <div>
+            <div class="bct-cont mb-4 d-none" id="keywordContainer" role="tabpanel">
+                <div class="mb-4">
+                    <label class="form-label" for="tagifyKeywords">
+    Anahtar Kelimeler </label>
+                    <tags class="tagify form-control tagify--noTags tagify--empty" tabindex="-1">
+            <span contenteditable="" tabindex="0" data-placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" aria-placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false"></span>
+                &ZeroWidthSpace;
+        </tags><input name="keywords" class="form-control" type="text" id="tagifyKeywords" placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" maxlength="500" tabindex="-1">
+                </div>
+
+                <div class="row">                    <div class="col-12 mb-4">
+                        <div class="form-check custom-option custom-option-basic checked">
+                            <label class="form-check-label custom-option-content" for="keywordType1">
+                                <input name="keyword_type" class="form-check-input" type="radio" value="1" id="keywordType1" checked="">
+                                <span class="custom-option-header"><span class="h6 mb-0">Anahtar kelimeler beraber değerlendirilsin</span></span>
+                                <span class="custom-option-body"><small>Anahtar kelimelerin hepsini kapsayacak başlıklar oluşturulur</small></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check custom-option custom-option-basic">
+                            <label class="form-check-label custom-option-content" for="keywordType2">
+                                <input name="keyword_type" class="form-check-input" type="radio" value="2" id="keywordType2">
+                                <span class="custom-option-header"><span class="h6 mb-0">Anahtar kelimeler ayrı ayrı değerlendirilsin</span></span>
+                                <span class="custom-option-body"><small>Anahtar kelimeler birbirinden bağımsız değerlendirilerek başlıklar oluşturulur</small></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none position-relative" id="websiteContainer" role="tabpanel">
+                <label class="form-label" for="user_website_s">
+    Web Siteniz </label>
+                <select class="select2 form-select select2-hidden-accessible" name="website_id" id="user_website_s" data-placeholder="Lütfen bir web sitesi seçiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="user_website_s" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="36"></option><option value="8180">https://akyurtnakliyat.org.tr</option><option value="8178">https://ankaracagrinakliyat.com</option><option value="400">https://ankaraozpolatnakliyat.com</option><option value="8167">https://boztasnakliyat.com.tr</option><option value="2040">https://elisamnakliyat.com</option><option value="8174">https://evtasimafirmasi.com</option><option value="8147">https://harekuafor.com.tr</option><option value="2">https://ozpolatnakliyat.com</option><option value="33">https://ozpolatnakliyat.com.tr</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="35" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-user_website_s-container"><span class="select2-selection__rendered" id="select2-user_website_s-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <div class="form-text text-body">- Bu seçenek <u>sadece WordPress sistemler</u> için çalışmaktadır.</div>
+                <div class="form-text text-body">- <a href="https://app.contety.com/account/website" title="Web Sitelerim" class="fw-medium">Web Sitelerim</a> bölümünden yeni bir site ekleyebilirsiniz.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="competitorContainer" role="tabpanel">
+                <label class="form-label" for="competitor_url">
+    Rakip Site URL Adresi </label>
+                <input name="competitor_url" class="form-control" type="text" id="competitor_url" placeholder="https://www.ornek-domain.com şeklinde giriniz">
+                <div class="form-text text-body">- Bu seçenek <u>sadece WordPress sistemler</u> için çalışmaktadır.</div>
+                <div class="form-text text-body">- WordPress harici sistemler için hata mesajı görüntülenecektir.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="manualTitleContainer" role="tabpanel">
+                <label class="form-label" for="custom_title">
+    Makale Başlıkları </label>
+                <textarea name="custom_title" class="form-control auto-size" id="custom_title" rows="10" placeholder="Lütfen her satıra sadece 1 adet başlık yazınız" spellcheck="false" style="overflow-x: hidden; overflow-wrap: break-word;"></textarea>
+                <div class="form-text text-body">* Lütfen <u>her satıra sadece 1 adet başlık</u> yazınız.</div>
+                <div class="form-text text-body">* En fazla 40 adet başlık girebilirsiniz.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-block" id="excelUploadContainer" role="tabpanel">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <label for="excel-file" class="form-label">Excel Dosyası</label>
+                        <input class="form-control" type="file" id="excel-file" name="excel_file" accept=".xlxs,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <div class="form-text text-body pb-0">
+                           <ul class="ps-3">
+                               <li>Örnek Excel dosyasını <a href="//static.contety.com/help/file/contety-ornek-toplu-makale-v2-excel-2.xlsx" class="fw-medium text-decoration-underline" target="_blank" title="Örnek Excel dosyasını indirin">buradan</a> indirebilirsiniz. Lütfen dosya hakkındaki <span class="text-danger cursor-pointer fw-medium text-decoration-underline" title="Excel Dosyası Özellikleri" data-bs-toggle="modal" data-bs-target="#excel-help-modal">gereksinimleri</span> dikkatlice okuduğunuzdan emin olunuz.</li>
+                           </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 text-black fw-medium">
+                        <i class="bx bx-down-arrow-alt"></i><i class="bx bx-down-arrow-alt"></i> Lütfen aşağıdaki formdan makale özelliklerini seçiniz.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+                            <div class="d-flex flex-row justify-content-start d-none" id="bcr-create-btn-cont">
+                    <div class="input-group w-auto">
+                        <input type="number" class="form-control w-px-75" name="title_count" id="bulk_title_count" placeholder="Adet" min="1" max="40" value="10">
+                        <button class="btn btn ib-spn-btnv2 btn-primary fw-medium d-none" type="button" id="bcr-create-btn" data-type="content-v2">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Dosyayı Yükle</span>
+</button>
+                    </div>
+                </div>
+                    </div>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 none-excel d-block d-none" style="border-width: 2px !important;">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-heading me-2"></i><span>Makale Başlıkları</span></h5>
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-info d-flex flex-row align-items-center mt-2">
+                    <i class="bx bx-info-circle me-2 fs-4"></i><div>Lütfen makale başlıkları, odak anahtar kelimeler ve resim anahtar kelimelerini kontrol ederek gerekli gördüğünüz düzenlemeleri yapmayı unutmayın.</div>
+                </div>
+
+                <table class="table table-borderless mb-4">
+                    <thead>
+                    <tr>
+                        <th class="td-buticont w-70 ps-0 fs-6">Makale Başlığı</th>
+                        <th class="td-bufkcont ps-2 fs-6">Odak Anahtar Kelime ve Diğer Anahtar Kelimeler<i class="bx bx-help-circle text-muted fs-6 ms-1" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-1'>- Kullanmak istediğiniz anahtar kelimeleri virgül ile ayırınız.</div><div class='mb-1'>- İlk anahtar kelime odak anahtar kelime olarak kabul edilecektir.</div><div class='mb-1'>- Arama ikonunu kullanarak ek anahtar kelimeler oluşturabilirsiniz.</div><div class='mb-1'>- Daha kaliteli sonuç için 3-4 adetten fazla anahtar kelime kullanmamanızı <strong><u>tavsiye ederiz</u></strong>.</div></div>"></i></th>
+                        <th class="td-buimcont d-none ps-2 fs-6">Resim Anahtar Kelimesi <i class="bx bx-help-circle text-muted fs-6 ms-1" id="bulk-content-image-icon-helper" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="Lütfen <strong><u>İngilizce</u></strong> bir resim anahtar kelimesi yazınız"></i></th>
+                        <th class="w-px-30"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="bc-titles-cont"> </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 d-block" style="border-width: 2px !important;" data-select2-id="113">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-cog me-2"></i><span>Genel Ayarlar</span></h5>
+    </div>
+
+    <div class="card-body" data-select2-id="112">
+        <div class="row" data-select2-id="111">
+            <div class="col-md-6 col-lg-4 position-relative mb-4" data-select2-id="110">
+                <label class="form-label" for="chatgpt_version">
+    Yapay Zeka Modeli </label>
+
+<select class="select2 form-select text-white select2-hidden-accessible" name="chatgpt_version" id="chatgpt_version" data-show-html="1" data-placeholder="Lütfen bir yapay zeka modeli seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="chatgpt_version" tabindex="-1" aria-hidden="true">
+    <option value="" data-select2-id="114"></option>
+
+    <optgroup label="OpenAI" data-select2-id="115">
+    <option value="gpt4o_mini" selected="" title="GPT-4o mini" data-select2-id="38">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="gpt4_1_nano" title="GPT-4.1 nano" data-select2-id="116">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 nano&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1_mini" title="GPT-4.1 mini" data-select2-id="117">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 2 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1" title="GPT-4.1" data-select2-id="118">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4o" title="GPT-4o" data-select2-id="119">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o4_mini" title="OpenAI o4-mini" data-select2-id="120">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o4-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o3_mini" title="OpenAI o3-mini" data-select2-id="121">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o3-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    <option value="chatgpt3.5_turbo" title="GPT-3.5 Turbo" data-select2-id="122">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-3.5 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="chatgpt4_turbo" title="GPT-4 Turbo" data-select2-id="123">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 10 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+
+    <optgroup label="Google Gemini" data-select2-id="124">
+    
+            <option value="gemini_2.0_flash" title="Gemini 2.0 Flash" data-select2-id="125">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 2.0 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gemini_1.5_flash" title="Gemini 1.5 Flash" data-select2-id="126">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    
+            <option value="gemini_1.5_pro" title="Gemini 1.5 Pro" data-select2-id="127">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Pro&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+</select><span class="select2 select2-container select2-container--default select2-container--below" dir="ltr" data-select2-id="37" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-chatgpt_version-container"><span class="select2-selection__rendered" id="select2-chatgpt_version-container" role="textbox" aria-readonly="true" title="GPT-4o mini">
+        <div class="d-flex flex-row justify-content-between align-items-center"><div>GPT-4o mini</div><div class="badge bg-label-primary fs085">1 kelime: 1 kredi</div></div>
+    </span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4 none-excel d-none">
+                <label class="form-label" for="section_length">
+    Bölüm Uzunluğu <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Bölüm Uzunluğu:</strong> Her bir H2 alt başlık altındaki bölümün ortalama kelime sayısını belirtir. Listedeki değerler ortalama değerler olup bu değerlerden <strong>daha kısa veya daha uzun metinler de oluşabilir</strong>.</div><div class='mb-2'>1. Makale konusu <br> 2. Makale dili <br> 3. GPT versiyonuna göre bölümlerdeki kelime sayılarında farklılıklar görülebilir</div><div class='mb-2'><strong class='text-danger'>Uyarı: </strong> Lütfen <strong>çok uzun</strong> seçeneğini kullanırken dikkatli olunuz. Yanlış kullanılması çok uzun makalelerin oluşturulmasına ve bu da çok fazla kredinizin harcanmasına sebep olabilir.</div></div>"></i> </label>
+                <select class="select2 form-select select2-hidden-accessible" name="section_length" id="section_length" data-placeholder="Lütfen bir bölüm uzunluğu seçiniz" data-allow-clear="false" data-show-html="1" data-minimum-results-for-search="Infinity" data-select2-id="section_length" tabindex="-1" aria-hidden="true"><option value="s" selected="selected" data-select2-id="40">Kısa &lt;small class="ms-2"&gt;[100-200 kelime]&lt;/small&gt;</option><option value="m">Orta &lt;small class="ms-2"&gt;[150-300 kelime]&lt;/small&gt;</option><option value="l">Uzun &lt;small class="ms-2"&gt;[200-400 kelime]&lt;/small&gt;</option><option value="xl">Çok Uzun &lt;small class="ms-2"&gt;[400-800 kelime]&lt;/small&gt;</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="39" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-section_length-container"><span class="select2-selection__rendered" id="select2-section_length-container" role="textbox" aria-readonly="true" title="Kısa <small class=&quot;ms-2&quot;>[100-200 kelime]</small>">Kısa <small class="ms-2">[100-200 kelime]</small></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <div class="form-text text-secondary mt-1 mb-0 d-none" id="sl-xl-warning-cont"><strong class="text-danger">Uyarı: </strong> Lütfen <strong>çok uzun</strong> seçeneğini kullanırken dikkatli olunuz. Yanlış kullanılması çok uzun makalelerin oluşturulmasına ve bu da çok fazla kredinizin harcanmasına sebep olabilir.</div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4">
+                <label class="form-label" for="folder_id">
+    Klasör </label>
+<select class="select2 form-select select2-hidden-accessible" name="folder_id" id="folder_id" data-placeholder="Makaleleriniz için bir klasör seçebilirsiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="folder_id" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="42"></option><option value="11275">Akyurt Nakliyat</option><option value="11163">Ankara Özpolat</option><option value="11108">Asansörlü Nakliyat</option><option value="11259">Boztaş Nakliyat</option><option value="11054">Çağrı</option><option value="11267">Ev Taşıma Firması</option><option value="11248">Hare Kuaför</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="41" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-folder_id-container"><span class="select2-selection__rendered" id="select2-folder_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Makaleleriniz için bir klasör seçebilirsiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4 none-excel d-none">
+                <div class="position-relative">
+                    <label class="form-label" for="outline_subheading_type">
+    Alt Başlık Tipi </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="outline_subheading_type" id="outline_subheading_type" data-placeholder="Lütfen bir başlık tipi seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="outline_subheading_type" tabindex="-1" aria-hidden="true"><option value="h2" selected="selected" data-select2-id="44">H2</option><option value="h2h3">H2 + H3</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="43" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-outline_subheading_type-container"><span class="select2-selection__rendered" id="select2-outline_subheading_type-container" role="textbox" aria-readonly="true" title="H2">H2</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4 none-excel d-none">
+                <label class="form-label" for="subheading_count">
+    Alt Başlık Sayısı (H2) </label>
+                <select class="select2 form-select select2-hidden-accessible" name="subheading_count" id="subheading_count" data-placeholder="Lütfen bir alt başlık sayısı seçiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="subheading_count" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="46"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="45" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-subheading_count-container"><span class="select2-selection__rendered" id="select2-subheading_count-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir alt başlık sayısı seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4">
+                <label class="form-label" for="tone_of_voice_id">
+    Yazı Stili </label>
+<select class="select2 form-select select2-hidden-accessible" name="tone_of_voice_id" id="tone_of_voice_id" data-placeholder="Makaleniz için bir yazım tarzı seçebilirsiniz" data-allow-clear="true" data-select2-id="tone_of_voice_id" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="48"></option><option value="112">Agresif</option><option value="192">Akademik</option><option value="204">Alçakgönüllü</option><option value="30">Arkadaşça</option><option value="221">Asık Suratlı / Somurtkan</option><option value="8">Bilgilendirici</option><option value="209">Bitkin</option><option value="106">Ciddi</option><option value="111">Coşkulu</option><option value="213">Dalgın / Düşünceli</option><option value="231">Dalkavukça / Yaltakçı</option><option value="226">Dehşete Düşmüş</option><option value="237">Depresif</option><option value="220">Destekleyici</option><option value="108">Diplomatik</option><option value="38">Dramatik</option><option value="114">Dürüst / Açık Sözlü</option><option value="219">Düşmanca</option><option value="227">Düşünceli (Başkalarını Düşünen)</option><option value="228">Düşünceli (Düşünceye Dalmış)</option><option value="198">Duygusal</option><option value="7">Eğlenceli</option><option value="116">Eleştirel</option><option value="27">Empatik</option><option value="180">Endişeli</option><option value="201">Enerjik</option><option value="9">Esprili / Hazırcevap</option><option value="248">Felsefi</option><option value="205">Flörtöz</option><option value="20">Gayri resmi</option><option value="256">Gazeteci</option><option value="134">Gerçekçi</option><option value="189">Gergin</option><option value="202">Gizemli</option><option value="24">Günlük Konuşma Dili</option><option value="129">Gururlu</option><option value="263">Haber Formatı (Ekonomi Haberleri)</option><option value="261">Haber Formatı (Genel Haber)</option><option value="262">Haber Formatı (Politika Haberleri)</option><option value="264">Haber Formatı (Sansasyonel Haberler)</option><option value="265">Haber Formatı (Teknoloji Haberleri)</option><option value="238">Hayal Kırıklığına Uğramış</option><option value="184">Hayran</option><option value="123">Heyecanlı</option><option value="257">Hikaye Anlatıcı</option><option value="240">Histerik</option><option value="188">Hüsrana Uğramış</option><option value="259">Huysuz</option><option value="113">İddialı</option><option value="5">İkna Edici / İnandırıcı</option><option value="6">İlham Verici </option><option value="133">İnatçı</option><option value="110">İronik</option><option value="121">Israrcı</option><option value="122">İstekli</option><option value="16">İyimser</option><option value="217">Kafası Karışık</option><option value="135">Kaprisli</option><option value="17">Karamsar</option><option value="246">Kararsız</option><option value="128">Kasvetli</option><option value="186">Kaygısız/Gamsız</option><option value="239">Kayıtsız / Umursamaz</option><option value="118">Kendinden Emin</option><option value="252">Kendini Beğenmiş</option><option value="214">Kibar</option><option value="187">Kibirli</option><option value="236">Kıskanç</option><option value="197">Kışkırtıcı / Provakatif</option><option value="179">Kızgın</option><option value="234">Korkmuş</option><option value="216">Küçümseyici</option><option value="222">Küstah</option><option value="244">Masum</option><option value="117">Melankolik</option><option value="235">Memnun / Hoşnut</option><option value="124">Meraklı</option><option value="249">Metaforik</option><option value="243">Meydan Okuyucu</option><option value="194">Minimalist</option><option value="185">Minnettar</option><option value="31">Mizahi</option><option value="229">Monoton (Donuk / Sıkıcı)</option><option value="105">Motive Edici</option><option value="125">Mutlu</option><option value="210">Nazik</option><option value="193">Nostaljik</option><option value="130">Öfkeli</option><option value="255">Öğretici</option><option value="254">Otoriter</option><option value="258">Öznel</option><option value="250">Özür Dileyici</option><option value="212">Paniğe Kapılmış</option><option value="200">Pastoral</option><option value="253">Patronluk Taslayan</option><option value="340">Pazarlama (Dostane ve Samimi)</option><option value="341">Pazarlama (İkna Edici ve Emin)</option><option value="339">Pazarlama (Profesyonel ve Güven Verici)</option><option value="131">Pişman</option><option value="215">Pozitif</option><option value="1">Profesyonel</option><option value="260">Rahat / Relaks</option><option value="232">Rahatlatıcı</option><option value="3">Resmi</option><option value="107">Romantik</option><option value="241">Sabırsız</option><option value="178">Sakin</option><option value="109">Samimi</option><option value="225">Sarkastik / İğneleyici</option><option value="132">Şaşırmış</option><option value="218">Şaşkın</option><option value="182">Saygılı</option><option value="251">Saygısız</option><option value="196">Şefkatli</option><option value="120">Sempatik</option><option value="247">Sessiz</option><option value="191">Şiirsel</option><option value="230">Sinirli</option><option value="11">Sohbet Tarzı</option><option value="181">Sorgulayıcı</option><option value="183">Suçlayıcı</option><option value="245">Suçlu</option><option value="115">Şüpheci</option><option value="127">Tarafsız / Objektif</option><option value="199">Tartışmacı</option><option value="206">Tehditkar</option><option value="190">Teknik</option><option value="203">Temkinli</option><option value="119">Teşvik Edici</option><option value="233">Tiksindirici</option><option value="208">Toleranslı</option><option value="195">Tutkulu</option><option value="126">Umutlu</option><option value="242">Umutsuz / Çaresiz</option><option value="211">Utangaç / Mahcup</option><option value="224">Vizyoner</option><option value="2">Yaratıcı</option><option value="223">Yargılayıcı</option><option value="207">Yorgun</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="47" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-tone_of_voice_id-container"><span class="select2-selection__rendered" id="select2-tone_of_voice_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Makaleniz için bir yazım tarzı seçebilirsiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4">
+                <label class="form-label" for="point_of_view_id">
+    Anlatıcı / Bakış Açısı <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Anlatıcı veya Bakış Açısı:</strong> Bu özellik yazının hangi bakış açısı ile yazılacağını belirler. Aşağıdaki <strong><u>örnekleri</u></strong> inceleyerek farkları daha rahat anlayabilirsiniz.</div><div class='mb-3'><strong>1. Birinci Tekil Şahıs (Ben, Beni, Bana):</strong><br> E-Ticaret sektöründe başarılı bir iş kurmak için sağlam bir iş planı hazırlamanın hayati <span class='text-info'>önem taşıdığını biliyorum.</span> İlk adım olarak kapsamlı bir pazar araştırması <span class='text-info'>yapmalı</span> ve hedef müşteri kitlesini detaylıca <span class='text-info'>belirlemeliyim</span>. Bu adımın ardından iş modeli ve strateji geliştirme sürecine <span class='text-info'>geçiyorum</span>; burada belirlediğim stratejiler, işletmemin uzun vadeli başarısını <span class='text-info'>garanti altına alacak</span>.</div><div class='mb-3'><strong>2. Birinci Çoğul Şahıs (Biz, Bizi, Bize):</strong><br>E-Ticaret sektöründe başarılı bir iş kurmak için sağlam bir iş planı hazırlamanın hayati <span class='text-info'>önem taşıdığını biliyoruz</span>. İlk adım olarak kapsamlı bir pazar araştırması <span class='text-info'>yapmalı</span> ve hedef müşteri kitlesini detaylıca <span class='text-info'>belirlemeliyiz</span>. Bu adımın ardından iş modeli ve strateji geliştirme sürecine <span class='text-info'>geçiyoruz</span>; burada belirlediğimiz stratejiler, işletmemizin uzun vadeli başarısını <span class='text-info'>garanti altına alacak</span>.</div><div class='mb-3'><strong>3. İkinci Tekil Şahıs (Sen, Seni, Sana):</strong><br>E-Ticaret sektöründe başarılı bir iş kurmak için sağlam bir iş planı hazırlaman hayati <span class='text-info'>önem taşır</span>. İlk adım olarak kapsamlı bir pazar araştırması <span class='text-info'>yapmalı</span> ve hedef müşteri kitleni detaylıca <span class='text-info'>belirlemelisin</span>. Bu adımın ardından iş modeli ve strateji geliştirme sürecine <span class='text-info'>geçersin</span>; burada belirlediğin stratejiler, işletmenin uzun vadeli başarısını <span class='text-info'>garanti altına alır</span>.</div><div class='mb-3'><strong>4. Üçüncü Tekil Şahıs (O, Onu, Ona, Onlar, Onları, Onlara):</strong><br>E-Ticaret sektöründe başarılı bir iş kurmak için sağlam bir iş planı hazırlamak hayati <span class='text-info'>önem taşır</span>. İlk adım olarak kapsamlı bir pazar araştırması <span class='text-info'>yapılmalı</span> ve hedef müşteri kitlesi detaylıca <span class='text-info'>belirlenmelidir</span>. Bu adımın ardından iş modeli ve strateji geliştirme sürecine <span class='text-info'>geçilir</span>; burada belirlenen stratejiler, işletmenin uzun vadeli başarısını <span class='text-info'>garanti altına alır</span>.</div></div>"></i> </label>
+                <select class="select2 form-select select2-hidden-accessible" name="point_of_view_id" id="point_of_view_id" data-placeholder="Makaleniz için bir anlatıcı seçebilirsiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="point_of_view_id" tabindex="-1" aria-hidden="true"><option value=" " data-select2-id="50">Genel</option><option value="1">Birinci Tekil Şahıs (Ben, Beni, Bana)</option><option value="2">Birinci Çoğul Şahıs (Biz, Bizi, Bize)</option><option value="5">İkinci Tekil Şahıs (Sen, Seni, Sana)</option><option value="6">Üçüncü Tekil Şahıs (O, Onu, Ona, Onlar, Onları, Onlara)</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="49" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-point_of_view_id-container"><span class="select2-selection__rendered" id="select2-point_of_view_id-container" role="textbox" aria-readonly="true" title="Genel">Genel</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4">
+                <label class="form-label" for="blog_post_type_id">
+    Yazı Türü <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Yazı Türü:</strong> Seçilen yazı türlerine göre farklı promptlar kullanılmaktadır. Oluşturmak istediğiniz yazının türünü bu listeden seçebilirsiniz.</div><div class='mb-3'>Eğer emin değilseniz lütfen <strong>'Genel'</strong> seçeneğini seçiniz.</div><hr class='border-secondary'><div class='mb-2'><strong class='fw-medium text-info'>Bu bölüme yeni yazı türleri eklenecektir. Eklenmesini istediğiniz yazı türlerini bize bildirebilirsiniz.</strong></div></div>"></i> </label>
+                <select class="select2 form-select select2-hidden-accessible" name="blog_post_type_id" id="blog_post_type_id" data-placeholder="Makaleniz için bir yazı türü seçebilirsiniz" data-allow-clear="false" data-select2-id="blog_post_type_id" tabindex="-1" aria-hidden="true"><option value=" " data-select2-id="52">Genel</option><option value="2">İpucu, Tavsiye, Nasıl Yapılır</option><option value="1">Liste</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="51" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-blog_post_type_id-container"><span class="select2-selection__rendered" id="select2-blog_post_type_id-container" role="textbox" aria-readonly="true" title="Genel">Genel</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-6 col-lg-4 position-relative mb-4">
+                <label class="form-label" for="target_audience_id">
+    Hedef Kitle <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Hedef Kitle:</strong> Makalenizin hitap edeceği hedef kitleyi belirtir.</div><div class='mb-3'>Herhangi bir sınırlama yapmak istemiyorsanız lütfen <strong>'Genel'</strong> seçeneğini seçiniz.</div></div>"></i> </label>
+                <select class="select2 form-select select2-hidden-accessible" name="target_audience_id" id="target_audience_id" data-placeholder="Makaleniz için bir hedef kitle seçebilirsiniz" data-allow-clear="false" data-select2-id="target_audience_id" tabindex="-1" aria-hidden="true"><option value=" " data-select2-id="54">Genel</option><optgroup label="1) Demografik Gruplar"><option value="1">Çocuklar</option><option value="10">Gençler</option><option value="2">Yetişkinler</option><option value="3">Yaşlılar</option><option value="5">Erkekler</option><option value="4">Kadınlar</option><option value="47">Evliler</option><option value="48">Boşanmışlar</option><option value="52">Ebeveynler</option></optgroup><optgroup label="2) Eğitim Durumu"><option value="6">Ortaöğretim Mezunları</option><option value="7">Lise Mezunları</option><option value="8">Üniversite Mezunları</option><option value="9">Yüksek Lisans veya Doktora Mezunları</option></optgroup><optgroup label="3) Çalışma Durumu"><option value="53">Öğrenciler</option><option value="54">Girişimciler</option><option value="60">Serbest Meslek Sahipleri</option><option value="56">Mavi Yakalılar</option><option value="57">Beyaz Yakalılar</option><option value="55">Freelance Çalışanlar</option><option value="59">Emekliler</option><option value="58">İşsizler</option></optgroup><optgroup label="4) Sektörler"><option value="11">Bilgi İşlem Çalışanları (Yazılımcılar, sistem mühendisleri, network uzmanları, vb.)</option><option value="31">Bilim ve Araştırma Çalışanları (Bilim insanları, araştırmacılar, laboratuvar teknisyenleri, vb.)</option><option value="24">Eğitim Çalışanları (Öğretmenler, müdürler, eğitmenler, vb.) &nbsp;</option><option value="34">Emlak ve Gayrimenkul Çalışanları (Emlakçılar, gayrimenkul yöneticileri, vb.)</option><option value="41">Enerji Sektörü Çalışanları</option><option value="15">Finans Çalışanları (Bankacılar, muhasebeciler, yatırım danışmanları, vb.)</option><option value="46">Güvenlik ve Savunma Sektörü Çalışanları (Güvenlik görevlileri, özel dedektifler, güvenlik danışmanları, vb.)
+
+</option><option value="40">Havacılık Sektörü Çalışanları (Pilotlar, ucuş görevlileri, hava trafik kontrol görevlileri, vb.)</option><option value="14">Hukuk Çalışanları (Avukatlar, hakimler, savcılar, vs.)</option><option value="18">İnşaat ve Yapı Sektörü Çalışanları (Mimarlar, proje yönetecileri, ustalar, vb.)</option><option value="30">İnsan Kaynakları Çalışanları (İK uzmanları, eğitim uzmanları, yetenek ve kariyer yöneticileri, vb.)</option><option value="28">Konaklama Sektörü Çalışanları (Otel müdürleri, etklinlik yöneticileri, şefler, vb.)</option><option value="23">Lojistik Çalışanları (Lojistik yöneticileri, tedatik zinciri sorumluları, depo müdürleri,vb.)</option><option value="32">Medya Sektörü Çalışanları (Gazeteciler, yayıncılar, editörler, vb.)</option><option value="45">Moda Sektörü Çalışanları (Moda tasarımcıları, modeller, kostüm tasarımcıları, vb.)</option><option value="16">Mühendislik Çalışanları (Makina mühendisleri, endüstri mühendisleri, vb.)</option><option value="25">Pazarlama ve Satış Sektörü Çalışanları (Pazarlama uzamanları, reklamcılar, halka ilişkiler uzmanları, vb.)</option><option value="29">Perakende ve Satış Çalışanları (Mağaza müdürleri, satış görevlileri, tüccarlar, vb.)</option><option value="13">Sağlık ve Tıp Çalışanları (Doktorlar, hemşireler, eczacılar, vb.)</option><option value="33">Sanat ve Eğlence Sektörü Çalışanları (Aktörler, müzisyenler, yapımcılar, vb.)</option><option value="44">Sporcular ve Spor Sektörü Çalışanları (Sporcular, antrenörler, fitness eğitmenleri, vb.)</option><option value="38">Tarım ve Çiftçilik Çalışanları</option><option value="27">Taşımacılık Sektörü Çalışanları (Sürücüler, pilotlar, vb.)</option><option value="43">Telekomünikasyon Sektörü Çalışanları</option><option value="17">Üretim ve İmalat Sektörü Çalışanları (Ürün yöneticileri, kalite kontrol uzmanları, fabrika işçileri, vb.)</option><option value="39">Ustalar ve Meslek Erbabı (Elektrikçi, tesisatçı, marangoz, vb.)</option></optgroup><optgroup label="5) İlgi Alanları"><option value="81">Açık Hava ve Doğa Meraklıları</option><option value="67">Araba Tutkunları</option><option value="68">Basketbol Severler</option><option value="74">Bilgisayar Oyunu Meraklıları</option><option value="85">Estetik ve Güzellik Meraklıları</option><option value="62">Ev Dekorasyonu Meraklıları</option><option value="78">Fitness Tutkunları</option><option value="79">Fotoğraf Meraklıları</option><option value="69">Futbol Severler</option><option value="63">Gezi ve Seyahat Tutkunları</option><option value="83">Hayvan Severler</option><option value="72">Koleksiyonerler</option><option value="73">Macera Tutkunları</option><option value="77">Moda Meraklıları</option><option value="80">Müzik Severler</option><option value="75">Sinema Tutkunları</option><option value="71">Spor Severler</option><option value="65">Teknoloji Meraklıları</option><option value="70">Voleybol Severler</option><option value="76">Yiyecek &amp; İçecek Tutkunları</option></optgroup><optgroup label="6) Gelir Seviyesi"><option value="49">Düşük Gelirliler</option><option value="50">Orta Gelirliler</option><option value="51">Yüksek Gelirliler</option></optgroup><optgroup label="7) Diğer"><option value="66">Online Alışveriş Yapanlar</option><option value="84">Online Eğitim ve Kurs Alanlar</option><option value="64">Sosyal Medya Kullanıcıları</option><option value="61">Üst Düzey Yöneticiler</option></optgroup></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="53" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-target_audience_id-container"><span class="select2-selection__rendered" id="select2-target_audience_id-container" role="textbox" aria-readonly="true" title="Genel">Genel</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="d-flex flex-row align-items-center justify-content-between mt-n4 mb-4 bc-form-step-2 d-block">
+            <div class="d-flex flex-row align-items-center flex-wrap" id="wp-v2-user-template-cont"></div>
+            <button type="button" class="btn btn-sm btn-outline-facebook wp-v2-user-template-save" data-target-form="#bc-form">ayarları kaydet <i class="bx bx-help-circle ms-2" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Formdaki bilgileri kaydederek daha sonraki kullanımlarınızda tek tık ile tüm formu doldurabilirsiniz"></i></button>
+        </div>
+
+                    <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 d-block" style="border-width: 2px !important;">
+    <div class="c-ribbon c-ribbon-success">Yeni</div>
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-time me-2"></i><span>Güncel Bilgiler</span></h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 position-relative mb-4">
+                <label class="form-label" for="ws_access">
+    Güncel Bilgiler </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_access" id="ws_access" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_access" tabindex="-1" aria-hidden="true"><option value="1">Evet (Ekstra Kredi)</option><option value="0" selected="selected" data-select2-id="56">Hayır</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="55" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_access-container"><span class="select2-selection__rendered" id="select2-ws_access-container" role="textbox" aria-readonly="true" title="Hayır">Hayır</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-8 mb-4 d-flex align-items-end">
+                Bu özelliği etkinleştirdiğinizde içerik oluşturulurken önce webde güncel bilgiler aranır, sonra doğrulanan veriler toplanır ve bu bilgiler kullanılarak içerik üretilir. Bu sayede oluşturulan içerikler en yeni ve doğru bilgileri içerir.
+            </div>
+        </div>
+
+        <div id="ws-details-cont" class="row d-none">
+            <div>
+                <div class="alert alert-primary d-flex align-items-center gap-1 mb-4" role="alert">
+                    <i class="icon-base bx bxs-alarm-exclamation fs-2 me-2"></i>
+
+                    <div>
+                        <strong>Fiyatlandırma:</strong> Güncel bilgiler özelliğini kullanmak ekstra kredi gerektirir. İçerik oluştururken kullanılan kredi miktarının <strong>4 katı ek kredi</strong> harcanır. Oluşturulan içeriğin kelime sayısı 1000'den az olsa bile en az 1000 kelime üzerinden hesaplama yapılır. <span class="cursor-pointer text-danger text-underline" data-bs-toggle="modal" data-bs-target="#web-search-info-modal">Örnekler &amp; Detaylar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4">
+                <label class="form-label" for="ws_search_source">
+    Arama Kaynağı <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'>Güncel bilgilerin elde edileceği kaynağı belirtir.</div><div class='mb-3'>Girmiş olduğunuz sorguyu kullanarak Google Search veya Google News'te arama yapar ve sonuçlardaki siteleri analiz ederek güncel bilgileri alır.</div><div class='mb-3'>İsterseniz güncel bilgilerin elde edileceği kaynakları siz kendiniz de girebilirsiniz.</div></div>"></i> </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_search_source" id="ws_search_source" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_search_source" tabindex="-1" aria-hidden="true"><option value="web" selected="selected" data-select2-id="58">Google Organik Arama</option><option value="news">Google News</option><option value="custom">Kendi Linklerimi Gireceğim</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="57" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_search_source-container"><span class="select2-selection__rendered" id="select2-ws_search_source-container" role="textbox" aria-readonly="true" title="Google Organik Arama">Google Organik Arama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-8 position-relative mb-4 ws-non-custom">
+                <label class="form-label" for="ws_search_query_type">
+    Arama Sorgusu </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_search_query_type" id="ws_search_query_type" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_search_query_type" tabindex="-1" aria-hidden="true"><option value="focus_keyword" data-select2-id="60">Odak anahtar kelime kullanılsın</option><option value="title">Makale başlığı kullanılsın</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="59" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_search_query_type-container"><span class="select2-selection__rendered" id="select2-ws_search_query_type-container" role="textbox" aria-readonly="true" title="Odak anahtar kelime kullanılsın">Odak anahtar kelime kullanılsın</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                            </div>
+
+            <div class="col-md-4 position-relative mb-4 ws-non-custom">
+                <label class="form-label" for="ws_search_country">
+    Arama Yapılacak Ülke </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_search_country" id="ws_search_country" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-select2-id="ws_search_country" tabindex="-1" aria-hidden="true"><option value="vi">ABD Virjin Adaları</option><option value="af">Afganistan</option><option value="de">Almanya</option><option value="us">Amerika Birleşik Devletleri</option><option value="um">Amerika Küçük Harici Adaları</option><option value="as">Amerikan Samoası</option><option value="ad">Andorra</option><option value="ao">Angola</option><option value="ai">Anguilla</option><option value="aq">Antarktika</option><option value="ag">Antigua ve Barbuda</option><option value="ar">Arjantin</option><option value="al">Arnavutluk</option><option value="aw">Aruba</option><option value="au">Avustralya</option><option value="at">Avusturya</option><option value="az">Azerbaycan</option><option value="bs">Bahamalar</option><option value="bh">Bahreyn</option><option value="bd">Bangladeş</option><option value="bb">Barbados</option><option value="eh">Batı Sahra</option><option value="by">Belarus</option><option value="be">Belçika</option><option value="bz">Belize</option><option value="bj">Benin</option><option value="bm">Bermuda</option><option value="ae">Birleşik Arap Emirlikleri</option><option value="gb">Birleşik Krallık</option><option value="bo">Bolivya</option><option value="ba">Bosna Hersek</option><option value="bw">Botsvana</option><option value="bv">Bouvet Adası</option><option value="br">Brezilya</option><option value="io">Britanya Hint Okyanusu Toprakları</option><option value="vg">Britanya Virjin Adaları</option><option value="bn">Brunei</option><option value="bg">Bulgaristan</option><option value="bf">Burkina Faso</option><option value="bi">Burundi</option><option value="bt">Butan</option><option value="cv">Cabo Verde</option><option value="td">Çad</option><option value="ky">Cayman Adaları</option><option value="gi">Cebelitarık</option><option value="cz">Çek Cumhuriyeti</option><option value="dz">Cezayir</option><option value="cx">Christmas Adası</option><option value="dj">Cibuti</option><option value="cn">Çin</option><option value="cc">Cocos (Keeling) Adaları</option><option value="ck">Cook Adaları</option><option value="dk">Danimarka</option><option value="do">Dominik Cumhuriyeti</option><option value="dm">Dominika</option><option value="ec">Ekvador</option><option value="gq">Ekvator Ginesi</option><option value="sv">El Salvador</option><option value="id">Endonezya</option><option value="er">Eritre</option><option value="am">Ermenistan</option><option value="ee">Estonya</option><option value="sz">Esvatini (Svaziland)</option><option value="et">Etiyopya</option><option value="fk">Falkland Adaları (Malvinas Adaları)</option><option value="fo">Faroe Adaları</option><option value="ma">Fas</option><option value="fj">Fiji</option><option value="ci">Fildişi Sahili (Côte d'Ivoire)</option><option value="ph">Filipinler</option><option value="ps">Filistin</option><option value="fi">Finlandiya</option><option value="fr">Fransa</option><option value="tf">Fransız Güney Toprakları</option><option value="gf">Fransız Guyanası</option><option value="pf">Fransız Polinezyası</option><option value="ga">Gabon</option><option value="gm">Gambiya</option><option value="gh">Gana</option><option value="gn">Gine</option><option value="gw">Gine-Bissau</option><option value="gd">Grenada</option><option value="gl">Grönland</option><option value="gp">Guadeloupe</option><option value="gu">Guam</option><option value="gt">Guatemala</option><option value="za">Güney Afrika</option><option value="gs">Güney Georgia ve Güney Sandwich Adaları</option><option value="kr">Güney Kore</option><option value="ge">Gürcistan</option><option value="gy">Guyana</option><option value="ht">Haiti</option><option value="hm">Heard Adası ve McDonald Adaları</option><option value="in">Hindistan</option><option value="hr">Hırvatistan</option><option value="nl">Hollanda</option><option value="hn">Honduras</option><option value="hk">Hong Kong</option><option value="iq">Irak</option><option value="ir">İran</option><option value="ie">İrlanda</option><option value="es">İspanya</option><option value="il">İsrail</option><option value="se">İsveç</option><option value="ch">İsviçre</option><option value="it">İtalya</option><option value="is">İzlanda</option><option value="jm">Jamaika</option><option value="jp">Japonya</option><option value="kh">Kamboçya</option><option value="cm">Kamerun</option><option value="ca">Kanada</option><option value="qa">Katar</option><option value="kz">Kazakistan</option><option value="ke">Kenya</option><option value="cy">Kıbrıs</option><option value="kg">Kırgızistan</option><option value="ki">Kiribati</option><option value="co">Kolombiya</option><option value="km">Komorlar</option><option value="cg">Kongo</option><option value="cd">Kongo Demokratik Cumhuriyeti</option><option value="cr">Kosta Rika</option><option value="cu">Küba</option><option value="kw">Kuveyt</option><option value="kp">Kuzey Kore</option><option value="mk">Kuzey Makedonya</option><option value="mp">Kuzey Mariana Adaları</option><option value="la">Laos</option><option value="ls">Lesotho</option><option value="lv">Letonya</option><option value="lr">Liberya</option><option value="ly">Libya</option><option value="li">Liechtenstein (Lihtenştayn)</option><option value="lt">Litvanya</option><option value="lb">Lübnan</option><option value="lu">Lüksemburg</option><option value="hu">Macaristan</option><option value="mg">Madagaskar</option><option value="mo">Makao</option><option value="mw">Malavi</option><option value="mv">Maldivler</option><option value="my">Malezya</option><option value="ml">Mali</option><option value="mt">Malta</option><option value="mh">Marshall Adaları</option><option value="mq">Martinik</option><option value="mu">Mauritius</option><option value="yt">Mayotte</option><option value="mx">Meksika</option><option value="fm">Mikronezya</option><option value="eg">Mısır</option><option value="mn">Moğolistan</option><option value="md">Moldova</option><option value="mc">Monako</option><option value="ms">Montserrat</option><option value="mr">Moritanya</option><option value="mz">Mozambik</option><option value="mm">Myanmar</option><option value="na">Namibya</option><option value="nr">Nauru</option><option value="np">Nepal</option><option value="ne">Nijer</option><option value="ng">Nijerya</option><option value="ni">Nikaragua</option><option value="nu">Niue</option><option value="nf">Norfolk Adası</option><option value="no">Norveç</option><option value="cf">Orta Afrika Cumhuriyeti</option><option value="uz">Özbekistan</option><option value="pk">Pakistan</option><option value="pw">Palau</option><option value="pa">Panama</option><option value="pg">Papua Yeni Gine</option><option value="py">Paraguay</option><option value="pe">Peru</option><option value="pn">Pitcairn Adaları</option><option value="pl">Polonya</option><option value="pt">Portekiz</option><option value="pr">Porto Riko</option><option value="re">Reunion</option><option value="ro">Romanya</option><option value="rw">Ruanda</option><option value="ru">Rusya</option><option value="sh">Saint Helena</option><option value="kn">Saint Kitts ve Nevis</option><option value="lc">Saint Lucia</option><option value="pm">Saint Pierre ve Miquelon</option><option value="vc">Saint Vincent ve Grenadinler</option><option value="ws">Samoa</option><option value="sm">San Marino</option><option value="st">Sao Tome ve Principe</option><option value="sn">Senegal</option><option value="sc">Seyşeller</option><option value="sl">Sierra Leone</option><option value="cl">Şili</option><option value="sg">Singapur</option><option value="rs">Sırbistan</option><option value="sk">Slovakya</option><option value="si">Slovenya</option><option value="sb">Solomon Adaları</option><option value="so">Somali</option><option value="lk">Sri Lanka</option><option value="sd">Sudan</option><option value="sr">Surinam</option><option value="sy">Suriye</option><option value="sa">Suudi Arabistan</option><option value="sj">Svalbard ve Jan Mayen</option><option value="tj">Tacikistan</option><option value="tz">Tanzanya</option><option value="th">Tayland</option><option value="tw">Tayvan</option><option value="tg">Togo</option><option value="tk">Tokelau</option><option value="to">Tonga</option><option value="tt">Trinidad ve Tobago</option><option value="tn">Tunus</option><option value="tr" selected="selected" data-select2-id="62">Türkiye</option><option value="tm">Türkmenistan</option><option value="tc">Turks ve Caicos Adaları</option><option value="tv">Tuvalu</option><option value="ug">Uganda</option><option value="ua">Ukrayna</option><option value="om">Umman</option><option value="jo">Ürdün</option><option value="uy">Uruguay</option><option value="vu">Vanuatu</option><option value="va">Vatikan</option><option value="ve">Venezuela</option><option value="vn">Vietnam</option><option value="wf">Wallis ve Futuna Adaları</option><option value="ye">Yemen</option><option value="nc">Yeni Kaledonya</option><option value="nz">Yeni Zelanda</option><option value="gr">Yunanistan</option><option value="zm">Zambiya</option><option value="zw">Zimbabve</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="61" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_search_country-container"><span class="select2-selection__rendered" id="select2-ws_search_country-container" role="textbox" aria-readonly="true" title="Türkiye">Türkiye</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4 ws-non-custom">
+                <label class="form-label" for="ws_search_language">
+    Arama Dili </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_search_language" id="ws_search_language" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="true" data-select2-id="ws_search_language" tabindex="-1" aria-hidden="true"><option value="af">Afrikaan Dili</option><option value="de">Almanca</option><option value="sq">Arnavutça</option><option value="az">Azerice</option><option value="bs">Boşnakça</option><option value="bg">Bulgarca</option><option value="cs">Çekçe</option><option value="da">Danca</option><option value="id">Endonezce</option><option value="et">Estonca</option><option value="nl">Felemenkçe</option><option value="fi">Fince</option><option value="fr">Fransızca</option><option value="hr">Hırvatça</option><option value="en">İngilizce</option><option value="es">İspanyolca</option><option value="sv">İsveççe</option><option value="it">İtalyanca</option><option value="ca">Katalanca</option><option value="ku">Kürtçe</option><option value="pl">Lehçe</option><option value="lv">Letonca</option><option value="lt">Litvanca</option><option value="hu">Macarca</option><option value="mk">Makedonca</option><option value="no">Norveççe</option><option value="pt">Portekizce</option><option value="ro">Rumence</option><option value="ru">Rusça</option><option value="sr">Sırpça</option><option value="sk">Slovakça</option><option value="sl">Slovence</option><option value="th">Tay Dili</option><option value="tr" selected="selected" data-select2-id="64">Türkçe</option><option value="tk">Türkmence</option><option value="vi">Vietnamca</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="63" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_search_language-container"><span class="select2-selection__rendered" id="select2-ws_search_language-container" role="textbox" aria-readonly="true" title="Türkçe"><span class="select2-selection__clear" title="Tüm öğeleri kaldır" data-select2-id="65">×</span>Türkçe</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4 ws-non-custom">
+                <label class="form-label" for="ws_source_date">
+    Arama Tarihi </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_source_date" id="ws_source_date" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_source_date" tabindex="-1" aria-hidden="true"><option value="all" selected="selected" data-select2-id="67">Hepsi</option><option value="last_hour">Son 1 Saat</option><option value="last_24_hours">Son 24 Saat</option><option value="last_week">Son 1 Hafta</option><option value="last_month">Son 1 Ay</option><option value="last_year">Son 1 Yıl</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="66" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_source_date-container"><span class="select2-selection__rendered" id="select2-ws_source_date-container" role="textbox" aria-readonly="true" title="Hepsi">Hepsi</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4 ws-non-custom">
+                <label class="form-label" for="ws_excluded_url">
+    Hariç Tutulacak Linkler </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_excluded_url" id="ws_excluded_url" data-placeholder="Lütfen bir konu seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_excluded_url" tabindex="-1" aria-hidden="true"><option value="0" selected="selected" data-select2-id="69">Yok</option><option value="1">Var</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="68" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_excluded_url-container"><span class="select2-selection__rendered" id="select2-ws_excluded_url-container" role="textbox" aria-readonly="true" title="Yok">Yok</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4">
+                <label class="form-label" for="ws_source_links_display_format">
+    Linkler Makale Sonuna Eklensin mi? </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_source_links_display_format" id="ws_source_links_display_format" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_source_links_display_format" tabindex="-1" aria-hidden="true"><option value="none" selected="selected" data-select2-id="71">Eklenmesin</option><option value="url">URL</option><option value="link_name">Link Başlığı</option><option value="url_link_name">URL + Link Başlığı</option><option value="link_name_url">Link Başlığı + URL</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="70" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ws_source_links_display_format-container"><span class="select2-selection__rendered" id="select2-ws_source_links_display_format-container" role="textbox" aria-readonly="true" title="Eklenmesin">Eklenmesin</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-md-4 position-relative mb-4">
+                <label class="form-label" for="ws_source_links_rel">
+    Link Yapısı </label>
+                <select class="select2 form-select select2-hidden-accessible" name="ws_source_links_rel" id="ws_source_links_rel" disabled="" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="ws_source_links_rel" tabindex="-1" aria-hidden="true"><option value="dofollow">DoFollow</option><option value="nofollow" selected="selected" data-select2-id="73">NoFollow (Tavsiye edilir)</option></select><span class="select2 select2-container select2-container--default select2-container--disabled" dir="ltr" data-select2-id="72" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="true" aria-labelledby="select2-ws_source_links_rel-container"><span class="select2-selection__rendered" id="select2-ws_source_links_rel-container" role="textbox" aria-readonly="true" title="NoFollow (Tavsiye edilir)">NoFollow (Tavsiye edilir)</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-sm-12 position-relative ws-non-custom d-none" id="ws_excluded_urls_cont">
+                <label class="form-label" for="ws_excluded_urls">
+    Hariç Tutulacak Linkler </label>
+
+                <textarea class="form-control auto-size" name="ws_excluded_urls" id="ws_excluded_urls" placeholder="Lütfen bir satıra 1 adet URL giriniz." rows="3" spellcheck="false" style="overflow-x: hidden; overflow-wrap: break-word;"></textarea>
+
+                <ul class="form-text ps-3 text-body">
+                    <li>Lütfen her satıra <u class="text-danger">1 adet</u> link giriniz.</li>
+                    <li>Lütfen en fazla <u class="text-danger">10 adet</u> link giriniz.</li>
+                    <li><u>https://www.site-ismi.com</u> şeklinde bir link girerseniz o domaindeki tüm sayfalar hariç tutulur.</li>
+                    <li><u>https://www.site-ismi.com/iletisim</u> şeklinde bir link girerseniz sadece ilgili sayfa hariç tutulur.</li>
+                </ul>
+            </div>
+
+            <div class="col-sm-12 position-relative d-none" id="ws_custom_urls_cont">
+                <label class="form-label" for="ws_custom_urls">
+    Kendi Linklerim </label>
+
+                <textarea class="form-control auto-size" name="ws_custom_urls" id="ws_custom_urls" placeholder="Lütfen her satıra 1 adet URL yazınız." rows="3" spellcheck="false" style="overflow-x: hidden; overflow-wrap: break-word;"></textarea>
+
+                <ul class="form-text ps-3 text-body mb-4">
+                    <li>Lütfen her satıra <u class="text-danger">1 adet</u> link giriniz.</li>
+                    <li>Lütfen en fazla <u class="text-danger">5 adet</u> link giriniz.</li>
+                    <li>Bu linkler sıra ile incelenecek ve içerikleri alınabilen <u class="text-danger">ilk 3 link</u> kullanılacaktır.</li>
+                    <li>PDF, Word, Excel, JSON, XML gibi dosya linkleri kabul edilmemektedir.</li>
+                    <li>YouTube, X, Facebook, Instagram, Pinterest, TikTok gibi sosyal medya linkleri kabul edilmemektedir.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 none-excel d-block d-none" style="border-width: 2px !important;">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-image me-2"></i><span>Görsel Seçenekleri</span></h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5 col-md-3 position-relative mb-4">
+                <label class="form-label" for="bulkImages">
+    Makale Resmi </label>
+<select class="select2 form-select select2-hidden-accessible" name="image_source" id="bulkImages" data-image-source="1" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="bulkImages" tabindex="-1" aria-hidden="true"><option value="0" data-select2-id="75">Görsel istemiyorum</option><option value="1">Unsplash (Ücretsiz)</option><option value="5">Pexels (Ücretsiz)</option><option value="6">Pixabay (Ücretsiz)</option><option value="3">Google (Ücretsiz)</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="74" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-bulkImages-container"><span class="select2-selection__rendered" id="select2-bulkImages-container" role="textbox" aria-readonly="true" title="Görsel istemiyorum">Görsel istemiyorum</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+            </div>
+
+            <div class="col-sm-7 col-md-9"> </div>
+
+            <div class="col-12">
+                <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-1">
+                    <ul class="ps-3 mb-0">
+                        <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için resim anahtar kelimesi giriniz.</li>
+                        <li>Bu servis ücretsiz bir stok görsel servisidir ve her anahtar kelimeniz için görsel <span class="fw-bold text-underline">bulunamayabilir.</span></li>
+                        <li>Lütfen <span class="fw-bold text-underline text-danger">İngilizce</span> bir anahtar kelime giriniz.</li>
+                        <li>Lütfen makale başlığınızı resim anahtar kelimesi olarak <span class="fw-bold text-underline">yazmayınız</span>.</li>
+                        <li>Lütfen makalenizde görmek istediğiniz görsele dair bir anahtar kelime giriniz.</li>
+                    </ul>
+                </div>
+
+                <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-2">
+                    <ul class="ps-3 mb-0">
+                        <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için Bing Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                        <li>Bulunan resimler ile Bing Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                        <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+                    </ul>
+                </div>
+
+                <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-3">
+                    <ul class="ps-3 mb-0">
+                        <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için Google Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                        <li>Bulunan resimler ile Google Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                        <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 d-block" style="border-width: 2px !important;">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-edit me-2"></i><span>İçerik Özellikleri</span></h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input faq-cls" type="checkbox" name="faq" id="faq1" value="1">
+                        <label class="form-check-label fw-medium" for="faq1">Sıkça Sorulan Sorular (Normal)</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input faq-cls" type="checkbox" name="faq" id="faq2" value="2">
+                        <label class="form-check-label fw-medium" for="faq2">Sıkça Sorulan Sorular (Normal + Schema)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="meta_description" id="meta_description" value="1">
+                        <label class="form-check-label fw-medium" for="meta_description">Meta Açıklama</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="excerpt" id="excerpt" value="1">
+                        <label class="form-check-label fw-medium" for="excerpt">Makale Özeti</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4" id="h3-container">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="h3" id="h3" value="1">
+                        <label class="form-check-label fw-medium" for="h3">H3 Alt Başlıklar</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="table" id="table" value="1">
+                        <label class="form-check-label fw-medium" for="table">Tablo <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><strong class='text-info'>İpucu</strong>: Daha kateli sonuçlar için lütfen tablo ve liste seçeneklerini aynı anda <u>kullanmayınız.</u></div>"></i></label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="list" id="list" value="1">
+                        <label class="form-check-label fw-medium" for="list">Liste <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><strong class='text-info'>İpucu</strong>: Daha kateli sonuçlar için lütfen tablo ve liste seçeneklerini aynı anda <u>kullanmayınız.</u></div>"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="bold" id="bold" value="1" checked="">
+                        <label class="form-check-label fw-medium" for="bold">Kalın Yazılar</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="italics" id="italics" value="1">
+                        <label class="form-check-label fw-medium" for="italics">İtalik Yazılar</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="quote" id="quote" value="1">
+                        <label class="form-check-label fw-medium" for="quote">Alıntı</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="p-0 m-0 mb-3" style="border-top: 1px dashed #d9dee3;">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-0 position-relative">
+                    <label class="form-label" for="custom_html_position">
+    Özel HTML </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="custom_html_position" id="custom_html_position" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="custom_html_position" tabindex="-1" aria-hidden="true"><option value="none" selected="selected" data-select2-id="77">Eklenmesin</option><option value="start">Makalelerin En Başına</option><option value="middle">Makalelerin Ortalarına</option><option value="end">Makalelerin En Sonuna</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="76" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-custom_html_position-container"><span class="select2-selection__rendered" id="select2-custom_html_position-container" role="textbox" aria-readonly="true" title="Eklenmesin">Eklenmesin</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 custom_html_extra d-none">
+                <div class="form-check mb-0">
+                    <input class="form-check-input" type="checkbox" name="save_custom_html" id="save_custom_html" value="1">
+                    <label class="form-check-label fw-medium" for="save_custom_html">Sonraki Kullanımlar İçin Kaydet <i class="bx bxs-help-circle ms-2 text-body" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Eklediğiniz HTML kodlarını kaydederek daha sonraki makalelerinizde tek tık ile kullanabilirsiniz"></i></label>
+                </div>
+
+                <div class="mt-1">
+                    <input name="custom_html_title" class="form-control" type="text" id="custom_html_title" placeholder="HTML kodunuz için bir başlık giriniz" maxlength="255" disabled="">
+                </div>
+            </div>
+
+            <div class="col-12 custom_html_extra mt-4  d-none">
+                <div class="d-flex flex-row align-items-center flex-wrap mb-2" id="wp-v2-custom-html-cont"></div>
+                <div id="custom_html_editor" spellcheck="false" style="display: none;"></div><div class="ck ck-reset ck-editor ck-rounded-corners" role="application" dir="ltr" lang="tr" aria-labelledby="ck-editor__label_e607b6cf2828cc854c0c3e5463e877b8d"><label class="ck ck-label ck-voice-label" id="ck-editor__label_e607b6cf2828cc854c0c3e5463e877b8d">Zengin İçerik Editörü</label><div class="ck ck-editor__top ck-reset_all" role="presentation"><div class="ck ck-sticky-panel"><div class="ck ck-sticky-panel__placeholder" style="display: none;"></div><div class="ck ck-sticky-panel__content"><div class="ck ck-toolbar" role="toolbar" aria-label="Düzenleme araç çubuğu" tabindex="-1"><div class="ck ck-toolbar__items"><div class="ck ck-dropdown ck-disabled ck-heading-dropdown"><button class="ck ck-button ck-disabled ck-off ck-button_with-text ck-dropdown__button" type="button" tabindex="-1" aria-label="Başlık" data-cke-tooltip-text="Başlık" data-cke-tooltip-position="s" aria-haspopup="true" aria-expanded="false" aria-disabled="true"><span class="ck ck-button__label">Paragraf</span><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-dropdown__arrow" viewBox="0 0 10 10"><path d="M.941 4.523a.75.75 0 1 1 1.06-1.06l3.006 3.005 3.005-3.005a.75.75 0 1 1 1.06 1.06l-3.549 3.55a.75.75 0 0 1-1.168-.136L.941 4.523z"></path></svg></button><div class="ck ck-reset ck-dropdown__panel ck-dropdown__panel_se" tabindex="-1"></div></div><span class="ck ck-toolbar__separator"></span><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_e64bf8386074b50f808bcf17a8695d441" aria-pressed="false" data-cke-tooltip-text="Kalın (Ctrl+B)" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M10.187 17H5.773c-.637 0-1.092-.138-1.364-.415-.273-.277-.409-.718-.409-1.323V4.738c0-.617.14-1.062.419-1.332.279-.27.73-.406 1.354-.406h4.68c.69 0 1.288.041 1.793.124.506.083.96.242 1.36.478.341.197.644.447.906.75a3.262 3.262 0 0 1 .808 2.162c0 1.401-.722 2.426-2.167 3.075C15.05 10.175 16 11.315 16 13.01a3.756 3.756 0 0 1-2.296 3.504 6.1 6.1 0 0 1-1.517.377c-.571.073-1.238.11-2 .11zm-.217-6.217H7v4.087h3.069c1.977 0 2.965-.69 2.965-2.072 0-.707-.256-1.22-.768-1.537-.512-.319-1.277-.478-2.296-.478zM7 5.13v3.619h2.606c.729 0 1.292-.067 1.69-.2a1.6 1.6 0 0 0 .91-.765c.165-.267.247-.566.247-.897 0-.707-.26-1.176-.778-1.409-.519-.232-1.31-.348-2.375-.348H7z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_e64bf8386074b50f808bcf17a8695d441">Kalın</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ecf451b92f4b17a00baf3504f329365d6" aria-pressed="false" data-cke-tooltip-text="İtalik (Ctrl+I)" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="m9.586 14.633.021.004c-.036.335.095.655.393.962.082.083.173.15.274.201h1.474a.6.6 0 1 1 0 1.2H5.304a.6.6 0 0 1 0-1.2h1.15c.474-.07.809-.182 1.005-.334.157-.122.291-.32.404-.597l2.416-9.55a1.053 1.053 0 0 0-.281-.823 1.12 1.12 0 0 0-.442-.296H8.15a.6.6 0 0 1 0-1.2h6.443a.6.6 0 1 1 0 1.2h-1.195c-.376.056-.65.155-.823.296-.215.175-.423.439-.623.79l-2.366 9.347z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ecf451b92f4b17a00baf3504f329365d6">İtalik</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ea7855096b560aeb8a554677c1619f74f" aria-pressed="false" data-cke-tooltip-text="Altı Çizgili (Ctrl+U)" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M3 18v-1.5h14V18zm2.2-8V3.6c0-.4.4-.6.8-.6.3 0 .7.2.7.6v6.2c0 2 1.3 2.8 3.2 2.8 1.9 0 3.4-.9 3.4-2.9V3.6c0-.3.4-.5.8-.5.3 0 .7.2.7.5V10c0 2.7-2.2 4-4.9 4-2.6 0-4.7-1.2-4.7-4z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ea7855096b560aeb8a554677c1619f74f">Altı Çizgili</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ebd992d02a7c677fe7f4bdf437c8fec03" aria-pressed="false" data-cke-tooltip-text="Üstü çizili (Ctrl+Shift+X)" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M7 16.4c-.8-.4-1.5-.9-2.2-1.5a.6.6 0 0 1-.2-.5l.3-.6h1c1 1.2 2.1 1.7 3.7 1.7 1 0 1.8-.3 2.3-.6.6-.4.6-1.2.6-1.3.2-1.2-.9-2.1-.9-2.1h2.1c.3.7.4 1.2.4 1.7v.8l-.6 1.2c-.6.8-1.1 1-1.6 1.2a6 6 0 0 1-2.4.6c-1 0-1.8-.3-2.5-.6zM6.8 9 6 8.3c-.4-.5-.5-.8-.5-1.6 0-.7.1-1.3.5-1.8.4-.6 1-1 1.6-1.3a6.3 6.3 0 0 1 4.7 0 4 4 0 0 1 1.7 1l.3.7c0 .1.2.4-.2.7-.4.2-.9.1-1 0a3 3 0 0 0-1.2-1c-.4-.2-1-.3-2-.4-.7 0-1.4.2-2 .6-.8.6-1 .8-1 1.5 0 .8.5 1 1.2 1.5.6.4 1.1.7 1.9 1H6.8z"></path><path d="M3 10.5V9h14v1.5z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ebd992d02a7c677fe7f4bdf437c8fec03">Üstü çizili</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ebf66848d73d0420cf4a5f17bb47add2d" aria-pressed="false" data-cke-tooltip-text="Bağlantı (Ctrl+K)" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="m11.077 15 .991-1.416a.75.75 0 1 1 1.229.86l-1.148 1.64a.748.748 0 0 1-.217.206 5.251 5.251 0 0 1-8.503-5.955.741.741 0 0 1 .12-.274l1.147-1.639a.75.75 0 1 1 1.228.86L4.933 10.7l.006.003a3.75 3.75 0 0 0 6.132 4.294l.006.004zm5.494-5.335a.748.748 0 0 1-.12.274l-1.147 1.639a.75.75 0 1 1-1.228-.86l.86-1.23a3.75 3.75 0 0 0-6.144-4.301l-.86 1.229a.75.75 0 0 1-1.229-.86l1.148-1.64a.748.748 0 0 1 .217-.206 5.251 5.251 0 0 1 8.503 5.955zm-4.563-2.532a.75.75 0 0 1 .184 1.045l-3.155 4.505a.75.75 0 1 1-1.229-.86l3.155-4.506a.75.75 0 0 1 1.045-.184z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ebf66848d73d0420cf4a5f17bb47add2d">Bağlantı</span></button><div class="ck ck-dropdown ck-disabled ck-font-size-dropdown"><button class="ck ck-button ck-disabled ck-off ck-dropdown__button" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ec01d96f40c664c78e9aa3df814cd760a" data-cke-tooltip-text="Yazı Boyutu" data-cke-tooltip-position="s" aria-haspopup="true" aria-expanded="false" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M9.816 11.5 7.038 4.785 4.261 11.5h5.555zm.62 1.5H3.641l-1.666 4.028H.312l5.789-14h1.875l5.789 14h-1.663L10.436 13zm7.55 2.279.779-.779.707.707-2.265 2.265-2.193-2.265.707-.707.765.765V4.825c0-.042 0-.083.002-.123l-.77.77-.707-.707L17.207 2.5l2.265 2.265-.707.707-.782-.782c.002.043.003.089.003.135v10.454z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ec01d96f40c664c78e9aa3df814cd760a">Yazı Boyutu</span><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-dropdown__arrow" viewBox="0 0 10 10"><path d="M.941 4.523a.75.75 0 1 1 1.06-1.06l3.006 3.005 3.005-3.005a.75.75 0 1 1 1.06 1.06l-3.549 3.55a.75.75 0 0 1-1.168-.136L.941 4.523z"></path></svg></button><div class="ck ck-reset ck-dropdown__panel ck-dropdown__panel_se" tabindex="-1"></div></div><div class="ck ck-dropdown ck-disabled ck-toolbar-dropdown ck-alignment-dropdown"><button class="ck ck-button ck-disabled ck-off ck-dropdown__button" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_e392268ae279f238fe65a5252d2ee7fb4" data-cke-tooltip-text="Yazı hizalama" data-cke-tooltip-position="s" aria-haspopup="true" aria-expanded="false" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75zm0 8c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75zm0 4c0 .414.336.75.75.75h9.929a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75zm0-8c0 .414.336.75.75.75h9.929a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_e392268ae279f238fe65a5252d2ee7fb4">Yazı hizalama</span><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-dropdown__arrow" viewBox="0 0 10 10"><path d="M.941 4.523a.75.75 0 1 1 1.06-1.06l3.006 3.005 3.005-3.005a.75.75 0 1 1 1.06 1.06l-3.549 3.55a.75.75 0 0 1-1.168-.136L.941 4.523z"></path></svg></button><div class="ck ck-reset ck-dropdown__panel ck-dropdown__panel_se" tabindex="-1"></div></div><span class="ck ck-toolbar__separator"></span><div class="ck ck-dropdown ck-disabled"><button class="ck ck-button ck-disabled ck-off ck-dropdown__button" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_eba9cdc30c7c7883b33959d921fd0baa6" data-cke-tooltip-text="Tablo Ekle" data-cke-tooltip-position="s" aria-haspopup="true" aria-expanded="false" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M3 6v3h4V6H3zm0 4v3h4v-3H3zm0 4v3h4v-3H3zm5 3h4v-3H8v3zm5 0h4v-3h-4v3zm4-4v-3h-4v3h4zm0-4V6h-4v3h4zm1.5 8a1.5 1.5 0 0 1-1.5 1.5H3A1.5 1.5 0 0 1 1.5 17V4c.222-.863 1.068-1.5 2-1.5h13c.932 0 1.778.637 2 1.5v13zM12 13v-3H8v3h4zm0-4V6H8v3h4z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_eba9cdc30c7c7883b33959d921fd0baa6">Tablo Ekle</span><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-dropdown__arrow" viewBox="0 0 10 10"><path d="M.941 4.523a.75.75 0 1 1 1.06-1.06l3.006 3.005 3.005-3.005a.75.75 0 1 1 1.06 1.06l-3.549 3.55a.75.75 0 0 1-1.168-.136L.941 4.523z"></path></svg></button><div class="ck ck-reset ck-dropdown__panel ck-dropdown__panel_se" tabindex="-1"></div></div><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_e949a134fc4f050e81554cead3666b95e" aria-pressed="false" data-cke-tooltip-text="Alıntı" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M3 10.423a6.5 6.5 0 0 1 6.056-6.408l.038.67C6.448 5.423 5.354 7.663 5.22 10H9c.552 0 .5.432.5.986v4.511c0 .554-.448.503-1 .503h-5c-.552 0-.5-.449-.5-1.003v-4.574zm8 0a6.5 6.5 0 0 1 6.056-6.408l.038.67c-2.646.739-3.74 2.979-3.873 5.315H17c.552 0 .5.432.5.986v4.511c0 .554-.448.503-1 .503h-5c-.552 0-.5-.449-.5-1.003v-4.574z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_e949a134fc4f050e81554cead3666b95e">Alıntı</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_efc7a8c34e459011a27b0733d43f28806" aria-pressed="false" data-cke-tooltip-text="Simgeli Liste" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M7 5.75c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75zm-6 0C1 4.784 1.777 4 2.75 4c.966 0 1.75.777 1.75 1.75 0 .966-.777 1.75-1.75 1.75C1.784 7.5 1 6.723 1 5.75zm6 9c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75zm-6 0c0-.966.777-1.75 1.75-1.75.966 0 1.75.777 1.75 1.75 0 .966-.777 1.75-1.75 1.75-.966 0-1.75-.777-1.75-1.75z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_efc7a8c34e459011a27b0733d43f28806">Simgeli Liste</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_e3d6c507b5a9363a522ab734f88e64bae" aria-pressed="false" data-cke-tooltip-text="Numaralı Liste" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M7 5.75c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75zM3.5 3v5H2V3.7H1v-1h2.5V3zM.343 17.857l2.59-3.257H2.92a.6.6 0 1 0-1.04 0H.302a2 2 0 1 1 3.995 0h-.001c-.048.405-.16.734-.333.988-.175.254-.59.692-1.244 1.312H4.3v1h-4l.043-.043zM7 14.75a.75.75 0 0 1 .75-.75h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_e3d6c507b5a9363a522ab734f88e64bae">Numaralı Liste</span></button><span class="ck ck-toolbar__separator"></span><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_eec774e1b3625ad96bf075f5281c10e04" aria-disabled="true" data-cke-tooltip-text="Biçimlendirmeyi Kaldır" data-cke-tooltip-position="s"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="M8.69 14.915c.053.052.173.083.36.093a.366.366 0 0 1 .345.485l-.003.01a.738.738 0 0 1-.697.497h-2.67a.374.374 0 0 1-.353-.496l.013-.038a.681.681 0 0 1 .644-.458c.197-.012.325-.043.386-.093a.28.28 0 0 0 .072-.11L9.592 4.5H6.269c-.359-.017-.609.013-.75.09-.142.078-.289.265-.442.563-.192.29-.516.464-.864.464H4.17a.43.43 0 0 1-.407-.569L4.46 3h13.08l-.62 2.043a.81.81 0 0 1-.775.574h-.114a.486.486 0 0 1-.486-.486c.001-.284-.054-.464-.167-.54-.112-.076-.367-.106-.766-.091h-3.28l-2.68 10.257c-.006.074.007.127.038.158zM3 17h8a.5.5 0 1 1 0 1H3a.5.5 0 1 1 0-1zm11.299 1.17a.75.75 0 1 1-1.06-1.06l1.414-1.415-1.415-1.414a.75.75 0 0 1 1.06-1.06l1.415 1.414 1.414-1.415a.75.75 0 1 1 1.06 1.06l-1.413 1.415 1.414 1.415a.75.75 0 0 1-1.06 1.06l-1.415-1.414-1.414 1.414z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_eec774e1b3625ad96bf075f5281c10e04">Biçimlendirmeyi Kaldır</span></button><span class="ck ck-toolbar__separator"></span><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_e959bdb89cc449b03a6c00ed99aacd297" aria-disabled="true" data-cke-tooltip-text="Geri al (Ctrl+Z)" data-cke-tooltip-position="s"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="m5.042 9.367 2.189 1.837a.75.75 0 0 1-.965 1.149l-3.788-3.18a.747.747 0 0 1-.21-.284.75.75 0 0 1 .17-.945L6.23 4.762a.75.75 0 1 1 .964 1.15L4.863 7.866h8.917A.75.75 0 0 1 14 7.9a4 4 0 1 1-1.477 7.718l.344-1.489a2.5 2.5 0 1 0 1.094-4.73l.008-.032H5.042z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_e959bdb89cc449b03a6c00ed99aacd297">Geri al</span></button><button class="ck ck-button ck-disabled ck-off" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ea6bab0ced749e5651319b0223aef4bda" aria-disabled="true" data-cke-tooltip-text="Tekrar yap (Ctrl+Y)" data-cke-tooltip-position="s"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="m14.958 9.367-2.189 1.837a.75.75 0 0 0 .965 1.149l3.788-3.18a.747.747 0 0 0 .21-.284.75.75 0 0 0-.17-.945L13.77 4.762a.75.75 0 1 0-.964 1.15l2.331 1.955H6.22A.75.75 0 0 0 6 7.9a4 4 0 1 0 1.477 7.718l-.344-1.489A2.5 2.5 0 1 1 6.039 9.4l-.008-.032h8.927z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ea6bab0ced749e5651319b0223aef4bda">Tekrar yap</span></button><span class="ck ck-toolbar__separator"></span><button class="ck ck-button ck-source-editing-button ck-disabled ck-off ck-button_with-text" type="button" tabindex="-1" aria-labelledby="ck-editor__aria-label_ef7fe90d5431551ae3f5e58649d3bde04" data-cke-tooltip-text="Kaynak" data-cke-tooltip-position="s" aria-disabled="true"><svg class="ck ck-icon ck-reset_all-excluded ck-icon_inherit-color ck-button__icon" viewBox="0 0 20 20"><path d="m12.5 0 5 4.5v15.003h-16V0h11zM3 1.5v3.25l-1.497 1-.003 8 1.5 1v3.254L7.685 18l-.001 1.504H17.5V8.002L16 9.428l-.004-4.22-4.222-3.692L3 1.5z"></path><path d="M4.06 6.64a.75.75 0 0 1 .958 1.15l-.085.07L2.29 9.75l2.646 1.89c.302.216.4.62.232.951l-.058.095a.75.75 0 0 1-.951.232l-.095-.058-3.5-2.5V9.14l3.496-2.5zm4.194 6.22a.75.75 0 0 1-.958-1.149l.085-.07 2.643-1.89-2.646-1.89a.75.75 0 0 1-.232-.952l.058-.095a.75.75 0 0 1 .95-.232l.096.058 3.5 2.5v1.22l-3.496 2.5zm7.644-.836 2.122 2.122-5.825 5.809-2.125-.005.003-2.116zm2.539-1.847 1.414 1.414a.5.5 0 0 1 0 .707l-1.06 1.06-2.122-2.12 1.061-1.061a.5.5 0 0 1 .707 0z"></path></svg><span class="ck ck-button__label" id="ck-editor__aria-label_ef7fe90d5431551ae3f5e58649d3bde04">Kaynak</span></button></div></div></div></div></div><div class="ck ck-editor__main" role="presentation"><div class="ck-blurred ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-read-only ck-column-resize_disabled" lang="tr" dir="ltr" role="textbox" aria-label="Editör düzenleme alanı: main" contenteditable="false" spellcheck="false"><p class="ck-placeholder" data-placeholder="Lütfen eklemek istediğiniz yazıyı yazınız..."><br data-cke-filler="true"></p></div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 d-block" style="border-width: 2px !important;">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-paper-plane me-2"></i><span>Sitenizde Yayınlama</span></h5>
+    </div>
+
+    <div class="card-body">
+                    <div class="row" id="content-website-publish-form">
+                <div class="col-12 position-relative mb-4">
+                    <label class="form-label" for="c_website_id">
+    Web Sitesi </label>
+                    <select class="form-select select2-hidden-accessible" name="website_id" id="c_website_id" data-select2-id="c_website_id" tabindex="-1" aria-hidden="true"><option value="8180" data-select2-id="96">https://akyurtnakliyat.org.tr</option><option value="8178" data-select2-id="97">https://ankaracagrinakliyat.com</option><option value="400" data-select2-id="98">https://ankaraozpolatnakliyat.com</option><option value="8167" data-select2-id="99">https://boztasnakliyat.com.tr</option><option value="2040" data-select2-id="100">https://elisamnakliyat.com</option><option value="8174" data-select2-id="101">https://evtasimafirmasi.com</option><option value="8147" data-select2-id="102">https://harekuafor.com.tr</option><option value="2" data-select2-id="103">https://ozpolatnakliyat.com</option><option value="33" data-select2-id="104">https://ozpolatnakliyat.com.tr</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="95" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-c_website_id-container"><span class="select2-selection__rendered" id="select2-c_website_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+
+                <div class="col-md-6 position-relative mb-4">
+                    <label class="form-label" for="c_category_ids" id="c_category_ids_label">
+    Kategori </label>
+                    <select class="form-select select2-hidden-accessible" name="category_ids[]" id="c_category_ids" disabled="" data-select2-id="c_category_ids" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default select2-container--disabled" dir="ltr" data-select2-id="106" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="true" aria-labelledby="select2-c_category_ids-container"><span class="select2-selection__rendered" id="select2-c_category_ids-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen önce bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+
+                <div class="col-md-6 position-relative mb-4">
+                    <label class="form-label" for="c_tag_ids">
+    Etiketler </label>
+                    <select class="form-select select2-hidden-accessible" name="tag_ids[]" id="c_tag_ids" disabled="" data-select2-id="c_tag_ids" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default select2-container--disabled" dir="ltr" data-select2-id="107" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="true" aria-labelledby="select2-c_tag_ids-container"><span class="select2-selection__rendered" id="select2-c_tag_ids-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen önce bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                                        </div>
+
+                <div class="col-md-6 position-relative mb-4 d-none" id="c_xf_user_id_cont">
+                    <label class="form-label" for="c_xf_user_id" id="c_xf_user_id_label">
+    Forum Kullanıcısı </label>
+                    <select class="form-select select2-hidden-accessible" name="xf_user_id" id="c_xf_user_id" disabled="" data-select2-id="c_xf_user_id" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default select2-container--disabled" dir="ltr" data-select2-id="108" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="true" aria-labelledby="select2-c_xf_user_id-container"><span class="select2-selection__rendered" id="select2-c_xf_user_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen önce bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+
+                <div class="col-md-6 position-relative mb-4 d-none" id="c_xf_discussion_type_cont">
+                    <label class="form-label" for="c_xf_discussion_type" id="c_xf_discussion_type_label">
+    Konu Türü </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="xf_discussion_type" id="c_xf_discussion_type" data-placeholder="Lütfen bir konu türü seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="c_xf_discussion_type" tabindex="-1" aria-hidden="true"><option value="discussion" data-select2-id="79">Tartışma</option><option value="article">Makale</option><option value="question">Soru</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="78" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-c_xf_discussion_type-container"><span class="select2-selection__rendered" id="select2-c_xf_discussion_type-container" role="textbox" aria-readonly="true" title="Tartışma">Tartışma</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+
+                <div class="col-12 position-relative mb-4">
+                    <label class="form-label" for="c_post_status">
+    Yayın Durumu </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="post_status" id="c_post_status" data-placeholder="Lütfen bir yayın durumu seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="c_post_status" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="81"></option><option value="draft">Taslak</option><option value="publish">Yayınla</option><option value="future">Zamanla</option><option value="internal_linking">Yayınlama - Sadece İç Linkleme İçin Kullan</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="80" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-c_post_status-container"><span class="select2-selection__rendered" id="select2-c_post_status-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir yayın durumu seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+
+                <div class="col-12 mb-4 collapse" id="c_gsc_notify-cont">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="gsc_notify" id="c_gsc_notify" value="1">
+                        <label class="form-check-label fw-medium" for="c_gsc_notify">
+                            Otomatik Google Index <span class="d-block form-text mt-0">Bu özelliğin çalışabilmesi için sitenizin Google Search Console entegrasyonu yapılmış olmalıdır.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-12 collapse" id="c_publish_date-cont">
+                    <div class="row">
+                        <div class="mb-4 col-sm-6">
+                            <label class="form-label" for="c_publish_date">
+    Yayınlanma Zamanı </label>
+                            <input name="publish_date" class="form-control flatpickr-input" type="text" id="c_publish_date" placeholder="Lütfen yayınlanma zamanını giriniz (d.m.Y H:i)" value="" readonly="readonly">
+                            <div class="fs085 text-muted mt-1">Lütfen kendi sitenizin zaman dilimine göre seçim yapın</div>
+                        </div>
+
+                        <div class="mb-4 col-sm-6">
+                            <label class="form-label" for="c_publish_interval">
+    Yayınlanma Sıklığı </label>
+                            <div class="input-group input-group-merge">
+                                <input type="number" class="form-control" name="publish_interval" id="c_publish_interval" min="0" step="1">
+                                <span class="input-group-text text-muted">saat ara ile yayınlasın</span>
+                            </div>
+                            <div class="fs085 text-muted mt-1" id="c_publish_interval_text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+                        </div>
+</div>
+        <div class="card mb-5 border border-label-primary shadow-none bc-form-step-2 d-block" style="border-width: 2px !important;">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0 d-flex flex-row align-items-center fs-4"><i class="bx text-primary bg-label-primary p-2 rounded bx-link me-2"></i><span>İç &amp; Dış Linkler</span></h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative">
+                    <label class="form-label" for="internal_linking">
+    İç Linkler <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div><strong>İç Linkleme</strong></div><div class='mb-3'>Sitenizde daha önce yayınlamış yazılar arasında <strong>odak anahtar kelimeniz</strong> ile ilgili olanlar bulunur ve makale içinde bu yazılara link verilir.</div><div><strong>Otomatik İç Linkleme</strong></div><div class='mb-3'>Yazıların bulunması otomatik gerçekleştirilir. Ancak bu işlemin gerçekleştirilebilmesi için sitenizde ilgili odak anahtar kelime ile ilgili daha önceden yayınlanan <u>en az bir adet yazı</u> yer almalıdır. Eğer odak anahtar kelime ile ilgili bir yazı bulunamazsa iç linkleme <u>yapılmaz</u>. Bu özellik sadece WordPress siteler için kullanılabilir.</div><div><strong>Manual İç Linkleme</strong></div><div class='mb-3'>Bu seçenek ile makalenizde yer almasını istediğiniz linkleri kendiniz girebilir ve bu linklerin verileceği kelimeleri de (anchor) belirleyebilirsiniz. Bu sayede daha kaliteli bir iç linkleme gerçekleştirmiş olursunuz.</div><div class='mb-3'><strong class='text-info'>İpucu</strong>: Daha kaliteli bir sonuç almak için manual iç linkleme seçeneğini kullanmanızı tavsiye ederiz.</div></div>"></i> </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="internal_linking" id="internal_linking" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="internal_linking" tabindex="-1" aria-hidden="true"><option value="0" selected="selected" data-select2-id="83">Yok</option><option value="1">Otomatik</option><option value="2">Manual</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="82" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-internal_linking-container"><span class="select2-selection__rendered" id="select2-internal_linking-container" role="textbox" aria-readonly="true" title="Yok">Yok</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative d-none" id="internal_link_count_cont">
+                    <label class="form-label" for="internal_link_count">
+    Adet </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="internal_link_count" id="internal_link_count" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="internal_link_count" tabindex="-1" aria-hidden="true"><option value="1">1</option><option value="2" selected="selected" data-select2-id="85">2</option><option value="3">3</option><option value="4">4</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="84" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-internal_link_count-container"><span class="select2-selection__rendered" id="select2-internal_link_count-container" role="textbox" aria-readonly="true" title="2">2</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative d-none" id="internal_link_position_cont">
+                    <label class="form-label" for="internal_link_position">
+    Konum <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'>Her bir link için ilk önce makale içindeki uygun kelimelere metin içi link (inline) eklenmeye çalışılır. Ancak metin içi link olarak eklenmeyen linkler bir liste şekinde burada seçtiğiniz konuma göre makale içine eklenir.</div>"></i> </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="internal_link_position" id="internal_link_position" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="internal_link_position" tabindex="-1" aria-hidden="true"><option value="start">Başlarda</option><option value="middle" selected="selected" data-select2-id="87">Ortalarda</option><option value="end">Sonlarda</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="86" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-internal_link_position-container"><span class="select2-selection__rendered" id="select2-internal_link_position-container" role="textbox" aria-readonly="true" title="Ortalarda">Ortalarda</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none internal_link_cont" id="internal_link_1_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="form-label" for="internal_link_1">
+    URL </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="internal_link_1" class="form-control" type="text" id="internal_link_1" placeholder="1. iç link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <label class="form-label" for="internal_anchor_1">
+    Link Metni (Anchor) <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Link Metni (Anchor):</strong> Linkin verileceği kelimeyi belirler. Eğer girilen kelime makale içinde bulunamazsa linkler ayrı bir bölümde liste şeklinde yazılır. Bu nedenle gramer ve yazım kurallarına uygun bir kelime girilmesi oldukça önemlidir.</div></div>"></i> </label>
+                    <input name="internal_anchor_1" class="form-control" type="text" id="internal_anchor_1" placeholder="1. iç link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none internal_link_cont" id="internal_link_2_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="internal_link_2" class="form-control" type="text" id="internal_link_2" placeholder="2. iç link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <input name="internal_anchor_2" class="form-control" type="text" id="internal_anchor_2" placeholder="2. iç link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none internal_link_cont" id="internal_link_3_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="internal_link_3" class="form-control" type="text" id="internal_link_3" placeholder="3. iç link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <input name="internal_anchor_3" class="form-control" type="text" id="internal_anchor_3" placeholder="3. iç link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none internal_link_cont" id="internal_link_4_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="internal_link_4" class="form-control" type="text" id="internal_link_4" placeholder="4. iç link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <input name="internal_anchor_4" class="form-control" type="text" id="internal_anchor_4" placeholder="4. iç link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <hr class="p-0 m-0 mb-3" style="border-top: 1px dashed #d9dee3;">
+
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative">
+                    <label class="form-label" for="external_linking">
+    Dış Linkler <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div><strong>Dış Linkleme</strong></div><div class='mb-3'>Makale konusu ile ilgili yazılar araştırılarak makale içinde bu yazılara link verilir.</div><div><strong>Otomatik Dış Linkleme (Arama Motorları)</strong></div><div class='mb-3'>Yazılar arama motorları ile arama yapılarak otomatik olarak bulunur. Ancak herhangi bir nedenden dolayı ilgili bir kaynak bulunamazsa dış linkleme <u>yapılmaz</u>.</div><div><strong>Otomatik Dış Linkleme (Diğer Siteleriniz)</strong></div><div class='mb-3'>Seçmiş olduğunuz sitelerdeki daha önce yayınlamış yazılar arasında <strong>odak anahtar kelimeniz</strong> ile ilgili olanlar bulunur. Ancak bu işlemin gerçekleştirilebilmesi için seçtiğiniz sitelerde ilgili odak anahtar kelime ile ilgili daha önceden yayınlanan <u>en az bir adet yazı</u> yer almalıdır. Eğer herhangi bir nedenden dolayı ilgili bir yazı bulunamazsa dış linkleme <u>yapılmaz</u>. Bu özellik sadece WordPress siteler için kullanılabilir.</div><div><strong>Manual Dış Linkleme</strong></div><div class='mb-3'>Bu seçenek ile makalenizde yer almasını istediğiniz linkleri kendiniz girebilir ve bu linklerin verileceği kelimeleri de (anchor) belirleyebilirsiniz.</div><div class='mb-3'><strong class='text-info'>İpucu 1</strong>: Daha kaliteli bir sonuç almak için manual dış linkleme seçeneğini kullanmanızı tavsiye ederiz.</div><div class='mb-3'><strong class='text-info'>İpucu 2</strong>: Diğer sitelerinizden otomatik seçim veya manual dış linkleme ile diğer sitelerinizdeki yazılara link vererek siteleriniz arasında backlink oluşturmanız kolaylaşır.</div></div>"></i> </label>
+
+                    <select class="select2 form-select select2-hidden-accessible" name="external_linking" id="external_linking" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="external_linking" tabindex="-1" aria-hidden="true"><option value="0" selected="selected" data-select2-id="89">Yok</option><option value="1">Otomatik (Arama Motorları)</option><option value="3">Otomatik (Diğer Siteleriniz)</option><option value="2">Manual</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="88" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-external_linking-container"><span class="select2-selection__rendered" id="select2-external_linking-container" role="textbox" aria-readonly="true" title="Yok">Yok</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative d-none" id="external_link_count_cont">
+                    <label class="form-label" for="external_link_count">
+    Adet </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="external_link_count" id="external_link_count" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="external_link_count" tabindex="-1" aria-hidden="true"><option value="1" selected="selected" data-select2-id="91">1</option><option value="2">2</option><option value="3">3</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="90" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-external_link_count-container"><span class="select2-selection__rendered" id="select2-external_link_count-container" role="textbox" aria-readonly="true" title="1">1</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="mb-4 position-relative d-none" id="external_link_position_cont">
+                    <label class="form-label" for="external_link_position">
+    Konum <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'>Her bir link için ilk önce makale içindeki uygun kelimelere metin içi link (inline) eklenmeye çalışılır. Ancak metin içi link olarak eklenmeyen linkler bir liste şekinde burada seçtiğiniz konuma göre makale içine eklenir.</div>"></i> </label>
+                    <select class="select2 form-select select2-hidden-accessible" name="external_link_position" id="external_link_position" data-placeholder="Lütfen bir seçim yapınız" data-minimum-results-for-search="Infinity" data-select2-id="external_link_position" tabindex="-1" aria-hidden="true"><option value="start">Başlarda</option><option value="middle">Ortalarda</option><option value="end" selected="selected" data-select2-id="93">Sonlarda</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="92" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-external_link_position-container"><span class="select2-selection__rendered" id="select2-external_link_position-container" role="textbox" aria-readonly="true" title="Sonlarda">Sonlarda</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none external_link_cont" id="external_link_1_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="form-label" for="external_link_1">
+    URL </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="external_link_1" class="form-control" type="text" id="external_link_1" placeholder="1. dış link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <label class="form-label" for="external_anchor_1">
+    Link Metni (Anchor) <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><div class='mb-3'><strong>Link Metni (Anchor):</strong> Linkin verileceği kelimeyi belirler. Eğer girilen kelime makale içinde bulunamazsa linkler ayrı bir bölümde liste şeklinde yazılır. Bu nedenle gramer ve yazım kurallarına uygun bir kelime girilmesi oldukça önemlidir.</div></div>"></i> </label>
+                    <input name="external_anchor_1" class="form-control" type="text" id="external_anchor_1" placeholder="1. dış link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none external_link_cont" id="external_link_2_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="external_link_2" class="form-control" type="text" id="external_link_2" placeholder="2. dış link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <input name="external_anchor_2" class="form-control" type="text" id="external_anchor_2" placeholder="2. dış link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none external_link_cont" id="external_link_3_cont">
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bx bx-link"></i></span>
+                        <input name="external_link_3" class="form-control" type="text" id="external_link_3" placeholder="3. dış link için URL giriniz" value="" maxlength="255">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-4">
+                    <input name="external_anchor_3" class="form-control" type="text" id="external_anchor_3" placeholder="3. dış link için kelime (anchor) giriniz" value="" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="d-none" id="external_link_websites_cont">
+            <label class="form-label" for="external_anchor_1">
+    Kaynak Siteler <i class="bx bx-help-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<div class='text-start mt-2'><strong>Kaynak Siteler:</strong> Makaleye dış link olarak verilecek linklerin bulunacağı siteleri belirtir. Burada seçmiş olduğunuz sitelerdeki daha önce yayınlamış yazılar arasında <strong>odak anahtar kelimeniz</strong> ile ilgili olan yazılar bulunur. Eğer herhangi bir nedenden dolayı konu ile ilgili bir yazı bulunamazsa dış linkleme <u>yapılmaz</u>. Bu özellik sadece WordPress siteler için kullanılabilir.</div>"></i> </label>
+            <select class="select2 form-select select2-hidden-accessible" name="external_link_websites_ids[]" id="external_link_websites_ids" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="true" multiple="" data-select2-id="external_link_websites_ids" tabindex="-1" aria-hidden="true"><option value="8180">https://akyurtnakliyat.org.tr</option><option value="8178">https://ankaracagrinakliyat.com</option><option value="400">https://ankaraozpolatnakliyat.com</option><option value="8167">https://boztasnakliyat.com.tr</option><option value="2040">https://elisamnakliyat.com</option><option value="8174">https://evtasimafirmasi.com</option><option value="8147">https://harekuafor.com.tr</option><option value="2">https://ozpolatnakliyat.com</option><option value="33">https://ozpolatnakliyat.com.tr</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="94" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="false"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="searchbox" aria-autocomplete="list" placeholder="Lütfen bir seçim yapınız" style="width: 0px;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+        </div>
+    </div>
+</div>
+
+        <div class="text-center bc-form-step-2 mb-4 d-block">
+            <button class="btn btn ib-spn-btnv2 btn-primary btn-lg mw-btn fw-medium" type="button" id="bc-create-btn">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label"><svg viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g stroke-width="0"></g><g class="str" stroke-linecap="round" stroke-linejoin="round"><path d="M244,152a4.0002,4.0002,0,0,1-4,4H220v20a4,4,0,0,1-8,0V156H192a4,4,0,0,1,0-8h20V128a4,4,0,0,1,8,0v20h20A4.0002,4.0002,0,0,1,244,152ZM64,64H80V80a4,4,0,0,0,8,0V64h16a4,4,0,0,0,0-8H88V40a4,4,0,0,0-8,0V56H64a4,4,0,0,0,0,8ZM184,196H172V184a4,4,0,0,0-8,0v12H152a4,4,0,0,0,0,8h12v12a4,4,0,0,0,8,0V204h12a4,4,0,0,0,0-8Zm-5.17236-81.1709L72.48535,221.17187a12.01686,12.01686,0,0,1-16.9707,0L34.8291,200.48535a11.998,11.998,0,0,1,0-16.9707l148.68555-148.686a12.01526,12.01526,0,0,1,16.9707-.00049L221.1709,55.51465a11.998,11.998,0,0,1,0,16.9707l-42.34229,42.34229-.00048.00048ZM149.65674,80,176,106.34326l39.51465-39.51465v-.00049a3.99855,3.99855,0,0,0,0-5.65625L194.8291,40.48535a4.00622,4.00622,0,0,0-5.6582.00049Zm20.68652,32L144,85.65674,40.48535,189.17187a3.99855,3.99855,0,0,0,0,5.65625L61.1709,215.51465a4.00621,4.00621,0,0,0,5.6582,0Z"></path></g><g><path d="M244,152a4.0002,4.0002,0,0,1-4,4H220v20a4,4,0,0,1-8,0V156H192a4,4,0,0,1,0-8h20V128a4,4,0,0,1,8,0v20h20A4.0002,4.0002,0,0,1,244,152ZM64,64H80V80a4,4,0,0,0,8,0V64h16a4,4,0,0,0,0-8H88V40a4,4,0,0,0-8,0V56H64a4,4,0,0,0,0,8ZM184,196H172V184a4,4,0,0,0-8,0v12H152a4,4,0,0,0,0,8h12v12a4,4,0,0,0,8,0V204h12a4,4,0,0,0,0-8Zm-5.17236-81.1709L72.48535,221.17187a12.01686,12.01686,0,0,1-16.9707,0L34.8291,200.48535a11.998,11.998,0,0,1,0-16.9707l148.68555-148.686a12.01526,12.01526,0,0,1,16.9707-.00049L221.1709,55.51465a11.998,11.998,0,0,1,0,16.9707l-42.34229,42.34229-.00048.00048ZM149.65674,80,176,106.34326l39.51465-39.51465v-.00049a3.99855,3.99855,0,0,0,0-5.65625L194.8291,40.48535a4.00622,4.00622,0,0,0-5.6582.00049Zm20.68652,32L144,85.65674,40.48535,189.17187a3.99855,3.99855,0,0,0,0,5.65625L61.1709,215.51465a4.00621,4.00621,0,0,0,5.6582,0Z"></path></g></svg>
+<span class="fw-medium"> Toplu Makale Oluştur</span></span>
+</button>
+        </div>
+    </form>
