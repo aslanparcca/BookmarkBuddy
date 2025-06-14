@@ -717,11 +717,16 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       let generatedCount = 0;
       const results = [];
 
-      console.log("Processing articles:", articles.length);
+      console.log(`Processing ${articles.length} articles for Excel template generation`);
       
-      for (const article of articles) {
+      // Process articles in batches to avoid API rate limits and timeouts
+      const BATCH_SIZE = 5; // Process 5 articles at a time
+      const DELAY_BETWEEN_REQUESTS = 1000; // 1 second delay between individual requests
+      
+      for (let i = 0; i < articles.length; i++) {
+        const article = articles[i];
         try {
-          console.log("Processing article:", article.title);
+          console.log(`Processing article ${i + 1}/${articles.length}: ${article.title}`);
           console.log("Article data:", {
             title: article.title,
             focusKeyword: article.focusKeyword,
@@ -820,8 +825,32 @@ HEDEF META AÇIKLAMA: ${article.metaDescription}
 Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu makale oluşturun.
           `;
 
-          const result = await model.generateContent(prompt);
-          const content = result.response.text();
+          // Add timeout and retry logic for API calls
+          let content;
+          let retryCount = 0;
+          const maxRetries = 3;
+          
+          while (retryCount < maxRetries) {
+            try {
+              const result = await Promise.race([
+                model.generateContent(prompt),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Request timeout')), 60000) // 60 second timeout
+                )
+              ]) as any;
+              content = result.response.text();
+              break;
+            } catch (error) {
+              retryCount++;
+              console.log(`Retry ${retryCount}/${maxRetries} for article: ${article.title}`);
+              if (retryCount >= maxRetries) {
+                throw error;
+              }
+              // Wait before retry
+              await new Promise(resolve => setTimeout(resolve, 2000 * retryCount));
+            }
+          }
+          
           const wordCount = content.split(/\s+/).length;
           const readingTime = Math.ceil(wordCount / 200);
 
@@ -875,6 +904,17 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
             status: 'failed',
             error: error instanceof Error ? error.message : 'Unknown error'
           });
+        }
+
+        // Add delay between requests to avoid rate limiting
+        if (i < articles.length - 1) {
+          console.log(`Waiting ${DELAY_BETWEEN_REQUESTS}ms before next article...`);
+          await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_REQUESTS));
+        }
+
+        // Progress update every 10 articles
+        if ((i + 1) % 10 === 0) {
+          console.log(`Progress: ${i + 1}/${articles.length} articles processed (${Math.round(((i + 1) / articles.length) * 100)}%)`);
         }
       }
 
