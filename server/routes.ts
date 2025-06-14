@@ -468,6 +468,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Kullanıcı kimliği bulunamadı" });
       }
 
+      console.log("Excel processing request:", { 
+        fileExists: !!req.file, 
+        fileName: req.file?.originalname,
+        fileSize: req.file?.size,
+        contentType: req.file?.mimetype 
+      });
+
       if (!req.file) {
         return res.status(400).json({ message: "Excel dosyası yüklenmedi" });
       }
