@@ -68,6 +68,10 @@ export default function URLRewrite() {
     retry: false,
   });
 
+  // Fetch categories for selected website
+  const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
+  const categories = selectedWebsite?.categories || [];
+
   const [settings, setSettings] = useState<URLRewriteSettings>({
     url: "",
     language: "Türkçe",
@@ -491,8 +495,15 @@ export default function URLRewrite() {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="site1">Site 1</SelectItem>
-                    <SelectItem value="site2">Site 2</SelectItem>
+                    {websites.length === 0 ? (
+                      <SelectItem value="none">Henüz web siteniz bulunmuyor</SelectItem>
+                    ) : (
+                      websites.map((website) => (
+                        <SelectItem key={website.id} value={website.id.toString()}>
+                          {website.url}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -504,8 +515,17 @@ export default function URLRewrite() {
                     <SelectValue placeholder="Lütfen önce bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="genel">Genel</SelectItem>
-                    <SelectItem value="teknoloji">Teknoloji</SelectItem>
+                    {!settings.website || settings.website === "none" ? (
+                      <SelectItem value="none">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
+                    ) : categories.length === 0 ? (
+                      <SelectItem value="none">Bu web sitesinde kategori bulunamadı</SelectItem>
+                    ) : (
+                      categories.map((category, index) => (
+                        <SelectItem key={index} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>

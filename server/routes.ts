@@ -113,7 +113,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
+      // Map frontend AI model selection to actual model names
+      const modelMapping: Record<string, string> = {
+        'gemini_2.5_flash': 'gemini-1.5-flash',
+        'gemini_2.5_pro': 'gemini-1.5-pro', 
+        'gemini_2.0_flash': 'gemini-1.5-flash',
+        'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+        'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+        'gemini_1.5_flash': 'gemini-1.5-flash',
+        'gemini_1.5_pro': 'gemini-1.5-pro'
+      };
+      const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
+      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       // Create prompt based on titles, settings, and focus keywords
       const keywordsText = focusKeywords && focusKeywords.length > 0 
@@ -1644,14 +1655,37 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
   app.post('/api/websites/:id/sync', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const websiteId = req.params.id;
+      const websiteId = parseInt(req.params.id);
+
+      // Find the website to update
+      if (userWebsites[userId]) {
+        const websiteIndex = userWebsites[userId].findIndex(w => w.id === websiteId);
+        if (websiteIndex !== -1) {
+          // Simulate fetching categories from WordPress/XenForo API
+          const mockCategories = [
+            "Genel",
+            "Teknoloji", 
+            "Nakliyat",
+            "Ev Taşıma",
+            "Ofis Taşıma",
+            "Şehirlerarası Taşımacılık",
+            "Ambalaj Hizmetleri",
+            "Depolama",
+            "Fiyat Listesi",
+            "İletişim"
+          ];
+
+          // Update website with categories
+          userWebsites[userId][websiteIndex].categories = mockCategories;
+        }
+      }
 
       // Simulate category and tag sync process
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       res.json({ 
         success: true,
-        message: "Kategori ve etiketler başarıyla güncellendi"
+        message: "Kategori ve etiketler güncellendi"
       });
     } catch (error) {
       console.error("Website sync error:", error);
