@@ -1463,10 +1463,12 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           const hasExcelSubheadings = titleData.subheadings && Array.isArray(titleData.subheadings) && titleData.subheadings.length > 0;
           
           // Debug log to see what we're getting
-          console.log(`Excel Subheadings Debug for "${titleData.title}":`, {
+          console.log(`Excel Data Debug for "${titleData.title}":`, {
             hasSubheadings: hasExcelSubheadings,
             subheadings: titleData.subheadings,
-            subheadingsLength: titleData.subheadings ? titleData.subheadings.length : 0
+            subheadingsLength: titleData.subheadings ? titleData.subheadings.length : 0,
+            companyName: titleData.companyName,
+            contentLength: titleData.contentLength
           });
           
           const promptParts = [
@@ -1481,10 +1483,12 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '',
             'ARTICLE STRUCTURE:',
             `- Target Length: ${
-              settings.sectionLength === 's' ? '1,000-1,500 words' :
-              settings.sectionLength === 'm' ? '1,200-1,700 words' :
-              settings.sectionLength === 'l' ? '1,500-2,000 words' :
-              settings.sectionLength === 'xl' ? '2,000-2,500 words' : '1,500-2,000 words'
+              titleData.contentLength === 'S' ? '800-1,200 words (Short)' :
+              titleData.contentLength === 'M' ? '1,200-1,700 words (Medium)' :
+              titleData.contentLength === 'L' ? '1,700-2,200 words (Long)' :
+              titleData.contentLength === 'XL' ? '2,200-2,700 words (Extra Long)' :
+              titleData.contentLength === 'XXL' ? '2,700-3,200 words (Very Long)' : 
+              '1,500-2,000 words (Default)'
             }`,
             hasExcelSubheadings ? 
               `- REQUIRED H2 sections (USE THESE EXACT HEADINGS): ${titleData.subheadings.join(', ')}` :
@@ -1513,7 +1517,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             'CONTENT ORGANIZATION:',
             '- Start with introduction paragraph (no heading)',
             '- Include focus keyword in first 100 words',
-            titleData.companyName ? `- Naturally mention the company "${titleData.companyName}" throughout the article when relevant` : '',
+            titleData.companyName ? `- IMPORTANT: Mention "${titleData.companyName}" company naturally 3-5 times throughout the article in relevant contexts` : '',
             '- Do NOT create a separate summary section',
             '- The content should be the complete article body',
             '',

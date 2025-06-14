@@ -652,20 +652,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 </Select>
               </div>
 
-              <div>
-                <Label htmlFor="sectionLength">Bölüm Uzunluğu</Label>
-                <Select value={settings.sectionLength} onValueChange={(value) => setSettings({...settings, sectionLength: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="s">Kısa [1.000-1.500 kelime]</SelectItem>
-                    <SelectItem value="m">Orta [1.200-1.700 kelime]</SelectItem>
-                    <SelectItem value="l">Uzun [1.500-2.000 kelime]</SelectItem>
-                    <SelectItem value="xl">Çok Uzun [2.000-2.500 kelime]</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
 
               <div>
                 <Label htmlFor="folder">Klasör</Label>
