@@ -241,6 +241,22 @@ export default function Articles() {
             <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
           </div>
           
+          {articles.length > 0 && (
+            <Button 
+              variant="outline" 
+              className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+              onClick={() => {
+                if (window.confirm(`Tüm makalelerinizi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`)) {
+                  bulkDeleteMutation.mutate();
+                }
+              }}
+              disabled={bulkDeleteMutation.isPending}
+            >
+              <i className="fas fa-trash mr-2"></i>
+              {bulkDeleteMutation.isPending ? 'Siliniyor...' : 'Tümünü Sil'}
+            </Button>
+          )}
+          
           {selectedArticles.length > 0 && (
             <Dialog open={isSendDialogOpen} onOpenChange={setIsSendDialogOpen}>
               <DialogTrigger asChild>

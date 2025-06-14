@@ -191,6 +191,7 @@ Changelog:
 - June 14, 2025. Fixed mandatory FAQ section implementation: added "Sıkça Sorulan Sorular" as required final section for every article, implemented comprehensive FAQ structure with H2/H3 tags, included 5-7 relevant questions with detailed answers, ensured consistent placement at article end, enhanced content value with topic-related FAQ content
 - June 14, 2025. Fixed bulk article request size limit error: increased Express body parser limits from default to 50MB for both JSON and URL-encoded payloads, resolved "request entity too large" 413 errors during bulk article generation, enhanced system capacity for processing large article datasets with extensive content and metadata
 - June 14, 2025. Enhanced bulk article generation performance: implemented sequential processing with 1-second delays between requests to prevent API rate limiting, added timeout and retry logic with 60-second timeouts and 3 retry attempts per article, improved progress tracking with detailed logging every 10 articles, resolved issue where only 20 out of 81 articles were processed by adding proper error recovery and request pacing
+- June 14, 2025. Increased article display limit from 20 to 100 in İçeriklerim section and added comprehensive bulk delete functionality: updated storage interface and database operations to support bulk deletion, added API endpoint for deleting all user articles (/api/articles DELETE), implemented frontend confirmation dialog and red-themed button for safe bulk deletion with loading states
 ```
 
 ## User Preferences
