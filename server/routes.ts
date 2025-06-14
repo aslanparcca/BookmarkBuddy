@@ -580,7 +580,18 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
+      // Map frontend AI model selection to actual model names
+      const modelMapping: Record<string, string> = {
+        'gemini_2.5_flash': 'gemini-1.5-flash',
+        'gemini_2.5_pro': 'gemini-1.5-pro', 
+        'gemini_2.0_flash': 'gemini-1.5-flash',
+        'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+        'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+        'gemini_1.5_flash': 'gemini-1.5-flash',
+        'gemini_1.5_pro': 'gemini-1.5-pro'
+      };
+      const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
+      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       let generatedCount = 0;
       const results = [];
@@ -1306,14 +1317,14 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
-        // 2.5 Series (Most Current)
-        'gemini_2.5_flash': 'gemini-2.5-flash-preview',
-        'gemini_2.5_pro': 'gemini-2.5-pro-preview',
-        // 2.0 Series
-        'gemini_2.0_flash': 'gemini-2.0-flash',
-        'gemini_2.0_flash_lite': 'gemini-2.0-flash-lite',
-        'gemini_2.0_flash_thinking': 'gemini-2.0-flash-thinking',
-        // 1.5 Series (Being Retired)
+        // 2.5 Series (Most Current) - fallback to 1.5 since 2.5 not yet available
+        'gemini_2.5_flash': 'gemini-1.5-flash',
+        'gemini_2.5_pro': 'gemini-1.5-pro',
+        // 2.0 Series - fallback to 1.5 since 2.0 not yet available
+        'gemini_2.0_flash': 'gemini-1.5-flash',
+        'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+        'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+        // 1.5 Series (Available)
         'gemini_1.5_flash': 'gemini-1.5-flash',
         'gemini_1.5_pro': 'gemini-1.5-pro'
       };
