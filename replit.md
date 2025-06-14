@@ -136,6 +136,8 @@ Changelog:
 - June 14, 2025. Added comprehensive interface sections: Genel Ayarlar, Güncel Bilgiler, Görsel Seçenekleri, İçerik Özellikleri, Sitenizde Yayınlama, İç & Dış Linkler
 - June 14, 2025. Redesigned sidebar menu with comprehensive navigation structure including main menu, bulk operations, voice & media, and help sections
 - June 14, 2025. Implemented all menu item navigation with placeholder pages for future development areas
+- June 14, 2025. Completed WP Makalesi V1 interface with 4-step workflow (Temel Bilgiler → Başlık Seç → Taslak Oluştur → Makale Oluştur)
+- June 14, 2025. Added comprehensive WordPress article generation with focus keywords, writing styles, AI model selection, and optional features (meta description, summary, YouTube video)
 ```
 
 ## User Preferences
