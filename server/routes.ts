@@ -191,7 +191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (!userSettings?.geminiApiKey) return;
 
           const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-pro" });
+          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-2.5-flash" });
 
           let completed = 0;
           let failed = 0;
