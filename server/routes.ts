@@ -16,25 +16,56 @@ const upload = multer({
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 
+// Helper function to intelligently distribute links across article sections
+function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
+  const totalLinks = links.length;
+  
+  // SEO-optimized distribution ratios based on best practices
+  const distributionRatio = linkType === 'internal' 
+    ? { intro: 0.2, middle: 0.6, conclusion: 0.2 } // Internal links: more in middle sections
+    : { intro: 0.3, middle: 0.5, conclusion: 0.2 }; // External links: balanced distribution
+  
+  // Calculate distribution counts
+  const introCount = Math.ceil(totalLinks * distributionRatio.intro);
+  const conclusionCount = Math.ceil(totalLinks * distributionRatio.conclusion);
+  const middleCount = totalLinks - introCount - conclusionCount;
+  
+  // Distribute links
+  const intro = links.slice(0, introCount);
+  const middle = links.slice(introCount, introCount + middleCount);
+  const conclusion = links.slice(introCount + middleCount);
+  
+  return {
+    intro,
+    middle,
+    conclusion
+  };
+}
+
 // Helper function to build link instructions for SEO-optimized placement
 function buildLinkInstructions(settings: any): string[] {
   const instructions = [];
   
   // Internal links processing
   if (settings.internalLinks === "Manuel" && settings.manualInternalLinks) {
-    const internalLinks = settings.manualInternalLinks
+    const allInternalLinks = settings.manualInternalLinks
       .split('\n')
       .map((link: string) => link.trim())
-      .filter((link: string) => link.length > 0 && link.startsWith('http'))
-      .slice(0, 5); // Limit to 5 internal links for SEO best practices
+      .filter((link: string) => link.length > 0 && link.startsWith('http'));
     
-    if (internalLinks.length > 0) {
-      instructions.push('INTERNAL LINKS (SEO Optimized):');
-      instructions.push(`- Include ${internalLinks.length} internal links naturally within the content`);
-      instructions.push('- Place internal links in contextually relevant paragraphs');
+    if (allInternalLinks.length > 0) {
+      // Intelligent distribution strategy based on article sections
+      const linkDistribution = distributeLinksIntelligently(allInternalLinks, 'internal');
+      
+      instructions.push('INTERNAL LINKS (Intelligent Distribution):');
+      instructions.push(`- Total internal links available: ${allInternalLinks.length}`);
+      instructions.push('- LINK DISTRIBUTION STRATEGY:');
+      instructions.push(`  * Introduction section: Use ${linkDistribution.intro.length} links - ${linkDistribution.intro.join(', ')}`);
+      instructions.push(`  * Middle sections: Use ${linkDistribution.middle.length} links - ${linkDistribution.middle.join(', ')}`);
+      instructions.push(`  * Conclusion section: Use ${linkDistribution.conclusion.length} links - ${linkDistribution.conclusion.join(', ')}`);
+      instructions.push('- Place links naturally within contextually relevant paragraphs');
       instructions.push('- Use descriptive anchor text that relates to the linked content');
-      instructions.push('- Distribute links evenly throughout the article (not all in one section)');
-      instructions.push(`- Internal links to include: ${internalLinks.join(', ')}`);
+      instructions.push('- Ensure even distribution - avoid clustering links in one section');
       instructions.push('- Format: <a href="URL">descriptive anchor text</a>');
     }
   } else if (settings.internalLinks === "Otomatik") {
@@ -46,20 +77,25 @@ function buildLinkInstructions(settings: any): string[] {
   
   // External links processing
   if (settings.externalLinks === "Manuel" && settings.manualExternalLinks) {
-    const externalLinks = settings.manualExternalLinks
+    const allExternalLinks = settings.manualExternalLinks
       .split('\n')
       .map((link: string) => link.trim())
-      .filter((link: string) => link.length > 0 && link.startsWith('http'))
-      .slice(0, 3); // Limit to 3 external links for SEO best practices
+      .filter((link: string) => link.length > 0 && link.startsWith('http'));
     
-    if (externalLinks.length > 0) {
-      instructions.push('EXTERNAL LINKS (SEO Optimized):');
-      instructions.push(`- Include ${externalLinks.length} external links to authoritative sources`);
+    if (allExternalLinks.length > 0) {
+      // Intelligent distribution strategy for external links
+      const linkDistribution = distributeLinksIntelligently(allExternalLinks, 'external');
+      
+      instructions.push('EXTERNAL LINKS (Intelligent Distribution):');
+      instructions.push(`- Total external links available: ${allExternalLinks.length}`);
+      instructions.push('- LINK DISTRIBUTION STRATEGY:');
+      instructions.push(`  * Introduction section: Use ${linkDistribution.intro.length} links - ${linkDistribution.intro.join(', ')}`);
+      instructions.push(`  * Middle sections: Use ${linkDistribution.middle.length} links - ${linkDistribution.middle.join(', ')}`);
+      instructions.push(`  * Conclusion section: Use ${linkDistribution.conclusion.length} links - ${linkDistribution.conclusion.join(', ')}`);
       instructions.push('- Use rel="nofollow" for all external links');
       instructions.push('- Open external links in new tab with target="_blank"');
       instructions.push('- Place external links to support claims or provide additional information');
       instructions.push('- Use descriptive anchor text that indicates the linked content');
-      instructions.push(`- External links to include: ${externalLinks.join(', ')}`);
       instructions.push('- Format: <a href="URL" target="_blank" rel="nofollow">descriptive anchor text</a>');
     }
   } else if (settings.externalLinks === "Otomatik") {
