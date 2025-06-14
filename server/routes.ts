@@ -617,35 +617,91 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
             ? `Şu alt başlıkları kullanın: ${article.subheadings.join(', ')}` 
             : 'Alt başlıkları otomatik oluşturun';
 
-          const prompt = `
-${article.language || 'Türkçe'} dilinde SEO uyumlu makale yazın:
+          // Gelişmiş içerik özelliklerini belirle
+          const contentFeatures = settings?.contentFeatures || [];
+          let contentEnhancements = '';
+          
+          if (contentFeatures.includes('tables')) {
+            contentEnhancements += '- İçeriği desteklemek için uygun yerlerde HTML tabloları kullanın\n';
+          }
+          if (contentFeatures.includes('lists')) {
+            contentEnhancements += '- Bilgileri düzenlemek için madde listeleri ve numaralı listeler kullanın\n';
+          }
+          if (contentFeatures.includes('bold')) {
+            contentEnhancements += '- Önemli kelimeleri ve cümleleri kalın (bold) yazın\n';
+          }
+          if (contentFeatures.includes('italic')) {
+            contentEnhancements += '- Vurgu yapmak için italik yazı kullanın\n';
+          }
+          if (contentFeatures.includes('quotes')) {
+            contentEnhancements += '- Konu ile ilgili alıntılar ve blockquote\'lar ekleyin\n';
+          }
 
+          const prompt = `
+${article.language || 'Türkçe'} dilinde yüksek kaliteli, SEO optimizasyonlu makale yazın:
+
+TEMEL BİLGİLER:
 Başlık: ${article.title}
 Odak Anahtar Kelime: ${article.focusKeyword}
 Diğer Anahtar Kelimeler: ${article.otherKeywords}
-Makale Konusu: ${article.description || 'Bu konuda detaylı bilgi verici makale'}
+Makale Konusu: ${article.description || 'Bu konuda detaylı, uzman seviyesinde bilgi verici makale'}
 Kategori: ${article.category}
-İçerik Uzunluğu: ${article.contentLength || '800-1200 kelime'}
-Yazım Stili: ${article.writingStyle || 'Profesyonel'}
-Hedef Kitle: ${article.targetAudience || 'Genel okuyucu kitlesi'}
-İçerik Tipi: ${article.contentType || 'Bilgilendirici'}
+
+İÇERİK KALİTE ÖZELLİKLERİ:
+İçerik Uzunluğu: ${settings?.sectionLength === 'cok_uzun' ? '2000-2500 kelime (Çok detaylı)' : 
+                  settings?.sectionLength === 'uzun' ? '1500-2000 kelime (Detaylı)' :
+                  settings?.sectionLength === 'orta' ? '1000-1500 kelime (Orta)' :
+                  settings?.sectionLength === 'kisa' ? '500-800 kelime (Kısa)' : '1200-1500 kelime'}
+Yazım Stili: ${settings?.writingStyle || 'Uzman ve Profesyonel'}
+Hedef Kitle: ${settings?.targetAudience || 'Konu hakkında bilgi arayan kullanıcılar'}
+Dil Seviyesi: Anlaşılır ancak profesyonel
+AI Model: ${settings?.aiModel ? settings.aiModel.replace('_', ' ').toUpperCase() : 'Gemini 2.5 Flash'}
+
+ALT BAŞLIK YÖNERGESİ: 
+${subheadingsText}
+
+İÇERİK GELİŞTİRME ÖZELLİKLERİ:
+${contentEnhancements}
+- Sık sorulan sorular (FAQ) bölümü ekleyin
+- Konuyla ilgili pratik ipuçları ve öneriler verin
+- Gerçek hayattan örnekler kullanın
+- Uzman görüşleri ve endüstri bilgileri dahil edin
+
+SEO ve YAPISAL GEREKSİNİMLER:
+- H1 başlığında odak anahtar kelimeyi kullanın
+- H2 ve H3 başlıklarında doğal anahtar kelime dağılımı
+- İlk paragrafta odak anahtar kelimeyi belirgin şekilde kullanın
+- Makale boyunca %1-2 anahtar kelime yoğunluğu koruyun
+- Her paragraf 3-4 cümleden oluşsun
+- Meta description uyumlu giriş paragrafı yazın
+- İç linkler için anchor text önerileri
+- Resim alt text önerileri ekleyin
+
+GÖRSEL ve MULTİMEDYA:
 Görsel Anahtar Kelime: ${article.imageKeyword}
+- Her bölüm için uygun görsel önerileri
+- İnfografik fikirleri
+- Video içerik önerileri
 
-Alt Başlık Talimatları: ${subheadingsText}
+UZMANLIK ve GÜVENİLİRLİK:
+- Güncel istatistikler ve veriler kullanın
+- Kaynak gösterimi yapın
+- Adım adım rehberler ekleyin  
+- Yaygın hataları ve çözümleri belirtin
 
-Lütfen aşağıdaki kriterlere uygun makale oluşturun:
-- SEO uyumlu H1, H2, H3 başlıkları kullanın
-- Odak anahtar kelimeyi doğal bir şekilde yerleştirin
-- Diğer anahtar kelimeleri de içeriğe dahil edin
-- ${article.contentLength || '800-1200 kelime'} uzunluğunda yazın
-- ${article.writingStyle || 'Profesyonel'} bir dil kullanın
-- HTML formatında döndürün
-- Makale sonunda ilgili etiketler ekleyin
-- Görsel anahtar kelimeye uygun resim önerileri ekleyin
+${article.metaDescription ? `
+HEDEF META AÇIKLAMA: ${article.metaDescription}
+(Bu meta açıklamaya uygun giriş ve sonuç yazın)
+` : ''}
 
-${article.metaDescription ? `Meta Açıklama: ${article.metaDescription}` : ''}
+ÇIKTI FORMATI:
+- Tamamen HTML formatında
+- Başlığı makale içinde tekrarlamamayın (sadece içerik)
+- Profesyonel ve akıcı yazım dili
+- Yüksek okunabilirlik skoru
+- Mobil uyumlu yapı
 
-Makaleyi HTML formatında, kapsamlı ve özgün olarak yazın.
+Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu makale oluşturun.
           `;
 
           const result = await model.generateContent(prompt);

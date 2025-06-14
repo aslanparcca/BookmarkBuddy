@@ -3,11 +3,14 @@ import { useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import FileDropZone from "@/components/FileDropZone";
-import { FileSpreadsheet, Download, Upload, CheckCircle, XCircle, Play } from "lucide-react";
+import { FileSpreadsheet, Download, Upload, CheckCircle, XCircle, Play, Settings, Image, FileText } from "lucide-react";
 
 interface ExcelTemplateProps {
   setLoading: (loading: boolean) => void;
@@ -45,6 +48,17 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
   const [generationResults, setGenerationResults] = useState<GenerationResult[]>([]);
   const [generationProgress, setGenerationProgress] = useState(0);
   const { toast } = useToast();
+
+  // İçerik kalite ayarları
+  const [settings, setSettings] = useState({
+    aiModel: 'gemini_2.5_flash',
+    sectionLength: 'orta',
+    writingStyle: 'profesyonel',
+    targetAudience: 'genel',
+    contentFeatures: [] as string[],
+    generateImages: false,
+    publishStatus: 'draft'
+  });
 
   const processExcelMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -93,7 +107,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
       console.log("Sending articles to backend:", articles.length, articles);
       const response = await apiRequest("POST", "/api/generate-from-excel-template", {
         articles,
-        settings: { publishStatus: 'draft' }
+        settings: settings
       });
       return await response.json();
     },
