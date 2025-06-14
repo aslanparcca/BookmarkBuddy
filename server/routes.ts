@@ -460,6 +460,204 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Excel template processing endpoint
+  app.post('/api/process-excel-template', isAuthenticated, upload.single('file'), async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ message: "Kullanıcı kimliği bulunamadı" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "Excel dosyası yüklenmedi" });
+      }
+
+      const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const data = XLSX.utils.sheet_to_json(worksheet);
+
+      // Excel şablonunu işle ve AI prompt hazırla
+      const processedData = data.map((row: any) => {
+        // Alt başlıkları topla (Alt Başlık 1'den Alt Başlık 20'ye kadar)
+        const subheadings = [];
+        for (let i = 1; i <= 20; i++) {
+          const subheading = row[`Alt Başlık ${i}`] || row[`Alt Başlık${i}`] || '';
+          if (subheading && subheading.trim() !== '') {
+            subheadings.push(subheading.trim());
+          }
+        }
+
+        return {
+          title: row['Makale Başlığı'] || row['Başlık'] || row['Title'] || '',
+          focusKeyword: row['Odak Anahtar Kelime'] || row['Focus Keyword'] || '',
+          otherKeywords: row['Diğer Anahtar Kelimeler'] || row['Other Keywords'] || '',
+          description: row['Makale Konusu'] || row['Açıklama'] || row['Description'] || '',
+          category: row['Kategori'] || row['Category'] || '',
+          tags: row['Görel Kaynak'] || row['Etiketler'] || row['Tags'] || '',
+          imageKeyword: row['Resim Anahtar Kelimesi'] || row['Image Keyword'] || '',
+          subheadings: subheadings,
+          writingStyle: row['Yazım Stili'] || row['Writing Style'] || 'Profesyonel',
+          language: row['Dil'] || row['Language'] || 'Türkçe',
+          metaDescription: row['Meta Açıklama'] || row['Meta Description'] || '',
+          targetAudience: row['Hedef Kitle'] || row['Target Audience'] || '',
+          contentType: row['İçerik Tipi'] || row['Content Type'] || 'Bilgilendirici',
+          contentLength: row['İçerik Uzunluğu'] || row['Content Length'] || '800-1200 kelime'
+        };
+      });
+
+      // Boş olmayan satırları filtrele
+      const validData = processedData.filter(item => item.title && item.title.trim() !== '');
+
+      if (validData.length === 0) {
+        return res.status(400).json({ message: "Excel dosyasında geçerli makale verisi bulunamadı" });
+      }
+
+      // AI Prompt oluştur
+      const aiPrompt = validData.map((item, index) => {
+        return `
+Makale ${index + 1}:
+Başlık: ${item.title}
+Anahtar Kelimeler: ${item.keywords}
+Açıklama: ${item.description}
+Kategori: ${item.category}
+Etiketler: ${item.tags}
+Görsel Anahtar Kelime: ${item.imageKeyword}
+Bölüm Uzunluğu: ${item.sectionLength} kelime
+Alt Başlık Sayısı: ${item.subheadingCount}
+Yazım Stili: ${item.writingStyle}
+Dil: ${item.language}
+Meta Açıklama: ${item.metaDescription}
+Odak Anahtar Kelime: ${item.focusKeyword}
+Hedef Kitle: ${item.targetAudience}
+İçerik Tipi: ${item.contentType}
+
+Bu bilgilere göre SEO uyumlu, kaliteli ve özgün makale içeriği oluşturun.
+        `;
+      }).join('\n\n---\n\n');
+
+      res.json({ 
+        success: true, 
+        articles: validData,
+        count: validData.length,
+        aiPrompt: aiPrompt,
+        message: `${validData.length} makale şablonu başarıyla işlendi ve AI prompt hazırlandı`
+      });
+
+    } catch (error) {
+      console.error("Excel processing error:", error);
+      res.status(500).json({ message: "Excel dosyası işlenirken hata oluştu" });
+    }
+  });
+
+  // Generate articles from Excel template endpoint  
+  app.post('/api/generate-from-excel-template', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ message: "Kullanıcı kimliği bulunamadı" });
+      }
+
+      const { articles, settings } = req.body;
+
+      if (!articles || !Array.isArray(articles)) {
+        return res.status(400).json({ message: "Makale verileri geçersiz" });
+      }
+
+      const userSettings = await storage.getUserSettings(userId);
+      if (!userSettings?.geminiApiKey) {
+        return res.status(400).json({ message: "Gemini API anahtarı bulunamadı. Lütfen ayarlarınızı kontrol edin." });
+      }
+
+      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+      const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-2.5-flash" });
+
+      let generatedCount = 0;
+      const results = [];
+
+      for (const article of articles) {
+        try {
+          const prompt = `
+Türkçe SEO uyumlu makale yazın:
+
+Başlık: ${article.title}
+Anahtar Kelimeler: ${article.keywords}
+Açıklama: ${article.description || 'Bu konuda detaylı bilgi verici makale'}
+Kategori: ${article.category}
+Yazım Stili: ${article.writingStyle || 'Profesyonel'}
+Bölüm Uzunluğu: ${article.sectionLength || '300-400'} kelime
+Alt Başlık Sayısı: ${article.subheadingCount || '3-5'}
+Odak Anahtar Kelime: ${article.focusKeyword || article.keywords}
+Hedef Kitle: ${article.targetAudience || 'Genel okuyucu kitlesi'}
+İçerik Tipi: ${article.contentType || 'Bilgilendirici'}
+
+Lütfen aşağıdaki kriterlere uygun makale oluşturun:
+- SEO uyumlu H1, H2, H3 başlıkları kullanın
+- Anahtar kelimeleri doğal bir şekilde yerleştirin
+- ${article.sectionLength || '300-400'} kelimelik bölümler halinde yazın
+- ${article.subheadingCount || '3-5'} alt başlık kullanın
+- ${article.writingStyle || 'Profesyonel'} bir dil kullanın
+- HTML formatında döndürün
+- Makale sonunda ilgili etiketler ekleyin
+
+${article.metaDescription ? `Meta Açıklama: ${article.metaDescription}` : ''}
+
+Makaleyi HTML formatında ve eksiksiz olarak yazın.
+          `;
+
+          const result = await model.generateContent(prompt);
+          const content = result.response.text();
+          const wordCount = content.split(/\s+/).length;
+          const readingTime = Math.ceil(wordCount / 200);
+
+          // Makaleyi veritabanına kaydet
+          const savedArticle = await storage.createArticle({
+            userId,
+            title: article.title,
+            content,
+            htmlContent: content,
+            wordCount,
+            readingTime,
+            category: article.category || 'Genel',
+            keywords: article.keywords ? article.keywords.split(',').map((k: string) => k.trim()) : [],
+            status: settings?.publishStatus || 'draft',
+          });
+
+          results.push({
+            id: savedArticle.id,
+            title: article.title,
+            wordCount,
+            readingTime,
+            status: 'success'
+          });
+
+          generatedCount++;
+          await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+        } catch (error) {
+          console.error(`Excel template article generation error for ${article.title}:`, error);
+          results.push({
+            title: article.title,
+            status: 'failed',
+            error: error.message
+          });
+        }
+      }
+
+      res.json({ 
+        success: true,
+        count: generatedCount,
+        total: articles.length,
+        results,
+        message: `${generatedCount}/${articles.length} makale başarıyla oluşturuldu`
+      });
+
+    } catch (error) {
+      console.error("Excel template generation error:", error);
+      res.status(500).json({ message: "Excel şablonu makale oluşturma işlemi başarısız oldu" });
+    }
+  });
+
   // Bulk job status
   app.get('/api/bulk-jobs/:id', isAuthenticated, async (req: any, res) => {
     try {

@@ -59,7 +59,7 @@ export default function BulkDream({ setLoading }: BulkDreamProps) {
 
   const processDreamSubjectsMutation = useMutation({
     mutationFn: async (subjects: string[]) => {
-      return await apiRequest("/api/process-dream-subjects", "POST", { subjects });
+      return await apiRequest("POST", "/api/process-dream-subjects", { subjects });
     },
     onSuccess: (data: any) => {
       const subjectData = data.subjects || [];
@@ -95,7 +95,7 @@ export default function BulkDream({ setLoading }: BulkDreamProps) {
 
   const generateDreamArticlesMutation = useMutation({
     mutationFn: async (settings: DreamSettings & { subjects: GeneratedDreamSubject[] }) => {
-      return await apiRequest("/api/bulk-dream-articles", "POST", settings);
+      return await apiRequest("POST", "/api/bulk-dream-articles", settings);
     },
     onSuccess: (data: any) => {
       toast({
