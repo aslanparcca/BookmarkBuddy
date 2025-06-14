@@ -16,6 +16,7 @@ interface Website {
   type: string;
   seoPlugin: string;
   gscConnected: boolean;
+  apiConnected: boolean;
 }
 
 interface WebSitesProps {
@@ -163,19 +164,20 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
                   <th className="font-semibold p-3 text-center">Tür</th>
                   <th className="font-semibold p-3 text-center">SEO Eklentisi</th>
                   <th className="font-semibold p-3 text-center" title="Google Search Console (GSC) Entegrasyonu">GSC</th>
+                  <th className="font-semibold p-3 text-center">API Durumu</th>
                   <th className="font-semibold p-3 text-end"></th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                    <td colSpan={7} className="p-8 text-center text-muted-foreground">
                       Yükleniyor...
                     </td>
                   </tr>
                 ) : filteredWebsites.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                    <td colSpan={7} className="p-8 text-center text-muted-foreground">
                       {searchUrl ? "Arama kriterinize uygun web sitesi bulunamadı" : "Henüz web siteniz bulunmuyor"}
                     </td>
                   </tr>
@@ -216,6 +218,14 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
                         ) : (
                           <X className="w-5 h-5 text-red-600 mx-auto" />
                         )}
+                      </td>
+                      <td className="text-center py-3 px-3">
+                        <Badge 
+                          variant={website.apiConnected ? "default" : "destructive"}
+                          className={website.apiConnected ? "bg-green-100 text-green-800 hover:bg-green-100" : "bg-red-100 text-red-800 hover:bg-red-100"}
+                        >
+                          {website.apiConnected ? "API Bağlı" : "API Bağlı Değil"}
+                        </Badge>
                       </td>
                       <td className="text-end py-3 px-3">
                         <DropdownMenu>

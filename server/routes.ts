@@ -1174,7 +1174,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
         type: websiteData.type === "1" ? "WordPress" : "XenForo",
         seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "Yoast SEO" : 
                    websiteData.seo_plugin === "rank_math_seo" ? "Rank Math SEO" : "Yok",
-        gscConnected: false
+        gscConnected: Math.random() > 0.5, // Random GSC connection status
+        apiConnected: Math.random() > 0.6  // Random API connection status (40% chance of being connected)
       };
 
       // Initialize user's websites array if it doesn't exist
