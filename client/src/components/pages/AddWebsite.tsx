@@ -224,9 +224,6 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                           <option value="rank_math_seo">Rank Math SEO</option>
                           <option value="yoast_seo">Yoast SEO</option>
                         </select>
-                        <div className="text-sm text-gray-600 mt-1">
-                          <span className="text-red-600 font-bold">Dikkat:</span> Lütfen Rank Math ve Yoast SEO eklentileri için yan taraftaki ilgili kodu web sitenizde kullandığınız temanın functions.php dosyasının en sonuna ekleyin.
-                        </div>
                       </div>
 
                       <div className="mb-4">
