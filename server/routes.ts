@@ -1529,6 +1529,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '- Use keyword variations and synonyms',
             '- Create proper H2, H3 hierarchy',
             '',
+            ...buildLinkInstructions(settings),
+            '',
             'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph.'
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');

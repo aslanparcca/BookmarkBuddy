@@ -75,6 +75,8 @@ interface BulkV2Settings {
   // İç & Dış Linkler
   internalLinks: string;
   externalLinks: string;
+  manualInternalLinks: string;
+  manualExternalLinks: string;
 }
 
 interface GeneratedTitle {
@@ -149,7 +151,9 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     publishDate: "",
     contentFeatures: [] as string[],
     internalLinks: "Yok",
-    externalLinks: "Yok"
+    externalLinks: "Yok",
+    manualInternalLinks: "",
+    manualExternalLinks: ""
   });
 
   // Fetch websites
@@ -848,7 +852,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
             </CardTitle>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="internalLinks">İç Linkler</Label>
@@ -858,9 +862,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Yok">Yok</SelectItem>
-                    <SelectItem value="Az">Az</SelectItem>
-                    <SelectItem value="Orta">Orta</SelectItem>
-                    <SelectItem value="Çok">Çok</SelectItem>
+                    <SelectItem value="Otomatik">Otomatik</SelectItem>
+                    <SelectItem value="Manuel">Manuel</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -873,13 +876,45 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Yok">Yok</SelectItem>
-                    <SelectItem value="Az">Az</SelectItem>
-                    <SelectItem value="Orta">Orta</SelectItem>
-                    <SelectItem value="Çok">Çok</SelectItem>
+                    <SelectItem value="Otomatik">Otomatik</SelectItem>
+                    <SelectItem value="Manuel">Manuel</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
+
+            {/* Manuel Link Input Areas */}
+            {settings.internalLinks === "Manuel" && (
+              <div>
+                <Label htmlFor="manualInternalLinks">Manuel İç Linkler</Label>
+                <Textarea
+                  id="manualInternalLinks"
+                  placeholder="Her satıra bir link yazın:&#10;https://example.com/sayfa1&#10;https://example.com/sayfa2&#10;https://example.com/sayfa3"
+                  className="min-h-[120px] mt-2"
+                  value={settings.manualInternalLinks || ''}
+                  onChange={(e) => setSettings({...settings, manualInternalLinks: e.target.value})}
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Her satıra bir iç link yazın. Makale içinde uygun yerlere yerleştirilecek.
+                </p>
+              </div>
+            )}
+
+            {settings.externalLinks === "Manuel" && (
+              <div>
+                <Label htmlFor="manualExternalLinks">Manuel Dış Linkler</Label>
+                <Textarea
+                  id="manualExternalLinks"
+                  placeholder="Her satıra bir link yazın:&#10;https://wikipedia.org/artikel1&#10;https://authoritysite.com/page&#10;https://reference.com/info"
+                  className="min-h-[120px] mt-2"
+                  value={settings.manualExternalLinks || ''}
+                  onChange={(e) => setSettings({...settings, manualExternalLinks: e.target.value})}
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Her satıra bir dış link yazın. Makale içinde uygun yerlere yerleştirilecek.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
