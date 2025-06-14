@@ -1,0 +1,195 @@
+<div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    
+                    
+                    <div class="row">
+        <div class="col-md-6 col-lg-7 mb-4">
+            <div class="card">
+                <div class="card-header border-bottom d-flex flex-row align-items-center justify-content-between pt-3 pb-2">
+                    <h5 class="m-0 p-0">Yeni API Key Ekle</h5>
+                    <a class="btn btn-label-primary btn-sm m-0" href="https://app.contety.com/account/3rd-party-api-key" title="Kendi API Keylerim">Kendi API Keylerim</a>
+                </div>
+
+                <div class="card-body pt-4">
+                    <form method="post" action="https://app.contety.com/account/3rd-party-api-key" spellcheck="false">
+                        <input type="hidden" name="_token" value="wuN6NKnyksivYnyw7as2Oahuyon3VhpIoJr1TvHv" autocomplete="off">
+                        <div class="mb-4">
+    <label class="form-label" for="third-party-service">
+    Yapay Zeka Servisi <span class="text-danger">*</span></label>
+    <select class="form-select" name="service" id="third-party-service"><option value="openai" selected="selected">OpenAI</option><option value="gemini">Google Gemini</option></select>
+    </div>
+
+<div class="mb-4">
+    <label class="form-label" for="title">
+    API Key ismi <span class="text-danger">*</span></label>
+    <input name="title" class="form-control" type="text" id="title" placeholder="Lütfen API keyinizi tanımlamak için bir isim giriniz" maxlength="255" required="required">
+    <div class="form-text mt-1">Bu isim içerik oluşturma sırasında kullanmak istediğiniz API keyi seçmeniz için kullanılacaktır.</div>
+    </div>
+
+<div class="mb-4">
+    <label class="form-label" for="api_key">
+    API Key <span class="text-danger">*</span></label>
+            <input name="api_key" class="form-control" type="text" id="api_key" placeholder="Lütfen API keyinizi giriniz" maxlength="255" required="required">
+        <div class="form-text mt-1 service-specs" id="openai-specs">Bu bilgiye <a href="https://platform.openai.com/api-keys" class="text-muted fw-medium" target="_blank" title="OpenAI API Keys">OpenAI API Keys <i class="bx bx-link-external fs07"></i></a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.</div>
+        <div class="form-text mt-1 service-specs d-none" id="gemini-specs">Bu bilgiye <a href="https://aistudio.google.com/apikey" class="text-muted fw-medium" target="_blank" title="Gemini API Keys">Gemini API Keys <i class="bx bx-link-external fs07"></i></a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.</div>
+        </div>
+
+<div class="third-party-service-cont" id="openai-cont">
+    <div class="mb-4">
+        <label class="form-label" for="organization">
+    Organization </label>
+                    <input name="organization" class="form-control" type="text" id="organization" placeholder="Lütfen organization bilginizi giriniz (Mecburi değildir)" maxlength="255">
+            <div class="form-text mt-1">Bu bilgiye <a href="https://platform.openai.com/account/organization" target="_blank" class="text-muted fw-medium" title="OpenAI Organization">OpenAI Organization <i class="bx bx-link-external fs07"></i></a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.</div>
+                    </div>
+</div>
+
+<div class="mb-4">
+    <div class="form-label">Varsayılan API Key</div>
+    <div class="form-text mb-3 mt-n2">İçerik oluşturma formunda seçili olarak gelsin mi?</div>
+
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="is_default" id="is_default1" value="1" checked="">
+        <label class="form-check-label" for="is_default1">Evet</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="is_default" id="is_default0" value="0">
+        <label class="form-check-label" for="is_default0">Hayır</label>
+    </div>
+
+    </div>
+
+    <div class="mb-4">
+        <div class="form-label">API Key Şartları</div>
+
+        <div class="border h-px-200 overflow-auto p-2 rounded mb-3 text-muted">
+            <div class="fw-bold mb-2">OpenAI API Key Şartları</div>
+            <ol class="ps-4">
+                <li>Ücretsiz API keyler kullanılmamalıdır.</li>
+                <li>Tek tek makale yazdırmak istiyorsanız <strong>minimum tier 1</strong>, toplu makale yazdırmak istiyorsanız <strong>minimum tier 2</strong> API Key kullanılmalıdır. (<a href="https://platform.openai.com/docs/guides/rate-limits/usage-tiers?context=tier-two" target="_blank">Detaylar <i class="bx bx-link-external fs07"></i></a>)</li>
+                <li>Şartları sağlamayan API key kullanmanız durumunda içerik oluşturma işlemlerinde hatalar meydana gelecektir.</li>
+                <li>Eğer kullandığınız pakete API hizmeti dahilse bu bölümde herhangi bir API key girmeniz gerekmemektedir.</li>
+            </ol>
+
+            <div class="fw-bold mb-2">Gemini API Key Şartları</div>
+
+            <ol class="ps-4">
+                <li>Ücretsiz API keyler kullanılmamalıdır.</li>
+                <li>Ücretsiz API keylerin limitleri makale yazdırmak için yeterli değildir.</li>
+                <li>Şartları sağlamayan API key kullanmanız durumunda içerik oluşturma işlemlerinde hatalar meydana gelecektir.</li>
+                <li>Eğer kullandığınız pakete API hizmeti dahilse bu bölümde herhangi bir API key girmeniz gerekmemektedir.</li>
+            </ol>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="api_key_confirm" id="api_key_confirm" value="1">
+            <label class="form-check-label" for="api_key_confirm">API keyin belirtilen şartlara uyduğunu kabul ediyorum.</label>
+        </div>
+            </div>
+
+<div class="mb-4">
+    <button class="btn btn-primary ib-spn-btn mt-3" type="submit">
+        <span class="btn-label">Kaydet</span>
+        <span class="spinner-border ms-1" role="status" aria-hidden="true"></span>
+    </button>
+</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-5">
+                        <div class="card mb-4">
+    <div class="card-header border-bottom py-3 d-flex flex-row align-items-center justify-content-between" data-bs-toggle="collapse" href="#third-party-api-key-security-faq-cont" role="button" aria-expanded="true" aria-controls="third-party-api-key-security-faq-cont">
+        <h5 class="m-0 p-0">API Keyler Hakkında Merak Edilenler</h5>
+        <i class="bx bx-chevron-down"></i>
+    </div>
+
+    <div class="collapse show" id="third-party-api-key-security-faq-cont">
+        <div class="card-body">
+            <ol class="ps-4">
+                <li>
+                    <div class="fw-bold mb-2">Eklediğim API keylerin güvenliğini nasıl sağlıyorsunuz?</div>
+                    <div class="mb-3">Eklenen API keyler encrypt edilerek (şifrelenerek) saklanmaktadır. Yani key bilgileri asla görüntülenememektedir.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">OpenAI'da 5$ değerinde ücretsiz hesabım var. Bu hesaba ait API keyleri kullanabilir miyim?</div>
+                    <div class="mb-3">Ücretsiz OpeanAI API keylerin limitleri olduğu için bu keyler ile yapılan işlemlerde hatalar ortaya çıkabilmektedir. Bu sebeple ücretsiz keyler contety'de kullanılamamaktadır.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Makalelerimi teker teker yazdırmak istiyorum, bunun için <u>OpenAI Tier 1 API key</u> yeterli mi?</div>
+                    <div class="mb-3">Evet, tek tek makale yazdırmak için OpenAI tier 1 API keyler kullanılabilir.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Makalelerimi teker teker yazdırmak istiyorum, bunun için <u>ücretsiz Gemini API key</u> yeterli mi?</div>
+                    <div class="mb-3">Ücretsiz Gemini API keylerin limitleri yeterli olmadığı için hatalar meydana gelmektedir. Bu nedenle makale yazdırmak için <strong>ücretli Gemini API keyler</strong> kullanılmalıdır.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Toplu makale yazdırmak istiyorum, bunun için <u>OpenAI Tier 1 API key</u> yeterli mi?</div>
+                    <div class="mb-3">OpenAI Tier 1 API keylerin limitleri toplu işlemlerde yeterli olmadığı için hatalar meydana gelebilmektedir. Bu nedenle toplu makale yazdırmak için <strong>minimum tier 2</strong> API keyler kullanılmalıdır.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Toplu makale yazdırmak istiyorum, bunun için <u>ücretsiz Gemini API key</u> yeterli mi?</div>
+                    <div class="mb-3">Ücretsiz Gemini API keylerin limitleri toplu işlemlerde yeterli olmadığı için hatalar meydana gelmektedir. Bu nedenle toplu makale yazdırmak için <strong>ücretli Gemini API keyler</strong> kullanılmalıdır.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">OpenAI veya Gemini'da mevcut bir API keyim var, contety için bunu kullanabilir miyim?</div>
+                    <div class="mb-3">Evet, kullanabilirsiniz. Ancak eğer birden fazla servis için API key kullanıyorsanız her servis için farklı API key oluşturmanızı tavsiye ederiz. Bu sayede keylerinizin işlemlerini daha kolay takip edebilirsiniz.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Farklı müşterilerimize ait birden fazla API keyim var. Bunların hepsini ekleyip içerik oluşturma işlemi sırasında istediğimi seçebilir miyim?</div>
+                    <div class="mb-3">Evet, farklı OpenAI veya Gemini hesaplarına ait birden fazla API keyi ekleyebilir ve hangisiyle içerik oluşturulacağını belirleyebilirsiniz.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Yeni OpenAI API key oluştururken hangi yetkileri vermeliyim?</div>
+                    <div class="mb-3">"Models" için "read", "Model capabilities" için "write" yetkisini vermenizi, diğer yetkileri vermemenizi tavsiye ederiz. <span class="fw-medium text-primary cursor-pointer" title="Yardım" data-bs-toggle="modal" data-bs-target="#third-party-api-key-help-modal">Nasıl API Key oluştururum? </span> bölümüne göz atabilirsiniz.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Nasıl Gemini API key oluşturabilirim?</div>
+                    <div class="mb-3"><a href="https://aistudio.google.com/app/apikey" target="_blank">https://aistudio.google.com/app/apikey</a> adresinden yeni bir API key oluşturabilirsiniz.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">OpenAI API key için organization bilgimi girmeli miyim?</div>
+                    <div class="mb-3">Bu bilgiyi girmek zorunlu değildir. Ancak OpenAI hesabınız birden fazla organizasyona aitse bu bilgiyi girmenizi tavsiye ederiz.</div>
+                </li>
+
+                <li>
+                    <div class="fw-bold mb-2">Eklediğim API keyleri silebilir miyim?</div>
+                    <div class="mb-3">Evet, istediğiniz zaman silebilirsiniz. Ayrıca OpenAI ve Gemini hesabınızdan da silme işlemini gerçekleştirebilirsiniz.</div>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+                </div>
+
+                <footer class="content-footer footer bg-footer-theme">
+    <div class="d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column container-fluid">
+        <div class="mb-2 mb-md-0">
+            © 2025 <a href="https://contety.com" target="_blank">contety</a> versiyon 2.5
+        </div>
+
+        <div class="d-none d-lg-inline-block">
+            <a href="https://app.contety.com/contact" class="footer-link fs085 me-4" title="İletişim">İletişim</a>
+            <a href="https://app.contety.com/api/intro" class="footer-link fs085 me-4" title="contety API">contety API</a>
+            <a href="https://contety.com/sozlesmeler/kullanici-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Kullanıcı Sözleşmesi">Kullanıcı Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/gizlilik-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Gizlilik Sözleşmesi">Gizlilik Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/cerez-politikasi" class="footer-link fs085 me-4" target="_blank" title="Çerez Politikası">Çerez Politikası</a>
+        </div>
+    </div>
+</footer>
+
+                <div class="content-backdrop fade"></div>
+            </div>

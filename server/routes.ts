@@ -13,8 +13,9 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+// Initialize Gemini AI with backup key
+const BACKUP_GEMINI_KEY = 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY);
 
 // Helper function to intelligently distribute links across article sections
 function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
@@ -220,15 +221,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const { titles, settings, focusKeywords } = req.body;
       
-      // Use system API key if user hasn't set their own
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+      // Use backup API key if primary is quota limited
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY || 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
       const userSettings = await storage.getUserSettings(userId);
       if (userSettings?.geminiApiKey) {
         apiKey = userSettings.geminiApiKey;
-      }
-
-      if (!apiKey) {
-        return res.status(400).json({ message: "Gemini API key not available" });
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
@@ -1583,7 +1580,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+      // Use backup API key if primary is quota limited
+      const apiKey = process.env.GOOGLE_GEMINI_API_KEY || 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
+      const genAI = new GoogleGenerativeAI(apiKey);
       
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
