@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -87,15 +87,6 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const { toast } = useToast();
   const [showStep2, setShowStep2] = useState(false);
 
-  // Fetch websites
-  const { data: websites = [] } = useQuery<Website[]>({
-    queryKey: ['/api/websites'],
-    retry: false,
-  });
-
-  // Fetch categories for selected website
-  const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
-  const categories = selectedWebsite?.categories || [];
   const [generatedTitles, setGeneratedTitles] = useState<GeneratedTitle[]>([]);
   const [selectedGenerateType, setSelectedGenerateType] = useState("1");
   const [currentInfoEnabled, setCurrentInfoEnabled] = useState(false);
@@ -139,6 +130,18 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     publishStatus: "draft",
     publishDate: ""
   });
+
+  // Fetch websites
+  const { data: websites = [] } = useQuery<Website[]>({
+    queryKey: ['/api/websites'],
+    retry: false,
+  });
+
+  // Fetch categories for selected website using useMemo
+  const categories = useMemo(() => {
+    const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
+    return selectedWebsite?.categories || [];
+  }, [websites, settings.website]);
 
   const generateTitlesMutation = useMutation({
     mutationFn: async (settings: BulkV2Settings) => {

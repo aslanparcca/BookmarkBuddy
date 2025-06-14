@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -62,16 +62,6 @@ interface Website {
 }
 
 export default function URLRewrite() {
-  // Fetch websites
-  const { data: websites = [] } = useQuery<Website[]>({
-    queryKey: ['/api/websites'],
-    retry: false,
-  });
-
-  // Fetch categories for selected website
-  const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
-  const categories = selectedWebsite?.categories || [];
-
   const [settings, setSettings] = useState<URLRewriteSettings>({
     url: "",
     language: "Türkçe",
@@ -99,6 +89,18 @@ export default function URLRewrite() {
     internalLinks: "Yok",
     externalLinks: "Yok"
   });
+
+  // Fetch websites
+  const { data: websites = [] } = useQuery<Website[]>({
+    queryKey: ['/api/websites'],
+    retry: false,
+  });
+
+  // Fetch categories for selected website using useMemo
+  const categories = useMemo(() => {
+    const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
+    return selectedWebsite?.categories || [];
+  }, [websites, settings.website]);
 
   const [openSections, setOpenSections] = useState({
     general: true,
