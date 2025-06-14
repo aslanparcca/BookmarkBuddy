@@ -1781,6 +1781,15 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
             }
 
             // Prepare post data with SEO meta fields
+            const focusKeyword = article.focusKeyword || article.keywords?.[0] || '';
+            console.log('Article SEO Debug:', {
+              articleId: article.id,
+              focusKeyword: article.focusKeyword,
+              keywords: article.keywords,
+              finalFocusKeyword: focusKeyword,
+              metaDescription: article.metaDescription
+            });
+
             const postData = {
               title: article.title,
               content: article.htmlContent || article.content,
@@ -1790,9 +1799,9 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               meta: {
                 // Yoast SEO fields
                 _yoast_wpseo_metadesc: article.metaDescription || '',
-                _yoast_wpseo_focuskw: article.keywords?.[0] || '',
+                _yoast_wpseo_focuskw: focusKeyword,
                 // Rank Math SEO fields
-                rank_math_focus_keyword: article.keywords?.[0] || '',
+                rank_math_focus_keyword: focusKeyword,
                 rank_math_description: article.metaDescription || ''
               }
             };
