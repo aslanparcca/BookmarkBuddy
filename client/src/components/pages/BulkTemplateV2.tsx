@@ -560,23 +560,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 </div>
               )}
 
-              {selectedGenerateType === "4" && (
-                <div>
-                  <Label htmlFor="customTitle">Makale Başlıkları</Label>
-                  <Textarea
-                    id="customTitle"
-                    rows={10}
-                    placeholder="Lütfen her satıra sadece 1 adet başlık yazınız"
-                    value={settings.customTitle}
-                    onChange={(e) => setSettings({...settings, customTitle: e.target.value})}
-                    className="resize-none"
-                  />
-                  <div className="text-sm text-muted-foreground mt-2">
-                    <p>* Lütfen <span className="underline">her satıra sadece 1 adet başlık</span> yazınız.</p>
-                    <p>* En fazla 40 adet başlık girebilirsiniz.</p>
-                  </div>
-                </div>
-              )}
+
 
               {selectedGenerateType === "excel" && (
                 <div className="space-y-4">
