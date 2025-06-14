@@ -1275,7 +1275,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
       {/* Progress Modal */}
       <Dialog open={isGenerating} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md" closeButton={false}>
+        <DialogContent className="sm:max-w-md [&>button]:hidden">
           <DialogHeader>
             <DialogTitle className="text-center">
               {progressData.status === "starting" && "Hazırlanıyor..."}
