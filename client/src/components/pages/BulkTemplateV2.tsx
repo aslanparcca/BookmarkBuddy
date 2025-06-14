@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -106,6 +106,7 @@ interface Category {
 
 export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showStep2, setShowStep2] = useState(false);
   
   // Progress tracking states
@@ -257,6 +258,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
       setTimeout(() => {
         setIsGenerating(false);
+        // Clear articles cache to show new articles
+        queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
         toast({
           title: "Başarılı",
           description: `${data.successCount} makale oluşturuldu!`,

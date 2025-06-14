@@ -61,9 +61,12 @@ export default function ArticlesNew() {
         params.append('search', searchQuery);
       }
       const response = await apiRequest('GET', `/api/articles?${params}`);
+      console.log('Articles API Response:', response);
       return response as ArticleResponse;
     },
     enabled: true,
+    staleTime: 0, // Force fresh data
+    gcTime: 0, // Don't cache (v5 renamed from cacheTime)
   });
 
   const articles = responseData?.articles || [];
