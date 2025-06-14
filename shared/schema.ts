@@ -84,7 +84,7 @@ export const apiUsage = pgTable("api_usage", {
 // User settings
 export const userSettings = pgTable("user_settings", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id").notNull().references(() => users.id),
+  userId: varchar("user_id").notNull().references(() => users.id).unique(),
   geminiApiKey: text("gemini_api_key"),
   geminiModel: varchar("gemini_model", { length: 50 }).default("gemini-2.5-flash"),
   wordpressUrl: text("wordpress_url"),

@@ -202,34 +202,42 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
       {/* Settings Panel */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Article Titles Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="h-10 w-10 bg-primary-100 text-primary-600 flex items-center justify-center rounded-lg">
-              <i className="fas fa-heading"></i>
+        <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="h-6 w-6 bg-blue-500 text-white flex items-center justify-center rounded text-xs font-semibold">
+              H
             </div>
-            <h3 className="text-lg font-semibold text-slate-900">Makale Başlıkları</h3>
+            <h3 className="text-base font-medium text-slate-800">Makale Başlıkları</h3>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             {titles.map((title, index) => (
-              <div key={index} className="flex items-center space-x-3">
+              <div key={index} className="flex items-center space-x-2">
+                <span className="text-sm text-slate-500 w-6">{index + 1}.</span>
                 <Input
                   type="text"
-                  placeholder={index === 0 ? "Ana başlık girin..." : "Başlık girin..."}
+                  placeholder="Lütfen bir başlık yazınız..."
                   value={title}
                   onChange={(e) => updateTitle(index, e.target.value)}
-                  className="flex-1"
+                  className="flex-1 text-sm"
+                />
+                <Input
+                  type="text"
+                  placeholder="Odak anahtar kelime..."
+                  value={focusKeywords[index] || ''}
+                  onChange={(e) => updateFocusKeyword(index, e.target.value)}
+                  className="flex-1 text-sm"
                 />
                 {titles.length > 1 && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => removeTitle(index)}
-                    className="text-slate-400 hover:text-red-500"
+                    className="text-slate-400 hover:text-red-500 h-8 w-8 p-0"
                   >
-                    <i className="fas fa-times"></i>
+                    <i className="fas fa-times text-xs"></i>
                   </Button>
                 )}
               </div>
@@ -239,145 +247,25 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
           <Button
             variant="ghost"
             onClick={addTitle}
-            className="mt-4 text-primary-600 hover:text-primary-700"
+            className="mt-3 text-blue-600 hover:text-blue-700 text-sm h-8"
           >
-            <i className="fas fa-plus mr-2"></i>
-            Yeni Başlık Ekle
+            + Yeni Başlık Ekle
           </Button>
         </div>
 
-        {/* Focus Keywords Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="h-10 w-10 bg-blue-100 text-blue-600 flex items-center justify-center rounded-lg">
-              <i className="fas fa-key"></i>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900">Odak Anahtar Kelimeler</h3>
-          </div>
-          
-          <div className="space-y-3">
-            {focusKeywords.map((keyword, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <Input
-                  type="text"
-                  placeholder="Odak anahtar kelime..."
-                  value={keyword}
-                  onChange={(e) => updateFocusKeyword(index, e.target.value)}
-                  className="flex-1"
-                />
-                {focusKeywords.length > 1 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeFocusKeyword(index)}
-                    className="text-slate-400 hover:text-red-500"
-                  >
-                    <i className="fas fa-times"></i>
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <Button
-            variant="ghost"
-            onClick={addFocusKeyword}
-            className="mt-4 text-blue-600 hover:text-blue-700"
-          >
-            <i className="fas fa-plus mr-2"></i>
-            Yeni Anahtar Kelime Ekle
-          </Button>
-        </div>
 
-        {/* Bulk Upload Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="h-10 w-10 bg-green-100 text-green-600 flex items-center justify-center rounded-lg">
-              <i className="fas fa-upload"></i>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900">Toplu Makale Yükleme</h3>
-          </div>
-          
-          <div className="mb-4">
-            <Label className="text-sm text-slate-600">Excel dosyası yükleyerek toplu makale oluşturun</Label>
-          </div>
-          
-          <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleFileSelect(file);
-              }}
-              className="hidden"
-              id="excel-upload"
-            />
-            <label htmlFor="excel-upload" className="cursor-pointer">
-              <div className="text-slate-400 mb-2">
-                <i className="fas fa-file-excel text-3xl"></i>
-              </div>
-              <p className="text-sm text-slate-600">Excel dosyası seçin veya buraya sürükleyin</p>
-              <p className="text-xs text-slate-400 mt-1">Desteklenen formatlar: .xlsx, .xls</p>
-            </label>
-          </div>
-          
-          {bulkArticles.length > 0 && (
-            <>
-              <div className="mt-4">
-                <p className="text-sm text-green-600 mb-2">
-                  <i className="fas fa-check mr-2"></i>
-                  {bulkArticles.length} makale başlığı yüklendi
-                </p>
-                <div className="max-h-32 overflow-y-auto space-y-1">
-                  {bulkArticles.slice(0, 5).map((article, index) => (
-                    <div key={index} className="text-xs text-slate-500 truncate">
-                      • {article.title}
-                    </div>
-                  ))}
-                  {bulkArticles.length > 5 && (
-                    <div className="text-xs text-slate-400">ve {bulkArticles.length - 5} makale daha...</div>
-                  )}
-                </div>
-              </div>
-              <Button
-                onClick={() => {
-                  if (bulkArticles.length > 0) {
-                    const formData = new FormData();
-                    formData.append('articles', JSON.stringify(bulkArticles));
-                    formData.append('settings', JSON.stringify(settings));
-                    
-                    fetch('/api/bulk-generate', {
-                      method: 'POST',
-                      body: formData,
-                    }).then(response => response.json())
-                      .then(data => {
-                        toast({
-                          title: "Toplu Makale Üretimi Başlatıldı!",
-                          description: data.totalArticles + " makale oluşturuluyor.",
-                        });
-                      });
-                  }
-                }}
-                disabled={bulkArticles.length === 0 || bulkUploadMutation.isPending}
-                className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white"
-              >
-                <i className="fas fa-magic mr-2"></i>
-                Toplu Makale Oluştur ({bulkArticles.length})
-              </Button>
-            </>
-          )}
-        </div>
+
+
 
         {/* General Settings Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 mb-6">Genel Ayarlar</h3>
+        <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <h3 className="text-base font-medium text-slate-800 mb-4">Genel Ayarlar</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Yazı Türü</Label>
+              <Label className="text-sm text-slate-600">Yazı Türü</Label>
               <Select value={settings.articleType} onValueChange={(value) => setSettings({...settings, articleType: value})}>
-                <SelectTrigger>
+                <SelectTrigger className="h-9">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -390,46 +278,42 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
             </div>
             
             <div>
-              <Label>Anlatım Tarzı</Label>
+              <Label className="text-sm text-slate-600">Anlatım Şekli</Label>
               <Select value={settings.tone} onValueChange={(value) => setSettings({...settings, tone: value})}>
-                <SelectTrigger>
+                <SelectTrigger className="h-9">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Profesyonel">Profesyonel</SelectItem>
-                  <SelectItem value="Samimi">Samimi</SelectItem>
-                  <SelectItem value="Eğitici">Eğitici</SelectItem>
-                  <SelectItem value="Satış Odaklı">Satış Odaklı</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label>Kelime Sayısı</Label>
-              <Select value={settings.wordCount} onValueChange={(value) => setSettings({...settings, wordCount: value})}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="500-800 kelime">500-800 kelime</SelectItem>
-                  <SelectItem value="800-1200 kelime">800-1200 kelime</SelectItem>
-                  <SelectItem value="1200-1500 kelime">1200-1500 kelime</SelectItem>
-                  <SelectItem value="1500+ kelime">1500+ kelime</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label>Hedef Kitle</Label>
-              <Select value={settings.targetAudience} onValueChange={(value) => setSettings({...settings, targetAudience: value})}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+                  <SelectItem value="2. Tekil Şahıs">2. Tekil Şahıs</SelectItem>
+                  <SelectItem value="1. Çoğul Şahıs">1. Çoğul Şahıs</SelectItem>
                   <SelectItem value="Genel">Genel</SelectItem>
-                  <SelectItem value="Profesyoneller">Profesyoneller</SelectItem>
-                  <SelectItem value="Yeni Başlayanlar">Yeni Başlayanlar</SelectItem>
-                  <SelectItem value="Uzmanlar">Uzmanlar</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label className="text-sm text-slate-600">Anlatım Türü</Label>
+              <Select value={settings.wordCount} onValueChange={(value) => setSettings({...settings, wordCount: value})}>
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Örnek">Örnek</SelectItem>
+                  <SelectItem value="Memnuel">Memnuel</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label className="text-sm text-slate-600">Alt Başlık Türü</Label>
+              <Select value={settings.targetAudience} onValueChange={(value) => setSettings({...settings, targetAudience: value})}>
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="H2">H2</SelectItem>
+                  <SelectItem value="H3">H3</SelectItem>
+                  <SelectItem value="H4">H4</SelectItem>
                 </SelectContent>
               </Select>
             </div>
