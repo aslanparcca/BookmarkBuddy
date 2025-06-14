@@ -140,7 +140,7 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
   const bulkUploadMutation = useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('excelFile', file);
       
       const response = await fetch('/api/bulk-upload', {
         method: 'POST',
@@ -148,17 +148,25 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
       });
       
       if (!response.ok) {
-        throw new Error('Dosya yüklenirken hata oluştu');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Dosya yüklenirken hata oluştu');
       }
       
       return await response.json();
     },
     onSuccess: (data) => {
-      setBulkArticles(data.articles);
-      toast({
-        title: "Excel Dosyası Yüklendi!",
-        description: `${data.articles.length} makale başlığı bulundu.`,
-      });
+      if (data.articles) {
+        setBulkArticles(data.articles);
+        toast({
+          title: "Excel Dosyası Yüklendi!",
+          description: `${data.articles.length} makale başlığı bulundu.`,
+        });
+      } else {
+        toast({
+          title: "Toplu İş Başlatıldı!",
+          description: `${data.totalArticles} makale oluşturma işlemi başlatıldı.`,
+        });
+      }
     },
     onError: (error: Error) => {
       toast({
@@ -277,7 +285,7 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
             className="mt-4 text-blue-600 hover:text-blue-700"
           >
             <i className="fas fa-plus mr-2"></i>
-            Yeni Başlık Ekle
+            Yeni Anahtar Kelime Ekle
           </Button>
         </div>
 

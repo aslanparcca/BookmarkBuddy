@@ -112,9 +112,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-pro" });
 
-      // Create prompt based on titles and settings
+      // Create prompt based on titles, settings, and focus keywords
+      const keywordsText = focusKeywords && focusKeywords.length > 0 
+        ? `\nOdak Anahtar Kelimeler (makalede mutlaka kullanılmalı): ${focusKeywords.join(", ")}`
+        : '';
+      
       const prompt = `
         Türkçe bir makale yazın. Başlıklar: ${titles.join(", ")}
+        ${keywordsText}
+        
         Yazı türü: ${settings.articleType || "Blog Yazısı"}
         Anlatım tarzı: ${settings.tone || "Profesyonel"}
         Kelime sayısı: ${settings.wordCount || "800-1200 kelime"}
@@ -124,6 +130,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ${settings.includeFaq ? "FAQ bölümü ekleyin." : ""}
         ${settings.includeConclusion ? "Sonuç bölümü ekleyin." : ""}
         ${settings.includeSubheadings ? "Alt başlıklar kullanın." : ""}
+        ${focusKeywords && focusKeywords.length > 0 ? "Odak anahtar kelimeleri doğal şekilde makalede dağıtın." : ""}
         
         Makalenin HTML formatında olmasını istiyorum.
       `;
