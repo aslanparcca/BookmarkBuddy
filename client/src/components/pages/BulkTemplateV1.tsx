@@ -49,7 +49,7 @@ export default function BulkTemplateV1({ setLoading }: BulkTemplateV1Props) {
 
   const generateTitlesMutation = useMutation({
     mutationFn: async (settings: BulkV1Settings) => {
-      return await apiRequest("/api/bulk-titles-v1", "POST", settings);
+      return await apiRequest("POST", "/api/bulk-titles-v1", settings);
     },
     onSuccess: (data: any) => {
       setGeneratedTitles(data.titles || []);

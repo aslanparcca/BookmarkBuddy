@@ -124,7 +124,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   const generateTitlesMutation = useMutation({
     mutationFn: async (settings: BulkV2Settings) => {
-      return await apiRequest("/api/bulk-titles-v2", "POST", settings);
+      return await apiRequest("POST", "/api/bulk-titles-v2", settings);
     },
     onSuccess: (data: any) => {
       setGeneratedTitles(data.titles || []);
