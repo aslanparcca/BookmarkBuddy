@@ -159,6 +159,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // WordPress generation route
+  app.post('/api/wordpress/generate', isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req.user as any)?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const settings = req.body;
+      const userSettings = await storage.getUserSettings(userId);
+      
+      if (!userSettings?.geminiApiKey) {
+        return res.status(400).json({ message: "Gemini API key not configured. Please update your settings." });
+      }
+
+      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      
+      // Generate main content
+      const prompt = `
+        Türkçe bir WordPress makalesi oluştur. Odak anahtar kelime: "${settings.focusKeywords}"
+        
+        Yazı stili: ${settings.writingStyle}
+        Uzunluk: ${settings.length}
+        Sıkça sorulan sorular dahil et: ${settings.faqType}
+        
+        Makale şunları içermelidir:
+        - SEO uyumlu başlık
+        - Giriş paragrafı
+        - Ana içerik bölümleri
+        - Sonuç paragrafı
+        ${settings.faqType === 'Evet' ? '- Sıkça sorulan sorular bölümü' : ''}
+        
+        Odak anahtar kelimeyi doğal bir şekilde makale boyunca kullan.
+        Lütfen sadece makale içeriğini döndür, başka açıklama ekleme.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const content = result.response.text();
+      const title = content.split('\n')[0].replace('#', '').trim();
+      
+      // Generate additional content based on settings
+      let metaDescription = '';
+      let summary = '';
+      let youtubeVideo = '';
+      
+      if (settings.includeMetaDescription) {
+        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
+        metaDescription = metaResult.response.text().trim();
+      }
+      
+      if (settings.includeSummary) {
+        const summaryResult = await model.generateContent(`Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
+        summary = summaryResult.response.text().trim();
+      }
+      
+      if (settings.includeYouTube) {
+        const videoResult = await model.generateContent(`Bu makale konusu için YouTube video açıklaması oluştur: "${settings.focusKeywords}". Sadece video açıklamasını döndür.`);
+        youtubeVideo = videoResult.response.text().trim();
+      }
+
+      // Calculate reading time and word count
+      const wordCount = content.split(' ').length;
+      const readingTime = Math.ceil(wordCount / 200);
+
+      // Save article to database
+      const article = await storage.createArticle({
+        userId,
+        title,
+        content,
+        keywords: [settings.focusKeywords],
+        status: 'draft',
+        wordCount,
+        readingTime
+      });
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, wordCount);
+
+      res.json({ 
+        success: true,
+        article: {
+          ...article,
+          metaDescription,
+          youtubeVideo
+        }
+      });
+    } catch (error) {
+      console.error("WordPress generation error:", error);
+      res.status(500).json({ message: "Failed to generate WordPress article" });
+    }
+  });
+
   // Bulk upload
   app.post('/api/bulk-upload', isAuthenticated, upload.single('excelFile'), async (req: any, res) => {
     try {
