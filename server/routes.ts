@@ -496,6 +496,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const data = XLSX.utils.sheet_to_json(worksheet);
 
       // Excel şablonunu işle ve AI prompt hazırla
+      const allExcelColumns = data.length > 0 ? Object.keys(data[0] as any) : [];
       const processedData = data.map((row: any) => {
         // Alt başlıkları topla (Alt Başlık 1'den Alt Başlık 20'ye kadar)
         const subheadings = [];
@@ -570,7 +571,7 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
         count: validData.length,
         aiPrompt: aiPrompt,
         debug: {
-          excelColumns: data.length > 0 ? Object.keys(data[0] as any) : [],
+          excelColumns: allExcelColumns,
           firstRowSubheadings: validData.length > 0 ? validData[0].subheadings : [],
           subheadingCounts: validData.map(item => ({ title: item.title, subheadingCount: item.subheadings.length })),
           rawFirstRow: data.length > 0 ? data[0] : null
