@@ -165,6 +165,10 @@ Changelog:
 - June 14, 2025. Fixed content generation issues: removed article title from content body, enhanced content features implementation (tables, lists, bold, italic, quotes), separated article summary from main content
 - June 14, 2025. Improved AI model selection to properly use Gemini 2.5 Flash when selected, updated section length handling including "Çok Uzun" option for 2,000-2,500 words
 - June 14, 2025. Enhanced meta description generation with SEO optimization: 140-160 character limit, focus keyword placement, power words usage, and SEO compliance indicators in frontend
+- June 14, 2025. Fixed web sitesi dropdown issue: websites now appear in "Sitenizde Yayınlama" sections across all bulk article components
+- June 14, 2025. Added automatic category fetching: when website is selected, categories are automatically loaded from backend sync
+- June 14, 2025. Fixed Gemini model mapping errors: all AI model selections now properly map to available Gemini 1.5 Flash/Pro models
+- June 14, 2025. Resolved JavaScript variable initialization errors in React components using useMemo hooks for proper state management
 ```
 
 ## User Preferences
