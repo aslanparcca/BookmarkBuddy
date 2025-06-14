@@ -1156,6 +1156,34 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     }
   });
 
+  app.post('/api/websites', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const websiteData = req.body;
+
+      // Simulate website addition process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const newWebsite = {
+        id: Math.floor(Math.random() * 10000),
+        url: websiteData.url,
+        type: websiteData.type === "1" ? "WordPress" : "XenForo",
+        seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "Yoast SEO" : 
+                   websiteData.seo_plugin === "rank_math_seo" ? "Rank Math SEO" : "Yok",
+        gscConnected: false
+      };
+
+      res.json({
+        success: true,
+        website: newWebsite,
+        message: "Web sitesi başarıyla eklendi"
+      });
+    } catch (error) {
+      console.error("Website addition error:", error);
+      res.status(500).json({ message: "Web sitesi eklenirken bir hata oluştu" });
+    }
+  });
+
   app.post('/api/websites/:id/sync', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;

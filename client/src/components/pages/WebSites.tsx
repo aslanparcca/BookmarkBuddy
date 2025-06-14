@@ -18,11 +18,15 @@ interface Website {
   gscConnected: boolean;
 }
 
-export default function WebSites() {
+interface WebSitesProps {
+  setCurrentPage?: (page: any) => void;
+}
+
+export default function WebSites({ setCurrentPage }: WebSitesProps) {
   const { toast } = useToast();
   const [searchUrl, setSearchUrl] = useState("");
 
-  const { data: websites = [], isLoading } = useQuery({
+  const { data: websites = [], isLoading } = useQuery<Website[]>({
     queryKey: ['/api/websites'],
     retry: false,
   });
@@ -89,19 +93,7 @@ export default function WebSites() {
     },
   });
 
-  const mockWebsites: Website[] = [
-    { id: 8180, url: "https://akyurtnakliyat.org.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-    { id: 8178, url: "https://ankaracagrinakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-    { id: 8174, url: "https://evtasimafirmasi.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-    { id: 8167, url: "https://boztasnakliyat.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-    { id: 8147, url: "https://harekuafor.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-    { id: 2040, url: "https://elisamnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-    { id: 400, url: "https://ankaraozpolatnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-    { id: 33, url: "https://ozpolatnakliyat.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-    { id: 2, url: "https://ozpolatnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-  ];
-
-  const filteredWebsites = mockWebsites.filter(website => 
+  const filteredWebsites = (websites as Website[]).filter((website: Website) => 
     website.url.toLowerCase().includes(searchUrl.toLowerCase())
   );
 
@@ -146,7 +138,10 @@ export default function WebSites() {
                 <Plus className="w-4 h-4 mr-2" />
                 Blogger
               </Button>
-              <Button className="me-2 font-medium">
+              <Button 
+                className="me-2 font-medium"
+                onClick={() => setCurrentPage && setCurrentPage('add-website')}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 WordPress
               </Button>

@@ -96,7 +96,7 @@ export default function Dashboard() {
       case 'help-sss':
         return <PlaceholderPage title="Yardım & SSS" description="Sıkça sorulan sorular ve yardım dokümantasyonu" icon="fas fa-question-circle" iconColor="text-blue-600" />;
       case 'websites':
-        return <WebSites />;
+        return <WebSites setCurrentPage={setCurrentPage} />;
       case 'add-website':
         return <AddWebsite />;
       default:
