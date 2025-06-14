@@ -33,7 +33,7 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
 
   const syncWebsiteDataMutation = useMutation({
     mutationFn: async (websiteId: number) => {
-      return await apiRequest(`/api/websites/${websiteId}/sync`, "POST");
+      return await apiRequest("POST", `/api/websites/${websiteId}/sync`);
     },
     onSuccess: () => {
       toast({
@@ -64,7 +64,7 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
 
   const deleteWebsiteMutation = useMutation({
     mutationFn: async (websiteId: number) => {
-      return await apiRequest(`/api/websites/${websiteId}`, "DELETE");
+      return await apiRequest("DELETE", `/api/websites/${websiteId}`);
     },
     onSuccess: () => {
       toast({
