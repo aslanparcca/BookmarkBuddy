@@ -144,6 +144,8 @@ Changelog:
 - June 14, 2025. Implemented URL Rewrite functionality with complete interface matching reference design including URL input, Genel Ayarlar, Görsel Seçenekleri, İçerik Özellikleri, Yayınlama, and İç & Dış Linkler sections
 - June 14, 2025. Added backend API endpoint for URL content fetching, HTML parsing, and AI-powered content rewriting using Gemini 2.5-flash model
 - June 14, 2025. Created "Toplu Oluşturulan Makalelerim" page with exact design match including stacked file icons, empty state messaging, navigation buttons to bulk creation tools, and YouTube help video link
+- June 14, 2025. Implemented comprehensive "Toplu Makale Oluştur V1" interface with 5 generation types (Anahtar Kelime, Web Siteniz, Rakip Siteler, Manuel Başlıklar, Excel Upload), language selection, title count configuration, and two-step workflow with generated title editing capabilities
+- June 14, 2025. Added backend API endpoint for bulk title generation V1 supporting all generation types with Gemini AI integration and intelligent fallback mechanisms
 ```
 
 ## User Preferences

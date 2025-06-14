@@ -7,6 +7,7 @@ import WordPressEditorV2 from "@/components/pages/WordPressEditorV2";
 import URLRewrite from "@/components/pages/URLRewrite";
 import BulkEditor from "@/components/pages/BulkEditor";
 import BulkArticles from "@/components/pages/BulkArticles";
+import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
@@ -64,7 +65,7 @@ export default function Dashboard() {
       case 'bulk-articles':
         return <BulkArticles setCurrentPage={setCurrentPage} />;
       case 'bulk-template-v1':
-        return <PlaceholderPage title="Toplu Makale V1" description="Toplu makale oluşturma şablonu versiyon 1" icon="fas fa-layer-group" iconColor="text-purple-600" />;
+        return <BulkTemplateV1 setLoading={setLoading} />;
       case 'bulk-template-v2':
         return <PlaceholderPage title="Toplu Makale V2" description="Toplu makale oluşturma şablonu versiyon 2" icon="fas fa-layer-group" iconColor="text-purple-600" />;
       case 'bulk-recipe':
