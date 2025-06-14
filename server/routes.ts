@@ -1303,7 +1303,17 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
       const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      // Map frontend AI model selection to actual model names
+      const modelMapping: Record<string, string> = {
+        'gpt4o_mini': 'gemini-1.5-flash', // Fallback to Gemini since we don't have OpenAI
+        'gemini_2.5_flash': 'gemini-2.0-flash-exp',
+        'gemini_1.5_flash': 'gemini-1.5-flash',
+        'gemini_1.5_pro': 'gemini-1.5-pro'
+      };
+      
+      const selectedModel = settings.aiModel && modelMapping[settings.aiModel] ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
+      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       let successCount = 0;
       let failedCount = 0;
@@ -1331,8 +1341,14 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : '',
             '',
             'ARTICLE STRUCTURE:',
-            `- Target Length: ${settings.sectionLength === 's' ? '1,000-1,500 words' : '1,500-2,000 words'}`,
-            `- Main sections: ${settings.sectionLength === 's' ? '5-7 sections' : '7-10 sections'}`,
+            `- Target Length: ${
+              settings.sectionLength === 's' ? '1,000-1,500 words' :
+              settings.sectionLength === 'm' ? '1,200-1,700 words' :
+              settings.sectionLength === 'l' ? '1,500-2,000 words' :
+              settings.sectionLength === 'xl' ? '2,000-2,500 words' : '1,500-2,000 words'
+            }`,
+            `- Main H2 sections: ${settings.subheadingCount || '7-10'} sections`,
+            `- Subheading type: ${settings.subheadingType === 'h2h3' ? 'Use both H2 and H3 tags (H2 for main sections, H3 for subsections)' : 'Use only H2 tags for main sections'}`,
             `- Writing Style: ${settings.writingStyle || 'Professional and trustworthy'}`,
             '',
             'CONTENT FEATURES:',
