@@ -15,6 +15,7 @@ interface Article {
   wordCount: number;
   readingTime: number;
   metaDescription?: string;
+  summary?: string;
   createdAt: string;
 }
 
@@ -104,6 +105,17 @@ export default function ArticleViewModal({ article, isOpen, onClose, onEdit }: A
               </div>
             )}
           </div>
+
+          {/* Article Summary */}
+          {article.summary && (
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+              <div className="flex items-center mb-2">
+                <i className="fas fa-info-circle text-blue-500 mr-2"></i>
+                <h3 className="font-medium text-blue-900">Makale Özeti</h3>
+              </div>
+              <p className="text-blue-800 text-sm leading-relaxed">{article.summary}</p>
+            </div>
+          )}
 
           {/* Article Content */}
           <div className="prose prose-slate max-w-none">

@@ -1324,13 +1324,12 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           const contentFeatures = [];
           if (settings.faqNormal) contentFeatures.push('- Add FAQ section with 5-7 common questions and detailed answers');
           if (settings.faqSchema) contentFeatures.push('- Include FAQ schema markup');
-          if (settings.articleSummary) contentFeatures.push('- Create article summary at the beginning');
           if (settings.h3Subheadings) contentFeatures.push('- Use H3 subheadings within each main section');
-          if (settings.table) contentFeatures.push('- Include informative tables where relevant');
-          if (settings.list) contentFeatures.push('- Use bullet points and numbered lists');
-          if (settings.boldText) contentFeatures.push('- Use <strong> tags for important text');
-          if (settings.italicText) contentFeatures.push('- Use <em> tags for emphasis');
-          if (settings.quote) contentFeatures.push('- Include relevant quotes in <blockquote> tags');
+          if (settings.table) contentFeatures.push('- Include at least 1-2 informative tables with headers and data related to the topic');
+          if (settings.list) contentFeatures.push('- Include both numbered lists (ol/li) and bullet point lists (ul/li) throughout the content');
+          if (settings.boldText) contentFeatures.push('- Use <strong> tags frequently for important keywords and phrases');
+          if (settings.italicText) contentFeatures.push('- Use <em> tags for emphasis on key terms and concepts');
+          if (settings.quote) contentFeatures.push('- Include 2-3 relevant quotes in <blockquote> tags from experts or studies');
 
           const promptParts = [
             'Create a Turkish SEO-focused article. Never use markdown code blocks. Return only clean HTML.',
@@ -1351,29 +1350,36 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             `- Subheading type: ${settings.subheadingType === 'h2h3' ? 'Use both H2 and H3 tags (H2 for main sections, H3 for subsections)' : 'Use only H2 tags for main sections'}`,
             `- Writing Style: ${settings.writingStyle || 'Professional and trustworthy'}`,
             '',
-            'CONTENT FEATURES:',
+            'CONTENT FEATURES (MUST IMPLEMENT):',
             contentFeatures.length > 0 ? contentFeatures.join('\n') : '- Use standard article format',
             '',
             'HTML FORMAT RULES (VERY IMPORTANT):',
+            '- DO NOT include the main article title (H1) in the content',
+            '- Start directly with the first introductory paragraph',
             '- Never use markdown code blocks',
             '- Return only clean HTML tags',
-            '- Use h1 for main title',
             '- Use h2 for section headers',
             '- Use h3 for subheaders (if requested)',
             '- Use p for paragraphs',
-            '- Use strong for bold text',
-            '- Use em for italic text',
-            '- Use ul/li for lists',
+            '- Use strong for bold text frequently',
+            '- Use em for italic text emphasis',
+            '- Use ul/li and ol/li for lists',
             '- Use blockquote for quotes',
-            '- Use table for tables',
+            '- Use table with thead/tbody for tables',
+            '',
+            'CONTENT ORGANIZATION:',
+            '- Start with introduction paragraph (no heading)',
+            '- Include focus keyword in first 100 words',
+            '- Do NOT create a separate summary section',
+            '- The content should be the complete article body',
             '',
             'SEO REQUIREMENTS:',
             '- Use focus keyword naturally with 1-2% density',
             '- Include focus keyword in first paragraph within first 100 words',
-            '- Create H1, H2, H3 hierarchy',
-            '- Add LSI keywords',
+            '- Use related keywords throughout content',
+            '- Create proper H2, H3 hierarchy',
             '',
-            'IMPORTANT: Return only clean HTML content in Turkish language. No explanations or code blocks. Start directly with HTML.'
+            'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph.'
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
 
@@ -1395,6 +1401,28 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             }
           }
           
+          // Generate article summary if requested
+          let articleSummary = null;
+          if (settings.articleSummary) {
+            const summaryPrompt = `Create a concise article summary in Turkish for the following article title: "${titleData.title}". Focus keyword: "${titleData.focusKeyword}". 
+
+The summary should:
+- Be 2-3 sentences maximum
+- Include the focus keyword naturally
+- Summarize the main benefits/information readers will get
+- Be engaging and informative
+- Return only plain text, no HTML tags
+
+Example format: "Bu makale [focus keyword] hakkında kapsamlı bilgiler sunar. [Main benefit 1] ve [main benefit 2] gibi konuları detaylı olarak ele alır."`;
+
+            try {
+              const summaryResult = await model.generateContent(summaryPrompt);
+              articleSummary = summaryResult.response.text().trim();
+            } catch (error) {
+              console.log('Summary generation failed, continuing without summary');
+            }
+          }
+          
           // Calculate word count from clean HTML content (excluding tags)
           const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
           const readingTime = Math.ceil(wordCount / 200);
@@ -1410,6 +1438,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             status: settings.publishStatus || 'draft',
             focusKeyword: titleData.focusKeyword,
             metaDescription: settings.metaDescription ? `${titleData.title} hakkında kapsamlı bilgiler. ${titleData.focusKeyword} ile ilgili detayları öğrenin.` : null,
+            summary: articleSummary,
           });
 
           successCount++;

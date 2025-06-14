@@ -51,6 +51,7 @@ export const articles = pgTable("articles", {
   wordCount: integer("word_count").default(0),
   readingTime: integer("reading_time").default(0),
   metaDescription: text("meta_description"),
+  summary: text("summary"),
   seoSettings: jsonb("seo_settings"),
   aiSettings: jsonb("ai_settings"),
   createdAt: timestamp("created_at").defaultNow(),
