@@ -83,6 +83,7 @@ interface GeneratedTitle {
   imageKeyword: string;
   otherKeywords?: string;
   subheadings?: string[];
+  companyName?: string;
 }
 
 interface Website {
@@ -263,13 +264,14 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       console.log("Excel Debug Info:", data.debug);
       
       if (data.success && data.articles) {
-        // Excel'den gelen verileri alt başlıklar dahil tam olarak kaydet
+        // Excel'den gelen verileri alt başlıklar ve firma dahil tam olarak kaydet
         const articlesData = data.articles.map((article: any) => ({
           title: article.title,
           focusKeyword: article.focusKeyword,
           imageKeyword: article.otherKeywords ? article.otherKeywords.split(',')[0].trim() : article.focusKeyword,
           otherKeywords: article.otherKeywords,
-          subheadings: article.subheadings || []
+          subheadings: article.subheadings || [],
+          companyName: article.companyName || ''
         }));
         
         setGeneratedTitles(articlesData);

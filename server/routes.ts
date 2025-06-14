@@ -525,6 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           category: row['Kategori'] || 'Genel',
           tags: row['Görel Kaynak'] || '',
           imageKeyword: row['Resim Anahtar Kelimesi'] || '',
+          companyName: row['Firma'] || '',
           subheadings: subheadings,
           contentLength: row['Bölüm Uzunluğu'] || '800-1200 kelime',
           writingStyle: 'Profesyonel',
@@ -1476,6 +1477,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             `- Focus Keyword: ${titleData.focusKeyword}`,
             titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : '',
             titleData.otherKeywords ? `- Other Keywords: ${titleData.otherKeywords}` : '',
+            titleData.companyName ? `- Company Name: ${titleData.companyName}` : '',
             '',
             'ARTICLE STRUCTURE:',
             `- Target Length: ${
@@ -1511,6 +1513,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             'CONTENT ORGANIZATION:',
             '- Start with introduction paragraph (no heading)',
             '- Include focus keyword in first 100 words',
+            titleData.companyName ? `- Naturally mention the company "${titleData.companyName}" throughout the article when relevant` : '',
             '- Do NOT create a separate summary section',
             '- The content should be the complete article body',
             '',

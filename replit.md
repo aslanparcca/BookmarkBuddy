@@ -182,6 +182,7 @@ Changelog:
 - June 14, 2025. Fixed Excel subheading detection: system now properly reads Alt Başlık 1-20 columns from Excel and forces AI to use these exact headings instead of generating new ones, ensuring Excel template structure is maintained in generated articles
 - June 14, 2025. Fixed Excel subheading processing workflow: identified that manual "Makale Başlıkları" field was blocking Excel processing, removed it completely, added comprehensive debug logging, updated GeneratedTitle interface to include subheadings and otherKeywords fields, now Excel alt başlık data flows from file reading through frontend to backend AI generation
 - June 14, 2025. Enhanced "Diğer Anahtar Kelimeler" processing: improved AI prompt to properly utilize secondary keywords from Excel file, added explicit keyword distribution instructions, system now uses both focus keyword and all secondary keywords naturally throughout article sections
+- June 14, 2025. Added "Firma" field support to Excel processing: system now reads company name from "Firma" column in Excel files and naturally mentions the company throughout generated articles when relevant, updated GeneratedTitle interface and AI prompt to include company branding
 ```
 
 ## User Preferences
