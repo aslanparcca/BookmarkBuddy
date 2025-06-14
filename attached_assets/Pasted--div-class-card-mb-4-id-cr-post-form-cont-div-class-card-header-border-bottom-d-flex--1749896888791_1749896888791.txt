@@ -1,0 +1,86 @@
+<div class="card mb-4" id="cr-post-form-cont">
+        <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between py-3">
+            <h5 class="m-0 p-0 d-flex flex-row align-items-center">Makale Özgünleştir <i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#content-rewrite-video-modal"></i></h5>
+
+            <div class="p-0 m-0 d-flex flex-row align-content-center">
+                <button type="button" class="btn btn-sm bg-label-secondary border-0 fw-medium me-2" title="Bilgilendirme" data-bs-toggle="modal" data-bs-target="#content-rewrite-info-modal"><i class="bx bx-info-circle fs-5 text-s me-1"></i> Bilgilendirme</button>
+            </div>
+        </div>
+
+        <div class="card-body mt-4">
+            <form method="POST" action="https://app.contety.com/content-rewrite/posts" id="cr-post-form" spellcheck="false">
+                <div class="d-flex flex-column flex-md-row">
+    <div class="w-100 w-md-40 w-lg-30 w-xxl-25 pe-0 me-0 pe-md-5 me-md-5 border-end">
+        <div class="form-check mb-3">
+            <input name="generate_type" class="crtw-radio sela-primary form-check-input" type="radio" value="1" id="generateType1" data-target="#websiteContainer" checked="">
+            <label class="form-check-label" for="generateType1">
+                <span class="fw-bold">Web Siteniz</span>
+                <small class="d-block">Kayıtlı web sitelerinizin içerikleri listelenir</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-top  border-dashed border-start-0 border-end-0 border-bottom-0 py-3">
+            <input name="generate_type" class="crtw-radio sela-primary form-check-input" type="radio" value="2" id="generateType2" data-target="#competitorContainer">
+            <label class="form-check-label" for="generateType2">
+                <span class="fw-bold">Diğer Siteler</span>
+                <small class="d-block">Diğer sitelerin içerikleri listelenir</small>
+            </label>
+        </div>
+    </div>
+
+    <div class="w-100 w-md-60 w-lg-70 w-xxl-75 mt-4 mt-md-0">
+        <div class="crtw-cont" id="websiteContainer" role="tabpanel">
+            <div class="position-relative mb-4">
+                <label class="form-label" for="user_website_s">
+    Web Siteniz </label>
+                <select class="form-select select2-hidden-accessible" name="website_id" id="user_website_s" data-select2-id="user_website_s" tabindex="-1" aria-hidden="true"><option value="8180" data-select2-id="90">https://akyurtnakliyat.org.tr</option><option value="8178" data-select2-id="91">https://ankaracagrinakliyat.com</option><option value="400" data-select2-id="92">https://ankaraozpolatnakliyat.com</option><option value="8167" data-select2-id="93">https://boztasnakliyat.com.tr</option><option value="2040" data-select2-id="94">https://elisamnakliyat.com</option><option value="8174" data-select2-id="95">https://evtasimafirmasi.com</option><option value="8147" data-select2-id="96">https://harekuafor.com.tr</option><option value="2" data-select2-id="97">https://ozpolatnakliyat.com</option><option value="33" data-select2-id="98">https://ozpolatnakliyat.com.tr</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="89" style="width: 589.547px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-user_website_s-container"><span class="select2-selection__rendered" id="select2-user_website_s-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <div class="form-text text-body">* Bu seçenek <u>sadece WordPress siteleriniz</u> için çalışmaktadır.</div>
+                <div class="form-text text-body">* Blogger ve diğer siteleriniz için özgünleştirme işlemi yapılamamaktadır.</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="position-relative mb-4">
+                        <label class="form-label" for="category_ids_s">
+    Kategori </label>
+                        <select class="form-select select2-hidden-accessible" name="category_ids[]" id="category_ids_s" disabled="" data-select2-id="category_ids_s" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default select2-container--disabled" dir="ltr" data-select2-id="100" style="width: 281.766px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="true" aria-labelledby="select2-category_ids_s-container"><span class="select2-selection__rendered" id="select2-category_ids_s-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen önce bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="mb-4 position-relative">
+                        <label class="form-label" for="post_status">
+    Yayın Durumu </label>
+                        <select class="select2 form-select select2-hidden-accessible" name="post_status" id="post_status" data-placeholder="Lütfen bir yazı durumu seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="post_status" tabindex="-1" aria-hidden="true"><option value=""></option><option value="any">Hepsi</option><option value="publish" selected="selected" data-select2-id="2">Sadece Yayındakiler</option><option value="future">Sadece Zamanlaşmışlar</option><option value="draft">Sadece Taslaklar</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 281.766px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-post_status-container"><span class="select2-selection__rendered" id="select2-post_status-container" role="textbox" aria-readonly="true" title="Sadece Yayındakiler">Sadece Yayındakiler</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="crtw-cont mb-4 d-none" id="competitorContainer" role="tabpanel">
+            <label class="form-label" for="competitor_url">
+    Hedef Site URL Adresi </label>
+            <input name="competitor_url" class="form-control" type="text" id="competitor_url" placeholder="https://www.ornek-domain.com şeklinde giriniz">
+            <div class="form-text text-body">* Bu seçenek <u>sadece WordPress sistemler</u> için çalışmaktadır.</div>
+            <div class="form-text text-body">* WordPress harici sistemler için hata mesajı görüntülenecektir.</div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label" for="search_query">
+    Arama Terimi
+                <div class="form-text text-body">Bu bölüm mecburi değildir. Eğer bir kelime girerseniz, girilen kelime yazı başlıklarında aranır.</div> </label>
+            <input name="search_query" class="form-control" type="text" id="search_query" placeholder="Eğer bir kelime ile arama yapmak isterseniz lütfen arama yapmak istediğiniz kelimeyi giriniz">
+        </div>
+
+        <div class="mb-4">
+            <button class="btn btn ib-spn-btnv2 btn-primary cr-post-form-btn" type="button" id="cr-post-form-btn-1" data-type="normal">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Makaleleri Listele</span>
+</button>
+        </div>
+    </div>
+</div>
+
+            </form>
+        </div>
+    </div>

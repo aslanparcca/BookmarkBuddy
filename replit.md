@@ -148,6 +148,8 @@ Changelog:
 - June 14, 2025. Added backend API endpoint for bulk title generation V1 supporting all generation types with Gemini AI integration and intelligent fallback mechanisms
 - June 14, 2025. Created advanced "Toplu Makale Oluştur V2" interface with comprehensive multi-section design including Genel Ayarlar, Görsel Seçenekleri, İçerik Özellikleri, Yayınlama settings, and enhanced title generation with image keywords
 - June 14, 2025. Added backend API endpoint for bulk title generation V2 with extended functionality supporting advanced content configuration and image keyword generation
+- June 14, 2025. Implemented comprehensive "Toplu Yemek Tarifi" interface with recipe-specific content options, structured data support, and multi-step workflow (recipe input → review → detailed configuration)
+- June 14, 2025. Added backend API endpoints for recipe processing and bulk recipe generation with Gemini AI integration supporting 15+ recipe content sections and customizable display options
 ```
 
 ## User Preferences

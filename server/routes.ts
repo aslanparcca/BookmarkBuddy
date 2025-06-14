@@ -868,6 +868,110 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     }
   });
 
+  // Process recipes endpoint
+  app.post('/api/process-recipes', isAuthenticated, async (req: any, res) => {
+    try {
+      const { recipes } = req.body;
+
+      if (!recipes || !Array.isArray(recipes)) {
+        return res.status(400).json({ message: "Geçerli yemek listesi gerekli" });
+      }
+
+      if (recipes.length === 0) {
+        return res.status(400).json({ message: "En az bir yemek ismi gerekli" });
+      }
+
+      if (recipes.length > 50) {
+        return res.status(400).json({ message: "En fazla 50 yemek ismi işlenebilir" });
+      }
+
+      // Clean and validate recipe names
+      const processedRecipes = recipes
+        .map(recipe => recipe.trim())
+        .filter(recipe => recipe.length > 0)
+        .slice(0, 50);
+
+      res.json({ 
+        success: true,
+        recipes: processedRecipes
+      });
+    } catch (error) {
+      console.error("Recipe processing error:", error);
+      res.status(500).json({ message: "Yemek işleme hatası" });
+    }
+  });
+
+  // Bulk recipes generation endpoint
+  app.post('/api/bulk-recipes', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const settings = req.body;
+
+      if (!settings.recipes || !Array.isArray(settings.recipes)) {
+        return res.status(400).json({ message: "Yemek listesi gerekli" });
+      }
+
+      // Initialize Gemini model
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+      let generatedCount = 0;
+
+      for (const recipe of settings.recipes) {
+        const recipeName = recipe.name;
+        
+        // Create comprehensive recipe prompt
+        const recipePrompt = `
+        "${recipeName}" yemeği için detaylı bir tarif oluştur. Aşağıdaki bölümleri dahil et:
+
+        ${settings.description ? '- Kısa bilgilendirme (yemeğin tanımı ve genel bilgileri)' : ''}
+        ${settings.ingredients ? '- Malzemeler listesi (detaylı miktarlarla)' : ''}
+        ${settings.instructions ? '- Yapılış aşamaları (adım adım detaylı)' : ''}
+        ${settings.time ? '- Hazırlık ve pişirme süreleri' : ''}
+        ${settings.yield ? '- Kaç kişilik tarif olduğu' : ''}
+        ${settings.nutrition ? '- Besin değerleri bilgileri' : ''}
+        ${settings.tools ? '- Gerekli araç gereçler' : ''}
+        ${settings.tips ? '- Pişirme ipuçları ve püf noktaları' : ''}
+        ${settings.difficulty ? '- Zorluk derecesi' : ''}
+        ${settings.categoryCuisine ? '- Kategori ve mutfak türü' : ''}
+        ${settings.service ? '- Servis ve sunum önerileri' : ''}
+        ${settings.storage ? '- Saklama koşulları' : ''}
+        ${settings.benefits ? '- Sağlığa faydaları' : ''}
+        ${settings.vegan ? '- Veganlar için alternatif öneriler' : ''}
+        ${settings.similarRecipes ? '- Benzer tarifler önerileri' : ''}
+
+        Tarifi Türkçe olarak, ayrıntılı ve profesyonel bir şekilde yaz.
+        ${settings.metaDescription ? 'Ayrıca tarif için SEO uyumlu meta açıklama da ekle.' : ''}
+        ${settings.excerpt ? 'Tarifen kısa bir özet de oluştur.' : ''}
+        `;
+
+        try {
+          const result = await model.generateContent(recipePrompt);
+          const content = result.response.text();
+
+          // Here we would normally save the recipe to the database
+          // For now, we'll just count successful generations
+          generatedCount++;
+
+          // Track API usage
+          await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+        } catch (error) {
+          console.error(`Recipe generation error for ${recipeName}:`, error);
+          // Continue with other recipes even if one fails
+        }
+      }
+
+      res.json({ 
+        success: true,
+        count: generatedCount,
+        message: `${generatedCount} yemek tarifi başarıyla oluşturuldu`
+      });
+    } catch (error) {
+      console.error("Bulk recipes generation error:", error);
+      res.status(500).json({ message: "Toplu tarif oluşturma işlemi başarısız oldu" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

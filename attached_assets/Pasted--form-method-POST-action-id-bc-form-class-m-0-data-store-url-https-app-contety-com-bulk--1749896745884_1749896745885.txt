@@ -1,0 +1,377 @@
+<form method="POST" action="" id="bc-form" class="m-0" data-store-url="https://app.contety.com/bulk-wp-recipe" data-request-url="https://app.contety.com/bulk-wp-recipe" spellcheck="false">
+        <input type="hidden" name="_token" value="DEZBZ3J9dMaVlfDge6JvFgWJ0SibRyq5l6oEhrCj" autocomplete="off">
+        <div class="card mb-4" id="bc-form-step-1">
+            <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between py-3">
+                <h5 class="m-0 p-0 d-flex flex-row align-items-center card-title"><i class="menu-icon tf-icons bx bx-dish"></i> Toplu Yemek Tarifi Oluştur <i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#bulk-wp-recipe-video-modal"></i></h5>
+
+                <div class="p-0 m-0 d-flex flex-row align-content-center">
+                    <button type="button" class="btn btn-sm bg-label-secondary fw-medium border-0" title="Yardım" data-bs-toggle="modal" data-bs-target="#wp-recipe-help-modal"><i class="bx bx-info-circle fs-5 text-s me-1"></i> Yardım</button>
+                </div>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="d-flex flex-column flex-md-row">
+    <div class="w-100 w-md-40 w-lg-30 w-xxl-25 pe-0 me-0 pe-md-5 me-md-5 border-end">
+        <div class="form-check mb-3 border-bottom  border-dashed border-start-0 border-end-0 border-top-0 pb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="recipe-manual" id="generateTypeRecipeManual" data-target="#manualTitleContainer" checked="">
+            <label class="form-check-label" for="generateTypeRecipeManual">
+                <span class="fw-bold">Yemekleri Kendim Gireceğim</span>
+                <small class="d-block">Yemek isimlerini kendiniz yazabilir veya kopyala/yapıştır yapabilirsiniz</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-4">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="recipe-excel" id="generateTypeRecipeExcel" data-target="#excelUploadContainer">
+            <label class="form-check-label" for="generateTypeRecipeExcel">
+                <span class="fw-bold">Excel Dosyası Yükleyeceğim</span>
+                <small class="d-block">Tüm bilgileri Excel dosyası olarak yükleyebilirsiniz</small>
+            </label>
+        </div>
+    </div>
+
+    <div class="w-100 w-md-60 w-lg-70 w-xxl-75 mt-4 mt-md-0">
+        <div>
+            <div class="bct-cont mb-4" id="manualTitleContainer" role="tabpanel">
+                <label class="form-label d-flex flex-row align-items-center align-content-center" for="custom_recipe">
+    <span class="me-1">Yemek İsimleri</span>
+                    <i class="bx bx-help-circle cursor-pointer fw-normal text-secondary fs-6" modal-id="wp-recipe-help-modal" data-bs-toggle="modal" data-bs-target="#wp-recipe-help-modal"></i> </label>
+                <textarea name="custom_recipe" class="form-control auto-size" id="custom_recipe" rows="10" placeholder="Lütfen her satıra sadece 1 adet yemek ismi yazınız" spellcheck="false" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 245px;"></textarea>
+                <div class="form-text text-body">* Lütfen <u>her satıra sadece 1 adet yemek ismi</u> yazınız.</div>
+                <div class="form-text text-body">* Bu bölüme sadece yemeğin ismi yazılmalı, yemek isminin sonuna "Tarif", "Tarifi", "Nasıl Yapılır?" veya "Recipe" gibi eklemeler <u class="text-danger">yapılmamalıdır</u>.</div>
+                <div class="form-text text-body">* En fazla 50 adet yemek ismi girebilirsiniz.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="excelUploadContainer" role="tabpanel">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <label for="excel-file" class="form-label">Excel Dosyası</label>
+                        <input class="form-control" type="file" id="excel-file" name="excel_file" accept=".xlxs,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <div class="form-text text-body pb-0">
+                           <ul class="ps-3">
+                               <li>Örnek Excel dosyasını <a href="//static.contety.com/help/file/contety-ornek-toplu-yemek-tarifi-excel.xlsx" class="fw-medium text-decoration-underline" target="_blank" title="Örnek Excel dosyasını indirin">buradan</a> indirebilirsiniz. Lütfen dosya hakkındaki <span class="text-danger cursor-pointer fw-medium text-decoration-underline" title="Excel Dosyası Özellikleri" data-bs-toggle="modal" data-bs-target="#wp-recipe-excel-help-modal">gereksinimleri</span> dikkatlice okuduğunuzdan emin olunuz.</li>
+                           </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+                            <button class="btn btn ib-spn-btnv2 btn-primary fw-medium" type="button" id="bcr-create-btn" data-source-input-id="custom_recipe">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Sonraki Adım</span>
+</button>
+                    </div>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div class="card mb-4 bc-form-step-2 none-excel d-none">
+            <div class="card-header border-bottom py-3">
+                <h5 class="card-title mb-0">Yemek İsimleri</h5>
+            </div>
+            <div class="card-body mt-2">
+                <table class="table table-borderless mb-4">
+                    <thead>
+                    <tr>
+                        <th class="td-buticont  ps-0 fs-6">Yemek İsmi <i class="bx bx-help-circle cursor-pointer fw-normal text-secondary fs-6" modal-id="wp-recipe-help-modal" data-bs-toggle="modal" data-bs-target="#wp-recipe-help-modal"></i>
+</th>
+                        <th class="td-buimcont d-none ps-2 fs-6">Resim Anahtar Kelimesi <i class="bx bxs-help-circle text-body fs-6 ms-1" id="bulk-content-image-icon-helper" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="Lütfen <strong><u>İngilizce</u></strong> bir resim anahtar kelimesi yazınız"></i> <button class="btn btn-sm btn-secondary d-none" type="button" id="bulk-x-img-keyword-shortcut-btn">Yemek isimlerini kullan</button></th>
+                        <th class="w-px-30"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="bc-titles-cont"> </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-4 bc-form-step-2 d-none">
+            <div class="card-header border-bottom py-3">
+                <h5 class="card-title mb-0">Tarif Özellikleri</h5>
+            </div>
+            <div class="card-body mt-4">
+                <div class="row">
+    
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="language_id">
+    Dil </label>
+<select class="select2 form-select select2-hidden-accessible" name="language_id" id="language_id" data-show-html="1" data-is-lang="1" data-placeholder="Lütfen bir dil seçiniz" data-allow-clear="false" data-select2-id="language_id" tabindex="-1" aria-hidden="true"><option value="1" data-select2-id="2">Türkçe</option><option value="2" data-select2-id="3">İngilizce</option><option value="5" data-select2-id="4">Almanca</option><option value="31" data-select2-id="5">Arnavutça</option><option value="39" data-select2-id="6">Azerice</option><option value="33" data-select2-id="7">Boşnakça</option><option value="18" data-select2-id="8">Bulgarca</option><option value="13" data-select2-id="9">Çekçe</option><option value="8" data-select2-id="10">Danca</option><option value="41" data-select2-id="11">Endonezce</option><option value="21" data-select2-id="12">Estonca</option><option value="10" data-select2-id="13">Felemenkçe</option><option value="9" data-select2-id="14">Fince</option><option value="3" data-select2-id="15">Fransızca</option><option value="28" data-select2-id="16">Hırvatça</option><option value="6" data-select2-id="17">İspanyolca</option><option value="12" data-select2-id="18">İsveççe</option><option value="7" data-select2-id="19">İtalyanca</option><option value="40" data-select2-id="20">Katalanca</option><option value="11" data-select2-id="21">Lehçe</option><option value="25" data-select2-id="22">Letonca</option><option value="24" data-select2-id="23">Litvanca</option><option value="16" data-select2-id="24">Macarca</option><option value="30" data-select2-id="25">Makedonca</option><option value="14" data-select2-id="26">Norveççe</option><option value="26" data-select2-id="27">Portekizce</option><option value="17" data-select2-id="28">Rumence</option><option value="22" data-select2-id="29">Rusça</option><option value="29" data-select2-id="30">Sırpça</option><option value="19" data-select2-id="31">Slovakça</option><option value="20" data-select2-id="32">Slovence</option><option value="48" data-select2-id="33">Tayca</option><option value="47" data-select2-id="34">Vietnamca</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-language_id-container"><span class="select2-selection__rendered" id="select2-language_id-container" role="textbox" aria-readonly="true" title="Türkçe"><span><img src="//static.contety.com/img/flags/4x3/tr.svg" width="16" loading="lazy" class="align-baseline">&nbsp;&nbsp;Türkçe</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="chatgpt_version">
+    Yapay Zeka Modeli </label>
+
+<select class="select2 form-select text-white select2-hidden-accessible" name="chatgpt_version" id="chatgpt_version" data-show-html="1" data-placeholder="Lütfen bir yapay zeka modeli seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="chatgpt_version" tabindex="-1" aria-hidden="true">
+    <option value=""></option>
+
+    <optgroup label="OpenAI">
+    <option value="gpt4o_mini" selected="" title="GPT-4o mini" data-select2-id="36">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="gpt4_1_nano" title="GPT-4.1 nano">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 nano&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1_mini" title="GPT-4.1 mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 2 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1" title="GPT-4.1">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4o" title="GPT-4o">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o4_mini" title="OpenAI o4-mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o4-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o3_mini" title="OpenAI o3-mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o3-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    <option value="chatgpt3.5_turbo" title="GPT-3.5 Turbo">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-3.5 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="chatgpt4_turbo" title="GPT-4 Turbo">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 10 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+
+    <optgroup label="Google Gemini">
+    
+            <option value="gemini_2.0_flash" title="Gemini 2.0 Flash">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 2.0 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gemini_1.5_flash" title="Gemini 1.5 Flash">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    
+            <option value="gemini_1.5_pro" title="Gemini 1.5 Pro">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Pro&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+</select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="35" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-chatgpt_version-container"><span class="select2-selection__rendered" id="select2-chatgpt_version-container" role="textbox" aria-readonly="true" title="GPT-4o mini">
+        <div class="d-flex flex-row justify-content-between align-items-center"><div>GPT-4o mini</div><div class="badge bg-label-primary fs085">1 kelime: 1 kredi</div></div>
+    </span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+    </div>
+
+    <div class="col-md-6 position-relative mb-4 none-excel">
+        <label class="form-label" for="bulkImages">
+    Tarif Görseli </label>
+<select class="select2 form-select select2-hidden-accessible" name="image_source" id="bulkImages" data-image-source="1" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="bulkImages" tabindex="-1" aria-hidden="true"><option value="0" data-select2-id="38">Görsel istemiyorum</option><option value="1">Unsplash (Ücretsiz)</option><option value="5">Pexels (Ücretsiz)</option><option value="6">Pixabay (Ücretsiz)</option><option value="3">Google (Ücretsiz)</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="37" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-bulkImages-container"><span class="select2-selection__rendered" id="select2-bulkImages-container" role="textbox" aria-readonly="true" title="Görsel istemiyorum">Görsel istemiyorum</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-1">
+            <ul class="ps-3">
+                <li>Lütfen yukarıdaki formda her tarif için resim anahtar kelimesi giriniz.</li>
+                <li>Bu servis ücretsiz bir stok görsel servisidir ve her anahtar kelimeniz için görsel <span class="fw-bold text-underline">bulunamayabilir.</span></li>
+                <li>Lütfen <span class="fw-bold text-underline text-danger">İngilizce</span> bir anahtar kelime giriniz.</li>
+                <li>Lütfen yemek ismini resim anahtar kelimesi olarak <span class="fw-bold text-underline">yazmayınız</span>.</li>
+                <li>Lütfen tarifinizde görmek istediğiniz görsele dair bir anahtar kelime giriniz.</li>
+            </ul>
+        </div>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-2">
+            <ul class="ps-3">
+                <li>Lütfen yukarıdaki formda her tarif için Bing Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                <li>Bulunan resimler ile Bing Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+            </ul>
+        </div>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-3">
+            <ul class="ps-3">
+                <li>Lütfen yukarıdaki formda her tarif için Google Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                <li>Bulunan resimler ile Google Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="folder_id">
+    Klasör </label>
+<select class="select2 form-select select2-hidden-accessible" name="folder_id" id="folder_id" data-placeholder="Tarifleriniz için bir klasör seçebilirsiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="folder_id" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="40"></option><option value="11275">Akyurt Nakliyat</option><option value="11163">Ankara Özpolat</option><option value="11108">Asansörlü Nakliyat</option><option value="11259">Boztaş Nakliyat</option><option value="11054">Çağrı</option><option value="11267">Ev Taşıma Firması</option><option value="11248">Hare Kuaför</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="39" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-folder_id-container"><span class="select2-selection__rendered" id="select2-folder_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Tarifleriniz için bir klasör seçebilirsiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+    </div>
+</div>
+
+<div class="none-excel">
+    <div class="divider divider-dashed text-start">
+        <div class="divider-text fw-medium form-label fs-6 text-underline">Tarif İçeriği</div>
+    </div>
+
+    <div class="row">
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="description" id="description" disabled="" checked="">
+                    <label class="form-check-label opa1i" for="description">Kısa Bilgilendirme</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="ingredients" id="ingredients" disabled="" checked="">
+                    <label class="form-check-label opa1i" for="ingredients">Malzemeler</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="instructions" id="instructions" disabled="" checked="">
+                    <label class="form-check-label opa1i" for="instructions">Yapılışı</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="time" id="time" disabled="" checked="">
+                    <label class="form-check-label opa1i" for="time">Süre</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="yield" id="yield" disabled="" checked="">
+                    <label class="form-check-label opa1i" for="yield">Kaç Kişilik</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="nutrition" id="nutrition">
+                    <label class="form-check-label" for="nutrition">Besin Değerleri</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="tools" id="tools">
+                    <label class="form-check-label" for="tools">Gerekli Araç Gereçler</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="tips" id="tips">
+                    <label class="form-check-label" for="tips">İpuçları</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="difficulty" id="difficulty">
+                    <label class="form-check-label" for="difficulty">Zorluk Derecesi</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="category_cuisine" id="category_cuisine">
+                    <label class="form-check-label" for="category_cuisine">Kategori ve Mutfak</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="service" id="service">
+                    <label class="form-check-label" for="service">Servis ve Sunum Önerileri</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="storage" id="storage">
+                    <label class="form-check-label" for="storage">Saklama Koşulları</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="benefits" id="benefits">
+                    <label class="form-check-label" for="benefits">Sağlığa Faydaları</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="vegan" id="vegan">
+                    <label class="form-check-label" for="vegan">Veganlar İçin Öneriler</label>
+                </div>
+            </div>
+                    <div class="col-md-3 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input opa1i" type="checkbox" value="1" name="similar_recipes" id="similar_recipes">
+                    <label class="form-check-label" for="similar_recipes">Benzer Tarifler</label>
+                </div>
+            </div>
+            </div>
+</div>
+
+<div class="divider divider-dashed text-start">
+    <div class="divider-text fw-medium form-label fs-6 text-underline">Görüntülenme Seçenekleri</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="form-label fw-medium mb-1">Malzemeler Nasıl Görüntülensin?</div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="ingredients_display_type" id="ingredients_display_type1" value="1" checked="">
+            <label class="form-check-label" for="ingredients_display_type1">Liste</label>
+        </div>
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="ingredients_display_type" id="ingredients_display_type2" value="2">
+            <label class="form-check-label" for="ingredients_display_type2">Tablo</label>
+        </div>
+            </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="form-label fw-medium mb-1">Besin Değerleri Nasıl Görüntülensin?</div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="nutrition_display_type" id="nutrition_display_type1" value="1">
+            <label class="form-check-label" for="nutrition_display_type1">Liste</label>
+        </div>
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="nutrition_display_type" id="nutrition_display_type2" value="2" checked="">
+            <label class="form-check-label" for="nutrition_display_type2">Tablo</label>
+        </div>
+            </div>
+</div>
+
+<div class="divider divider-dashed text-start">
+    <div class="divider-text fw-medium form-label fs-6 text-underline">Ek Seçenekler</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-1">
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" name="meta_description" id="meta_description" value="1">
+            <label class="form-check-label fw-medium" for="meta_description">
+                Meta Açıklama <span class="d-block form-text mt-0">Tarif için meta açıklaması oluşturulur.</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-1">
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" name="excerpt" id="excerpt" value="1">
+            <label class="form-check-label fw-medium" for="excerpt">
+                Makale Özeti <span class="d-block form-text mt-0">Makalenin kısa bir özeti (excerpt) çıkarılır.</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="divider divider-dashed text-start">
+    <div class="divider-text fw-medium form-label fs-6 text-underline">Önemli Hatırlatma</div>
+</div>
+
+<div class="mb-4">
+     Oluşturulan tarifler, <a href="https://developers.google.com/search/docs/appearance/structured-data/recipe?hl=tr" target="_blank">yemek tarifi yapılandırılmış verilerini <i class="bx bx-link-external fs085"></i></a> içerecek şekilde oluşturulmaktadır. Ancak bu verilerin düzgün bir şekilde oluşturulabilmesi için lütfen <span class="text-underline text-primary cursor-pointer" data-bs-toggle="modal" data-bs-target="#wp-recipe-schema-help-modal">bu ayarlara dikkat ediniz (tıkla).</span>
+</div>
+
+<div class="mb-4">
+    <button class="btn btn ib-spn-btnv2 btn-primary mt-4 fw-medium" type="button" id="bc-create-btn">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Toplu Yemek Tarifi Oluştur</span>
+</button>
+</div>
+            </div>
+        </div>
+    </form>
