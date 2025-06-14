@@ -50,7 +50,8 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
-      return await apiRequest("POST", "/api/process-excel-template", formData);
+      const response = await apiRequest("POST", "/api/process-excel-template", formData);
+      return await response.json();
     },
     onMutate: () => {
       setLoading(true);
@@ -90,10 +91,11 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
   const generateArticlesMutation = useMutation({
     mutationFn: async (articles: ProcessedArticle[]) => {
       console.log("Sending articles to backend:", articles.length, articles);
-      return await apiRequest("POST", "/api/generate-from-excel-template", {
+      const response = await apiRequest("POST", "/api/generate-from-excel-template", {
         articles,
         settings: { publishStatus: 'draft' }
       });
+      return await response.json();
     },
     onMutate: () => {
       setLoading(true);
