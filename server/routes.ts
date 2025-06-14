@@ -96,16 +96,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/generate-content', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { titles, settings } = req.body;
+      const { titles, settings, focusKeywords } = req.body;
       
-      // Get user settings for API key
+      // Use system API key if user hasn't set their own
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY;
       const userSettings = await storage.getUserSettings(userId);
-      if (!userSettings?.geminiApiKey) {
-        return res.status(400).json({ message: "Gemini API key not configured" });
+      if (userSettings?.geminiApiKey) {
+        apiKey = userSettings.geminiApiKey;
       }
 
-      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-pro" });
+      if (!apiKey) {
+        return res.status(400).json({ message: "Gemini API key not available" });
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-pro" });
 
       // Create prompt based on titles and settings
       const prompt = `

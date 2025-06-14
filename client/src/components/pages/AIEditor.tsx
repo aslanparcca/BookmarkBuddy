@@ -15,6 +15,7 @@ interface AIEditorProps {
 
 export default function AIEditor({ setLoading }: AIEditorProps) {
   const [titles, setTitles] = useState<string[]>(['']);
+  const [focusKeywords, setFocusKeywords] = useState<string[]>(['']);
   const [settings, setSettings] = useState({
     articleType: 'Blog Yazısı',
     tone: 'Profesyonel',
@@ -30,6 +31,7 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
   const [content, setContent] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [readingTime, setReadingTime] = useState(0);
+  const [bulkArticles, setBulkArticles] = useState<any[]>([]);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -41,9 +43,11 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
         throw new Error('En az bir başlık girmelisiniz');
       }
 
+      const validKeywords = focusKeywords.filter(keyword => keyword.trim() !== '');
       const response = await apiRequest('POST', '/api/generate-content', {
         titles: validTitles,
         settings,
+        focusKeywords: validKeywords,
       });
       return await response.json();
     },
@@ -117,6 +121,58 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
     }
   };
 
+  const addFocusKeyword = () => {
+    setFocusKeywords([...focusKeywords, '']);
+  };
+
+  const updateFocusKeyword = (index: number, value: string) => {
+    const newKeywords = [...focusKeywords];
+    newKeywords[index] = value;
+    setFocusKeywords(newKeywords);
+  };
+
+  const removeFocusKeyword = (index: number) => {
+    if (focusKeywords.length > 1) {
+      setFocusKeywords(focusKeywords.filter((_, i) => i !== index));
+    }
+  };
+
+  const bulkUploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/bulk-upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Dosya yüklenirken hata oluştu');
+      }
+      
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setBulkArticles(data.articles);
+      toast({
+        title: "Excel Dosyası Yüklendi!",
+        description: `${data.articles.length} makale başlığı bulundu.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Dosya yüklenirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleFileSelect = (file: File) => {
+    bulkUploadMutation.mutate(file);
+  };
+
   const copyContent = () => {
     navigator.clipboard.writeText(content);
     toast({
@@ -180,6 +236,102 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
             <i className="fas fa-plus mr-2"></i>
             Yeni Başlık Ekle
           </Button>
+        </div>
+
+        {/* Focus Keywords Card */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="h-10 w-10 bg-blue-100 text-blue-600 flex items-center justify-center rounded-lg">
+              <i className="fas fa-key"></i>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900">Odak Anahtar Kelimeler</h3>
+          </div>
+          
+          <div className="space-y-3">
+            {focusKeywords.map((keyword, index) => (
+              <div key={index} className="flex items-center space-x-3">
+                <Input
+                  type="text"
+                  placeholder="Odak anahtar kelime..."
+                  value={keyword}
+                  onChange={(e) => updateFocusKeyword(index, e.target.value)}
+                  className="flex-1"
+                />
+                {focusKeywords.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeFocusKeyword(index)}
+                    className="text-slate-400 hover:text-red-500"
+                  >
+                    <i className="fas fa-times"></i>
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          <Button
+            variant="ghost"
+            onClick={addFocusKeyword}
+            className="mt-4 text-blue-600 hover:text-blue-700"
+          >
+            <i className="fas fa-plus mr-2"></i>
+            Yeni Başlık Ekle
+          </Button>
+        </div>
+
+        {/* Bulk Upload Card */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="h-10 w-10 bg-green-100 text-green-600 flex items-center justify-center rounded-lg">
+              <i className="fas fa-upload"></i>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900">Toplu Makale Yükleme</h3>
+          </div>
+          
+          <div className="mb-4">
+            <Label className="text-sm text-slate-600">Excel dosyası yükleyerek toplu makale oluşturun</Label>
+          </div>
+          
+          <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileSelect(file);
+              }}
+              className="hidden"
+              id="excel-upload"
+            />
+            <label htmlFor="excel-upload" className="cursor-pointer">
+              <div className="text-slate-400 mb-2">
+                <i className="fas fa-file-excel text-3xl"></i>
+              </div>
+              <p className="text-sm text-slate-600">Excel dosyası seçin veya buraya sürükleyin</p>
+              <p className="text-xs text-slate-400 mt-1">Desteklenen formatlar: .xlsx, .xls</p>
+            </label>
+          </div>
+          
+          {bulkArticles.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm text-green-600 mb-2">
+                <i className="fas fa-check mr-2"></i>
+                {bulkArticles.length} makale başlığı yüklendi
+              </p>
+              <div className="max-h-32 overflow-y-auto space-y-1">
+                {bulkArticles.slice(0, 5).map((article, index) => (
+                  <div key={index} className="text-xs text-slate-500 truncate">
+                    • {article.title}
+                  </div>
+                ))}
+                {bulkArticles.length > 5 && (
+                  <div className="text-xs text-slate-400">ve {bulkArticles.length - 5} makale daha...</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* General Settings Card */}
