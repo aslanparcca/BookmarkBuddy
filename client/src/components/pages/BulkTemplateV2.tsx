@@ -1000,7 +1000,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Kategori seçiniz</SelectItem>
+                    <SelectItem value="none">Kategori seçiniz</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id.toString()}>
                         {category.name}
@@ -1301,7 +1301,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Seçiniz</SelectItem>
+                    <SelectItem value="none">Seçiniz</SelectItem>
                     {websites.map((website) => (
                       <SelectItem key={website.id} value={website.id.toString()}>
                         {website.url}
@@ -1321,7 +1321,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Kategori seçiniz</SelectItem>
+                    <SelectItem value="none">Kategori seçiniz</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id.toString()}>
                         {category.name}
