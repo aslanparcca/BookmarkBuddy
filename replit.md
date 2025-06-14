@@ -154,6 +154,8 @@ Changelog:
 - June 14, 2025. Implemented "Özgünleştirilen Makaleler" empty state page with navigation to article customization tools and help video integration
 - June 14, 2025. Built "Makale Özgünleştir" interface with website/competitor content selection, filtering options, and article listing functionality for content customization workflows
 - June 14, 2025. Added backend API endpoints for dream interpretation article generation and article customization listing with Gemini AI integration and WordPress content management
+- June 14, 2025. Created "Web Sitelerim" comprehensive website management interface with search functionality, platform badges (WordPress, Blogger, XenForo), SEO plugin indicators, and Google Search Console status tracking
+- June 14, 2025. Added backend API endpoints for website management including listing, synchronization, and deletion operations with complete dropdown menu functionality and table-based display
 ```
 
 ## User Preferences

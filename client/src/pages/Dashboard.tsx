@@ -93,6 +93,8 @@ export default function Dashboard() {
         return <PlaceholderPage title="Yeni Resim Oluştur" description="AI ile yeni resim oluşturma araçları" icon="fas fa-paint-brush" iconColor="text-pink-600" />;
       case 'help-sss':
         return <PlaceholderPage title="Yardım & SSS" description="Sıkça sorulan sorular ve yardım dokümantasyonu" icon="fas fa-question-circle" iconColor="text-blue-600" />;
+      case 'websites':
+        return <WebSites />;
       default:
         return <AIEditor setLoading={setLoading} />;
     }
