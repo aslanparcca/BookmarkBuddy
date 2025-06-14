@@ -1,0 +1,277 @@
+<div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    
+                    
+                    <div class="row">
+        <div class="col-md-6 col-lg-7 mb-4 mb-md-0">
+            <div class="card h-100">
+                <div class="card-header border-bottom d-flex flex-row align-items-center justify-content-between pt-3 pb-2">
+                    <h5 class="m-0 p-0 d-flex flex-row align-items-center">Yeni Web Sitesi Ekle <i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#website-video-modal"></i><i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#website-xenforo-video-modal"></i></h5>
+                    <div class="d-flex flex-row align-items-center">
+                        <a class="btn btn-label-primary btn-sm" href="https://app.contety.com/account/website" title="Web Sitelerim">Web Sitelerim</a>
+                     </div>
+                </div>
+
+                <div class="card-body pt-4">
+                    <form method="post" action="https://app.contety.com/account/website" spellcheck="false">
+                        <input type="hidden" name="_token" value="DEZBZ3J9dMaVlfDge6JvFgWJ0SibRyq5l6oEhrCj" autocomplete="off">
+                        <div class="mb-4">
+    <label class="form-label" for="type">
+    Site Türü <span class="text-danger">*</span></label>
+    <select class="form-select" name="type" id="website-type"><option value="1" selected="selected">WordPress</option><option value="3">XenForo</option></select>
+    </div>
+
+<div class="mb-4">
+    <label class="form-label" for="url">
+    Web Sitesi URL Adresi <span class="text-danger">*</span></label>
+    <input name="url" class="form-control" type="text" id="url" placeholder="Lütfen web sitenizin URL adresini giriniz" maxlength="255" required="required">
+        <div class="fs085 text-muted mt-1">Web sitenizin adresini başında <strong>https://</strong> olacak şekilde giriniz</div>
+</div>
+
+<div class="website-type-cont" id="website-type-1-cont">
+    <div class="mb-4">
+        <label class="form-label d-flex flex-row align-items-center align-content-center" for="username">
+    <span class="me-1">Kullanıcı Adı</span><i class="bx bx-help-circle cursor-pointer fw-normal text-secondary fs-6" modal-id="website-help-modal" data-bs-toggle="modal" data-bs-target="#website-help-modal"></i> <span class="text-danger">*</span></label>
+        <input name="username" class="form-control" type="text" id="username" placeholder="Lütfen web sitenizdeki kullanıcı isminizi giriniz" maxlength="255" required="required">
+                <div class="fs085 text-muted mt-1">Lütfen web sitenizdeki kullanıcı adını giriniz. Girdiğiniz kullanıcının <strong>"yönetici"</strong> veya <strong>"editör"</strong> yetkisi olması gerekmektedir.</div>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label d-flex flex-row align-items-center align-content-center" for="application_key">
+    <span class="me-1">Uygulama Parolası</span><i class="bx bx-help-circle cursor-pointer fw-normal text-secondary fs-6" modal-id="website-help-modal" data-bs-toggle="modal" data-bs-target="#website-help-modal"></i> <span class="text-danger">*</span></label>
+        <input name="application_key" class="form-control" type="text" id="application_key" placeholder="Lütfen web sitenizdeki uygulama parolanızı giriniz" maxlength="255" required="required">
+            </div>
+
+    <div class="mb-4">
+        <label class="form-label" for="seo_plugin">
+    SEO Eklentisi <span class="text-danger">*</span></label>
+        <select class="form-select" name="seo_plugin" id="seo_plugin"><option value="yok" selected="selected">Yok</option><option value="rank_math_seo">Rank Math SEO</option><option value="yoast_seo">Yoast SEO</option></select>
+        <div class="form-text"><span class="text-danger fw-bold">Dikkat:</span> Lütfen Rank Math ve Yoast SEO eklentileri için yan taraftaki ilgili kodu web sitenizde kullandığınız temanın functions.php dosyasının en sonuna ekleyin.</div>
+            </div>
+
+    <div class="mb-4">
+        <label class="form-label" for="woocommerce">
+    WooCommerce <span class="text-danger">*</span></label>
+        <select class="form-select" name="woocommerce" id="woocommerce"><option value="1">Kullanıyorum</option><option value="0" selected="selected">Kullanmıyorum</option></select>
+            </div>
+</div>
+
+<div class="website-type-cont d-none" id="website-type-3-cont">
+    <div class="mb-4">
+        <label class="form-label" for="xenforo_api_key">
+    API Key <span class="text-danger">*</span></label>
+        <input name="xenforo_api_key" class="form-control" type="text" id="xenforo_api_key" placeholder="Lütfen API key bilginizi giriniz" maxlength="255" required="required">
+                <div class="fs085 text-muted mt-1">* Eklediğiniz API keyin sadece <strong>attachment:write</strong>, <strong>node:read</strong> ve <strong>thread:write</strong> kapsamlarına erişim yetkisi olmalıdır.</div>
+        <div class="fs085 text-muted mt-1">* Lütfen tüm kapsamlara erişim yetkisi olan bir API key kullanmayınız.</div>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label" for="xenforo_api_key_type">
+    API Key Türü <span class="text-danger">*</span></label>
+        <select class="form-select" name="xenforo_api_key_type" id="xenforo_api_key_type"><option value="1">Kullanıcı Anahtarı</option><option value="2">Süper Kullanıcı Anahtarı</option></select>
+            </div>
+
+    <div class="mb-4 d-none" id="xf-user-list-cont">
+        <div class="d-flex flex-row mb-1 align-items-baseline">
+            <div class="form-label flex-grow-1">Eklemek İstediğiniz Kullanıcılar</div>
+            <div class=""><button type="button" class="btn btn-label-info btn-sm xf-user-add">Yeni kullanıcı ekle</button></div>
+        </div>
+
+                    <div class="xf-user-cont">
+                <div class="input-group mt-3">
+                    <span class="input-group-text w-px-40 xf-user-iter">1</span>
+                                        <input name="xenforo_api_user_ids[]" class="form-control" type="text" placeholder="Kullanıcı ID" value="" maxlength="255">
+                    <input name="xenforo_api_user_usernames[]" class="form-control" type="text" placeholder="Kullanıcı Adı" value="" maxlength="255">
+                    <span class="input-group-text"><i class="bx bx-trash cursor-pointer xf-user-remove"></i></span>
+                </div>
+
+                                            </div>
+                    <div class="xf-user-cont">
+                <div class="input-group mt-3">
+                    <span class="input-group-text w-px-40 xf-user-iter">2</span>
+                                        <input name="xenforo_api_user_ids[]" class="form-control" type="text" placeholder="Kullanıcı ID" value="" maxlength="255">
+                    <input name="xenforo_api_user_usernames[]" class="form-control" type="text" placeholder="Kullanıcı Adı" value="" maxlength="255">
+                    <span class="input-group-text"><i class="bx bx-trash cursor-pointer xf-user-remove"></i></span>
+                </div>
+
+                                            </div>
+            </div>
+</div>
+
+<div>
+    <button class="btn btn-primary ib-spn-btn" type="submit">
+        <span class="btn-label">Kaydet</span>
+        <span class="spinner-border ms-1" role="status" aria-hidden="true"></span>
+    </button>
+</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-5">
+            <div class="card h-100">
+                <div class="card-header border-bottom py-3">
+                    <h5 class="m-0 p-0" id="website-right-header">SEO Eklenti Kodları</h5>
+                </div>
+
+                <div class="card-body pt-4">
+                    <div class="website-right-cont" id="website-type-right-1-cont">
+                        <div class="nav-align-top">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-rank-math btn-sm me-2" role="tab" data-bs-toggle="tab" data-bs-target="#rank-math-seo-code-block" aria-controls="rank-math-seo-code-block" aria-selected="false" tabindex="-1">Rank Math SEO</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-yoast btn-sm active" role="tab" data-bs-toggle="tab" data-bs-target="#yoast-seo-code-block" aria-controls="yoast-seo-code-block" aria-selected="true">Yoast SEO</button>
+        </li>
+    </ul>
+
+    <div class="tab-content shadow-none p-0">
+        <div class="tab-pane fade" id="rank-math-seo-code-block" role="tabpanel">
+            <div class="mb-3">
+                <strong style="color:#724bb7">Rank Math SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+            </div>
+
+            <div class="cursor-pointer cccd border p-2 rounded" id="rank-math-seo-codes" data-clipboard-target="#rank-math-seo-codes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="<small>Kopyalandı</small>" data-bs-trigger="manual">
+                                                                                    <pre class="hljs p-0 m-0" style="display: block; background: rgb(255, 255, 255); padding: 0.5em; color: rgb(51, 51, 51); overflow-x: auto;">add_action(<span class="hljs-string" style="color: rgb(223, 80, 0);">'rest_api_init'</span>, <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span> </span>{
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'rank_math_focus_keyword'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'rank_math_description'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+});</pre></div>
+        </div>
+        <div class="tab-pane fade active show" id="yoast-seo-code-block" role="tabpanel">
+            <div class="mb-3">
+                <strong style="color:#a61e69">Yoast SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+            </div>
+            <div class="cursor-pointer cccd border p-2 rounded" id="yoast-seo-codes" data-clipboard-target="#yoast-seo-codes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="<small>Kopyalandı</small>" data-bs-trigger="manual">
+                                                                                    <pre class="hljs p-0 m-0" style="display: block; background: rgb(255, 255, 255); padding: 0.5em; color: rgb(51, 51, 51); overflow-x: auto;">add_action(<span class="hljs-string" style="color: rgb(223, 80, 0);">'rest_api_init'</span>, <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span> </span>{
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'_yoast_wpseo_focuskw'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'_yoast_wpseo_metadesc'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+});</pre></div>
+        </div>
+    </div>
+</div>
+                    </div>
+
+                    <div class="website-right-cont d-none" id="website-type-right-3-cont">
+                        <div class="nav-align-top">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-primary btn-sm me-2 active" role="tab" data-bs-toggle="tab" data-bs-target="#xf-info" aria-controls="xf-info" aria-selected="true">Bilgiler</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-primary btn-sm me-2" role="tab" data-bs-toggle="tab" data-bs-target="#xf-user-api" aria-controls="xf-user-api" aria-selected="false" tabindex="-1">Kullanıcı Anahtarı</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-primary btn-sm" role="tab" data-bs-toggle="tab" data-bs-target="#xf-superuser-api" aria-controls="xf-superuser-api" aria-selected="false" tabindex="-1">Süper Kullanıcı Anahtarı</button>
+        </li>
+    </ul>
+
+    <div class="tab-content shadow-none p-0">
+        <div class="tab-pane fade show active" id="xf-info" role="tabpanel">
+            <div class="mb-2">
+                Entegrasyon API keyler sayesinde gerçekleştirilir. 2 tür API key vardır:
+                <ol>
+                    <li>Kullanıcı Anahtarı</li>
+                    <li>Süper Kullanıcı Anahtarı</li>
+                </ol>
+            </div>
+
+            <div class="mb-2">
+                <strong>Kullanıcı Anahtarı</strong>
+                <ul class="ms-0 ps-3">
+                    <li>Kullanıcı anahtarı ile gerçekleştirilen entegrasyonlar <strong>tek bir kullanıcı</strong> için geçerlidir.</li>
+                    <li>Bu API key örneğin sitenizdeki "ali" kullanıcı isimli bir kullanıcıya ait olur ve contety üzerinden sitenize gönderilen yazılar bu kullanıcı adına sitenize kaydedilir.</li>
+                    <li>Bu kullanıcıyı yönetim panelinizden API key oluşturma işlemi sırasında belirleyebilirsiniz.</li>
+                </ul>
+            </div>
+
+            <div class="mb-2">
+                <strong>Süper Kullanıcı Anahtarı</strong>
+                <ul class="ms-0 ps-3">
+                    <li>Süper kullanıcı anahtarı ile gerçekleştirilen entegrasyonlar <strong>birden çok kullanıcı</strong> için geçerlidir.</li>
+                    <li>Bu API key sitenizdeki tüm kullanıcılara ait olur ve contety üzerinden sitenize bir yazı gönderirken hangi kullanıcı adına gönderileceğini seçebilirsiniz.</li>
+                    <li>Ancak bu seçimi yapabilmek için kullanmak istediğiniz kullanıcıların ID ve kullanıcı isimleri sistemimize kaydedilmelidir.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="xf-user-api" role="tabpanel">
+            <div class="mb-2"><strong>Kullanıcı Anahtarı Oluşturma Adımları</strong></div>
+            <ol class="ms-0 ps-3">
+                <li>API key oluşturmak için XenForo sitenizin yönetim panelinden Kurulumlar (Settings) bölümündeki API Anahtarları (API Keys) sayfasına gidiniz.</li>
+                <li><strong>Başlık:</strong> API anahtarınız için bir başlık giriniz.</li>
+                <li><strong>Anahtar türü:</strong> Bu bölümden "Kullanıcı Anahtarı" seçeneğini seçiniz.</li>
+                <li><strong>Kullanıcı:</strong> Kullanıcı olarak istediğiniz kullanıcının kullanıcı ismini seçiniz. Yazılarınız bu kullanıcı adına sitenize gönderilecektir.</li>
+                <li><strong>İzin verilen kapsamlar:</strong> Bu bölümden "Yalnızca seçili kapsamlar" seçeneğini seçerek aşağıdaki kapsamları seçiniz:
+                    <ol>
+                        <li>attachment:write</li>
+                        <li>node:read</li>
+                        <li>thread:write</li>
+                    </ol>
+                </li>
+                <li><a href="https://contety1.fra1.cdn.digitaloceanspaces.com/web/xenforo-contety-integration-1.png" target="_blank">Ekran görüntüsü <i class="bx bx-link-external"></i></a></li>
+            </ol>
+        </div>
+        <div class="tab-pane fade" id="xf-superuser-api" role="tabpanel">
+            <div class="mb-2"><strong>Süper Kullanıcı Anahtarı Oluşturma Adımları</strong></div>
+            <ol class="ms-0 ps-3">
+                <li>API key oluşturmak için XenForo sitenizin yönetim panelinden Kurulumlar (Settings) bölümündeki API Anahtarları (API Keys) sayfasına gidiniz.</li>
+                <li><strong>Başlık:</strong> API anahtarınız için bir başlık giriniz.</li>
+                <li><strong>Anahtar türü:</strong> Bu bölümden "Süper Kullanıcı Anahtarı" seçeneğini seçiniz.</li>
+                <li><strong>İzin verilen kapsamlar:</strong> Bu bölümden "Yalnızca seçili kapsamlar" seçeneğini seçerek aşağıdaki kapsamları seçiniz:
+                    <ol>
+                        <li>attachment:write</li>
+                        <li>node:read</li>
+                        <li>thread:write</li>
+                    </ol>
+                </li>
+                <li><a href="https://contety1.fra1.cdn.digitaloceanspaces.com/web/xenforo-contety-integration-2.png" target="_blank">Ekran görüntüsü <i class="bx bx-link-external"></i></a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                </div>
+
+                <footer class="content-footer footer bg-footer-theme">
+    <div class="d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column container-fluid">
+        <div class="mb-2 mb-md-0">
+            © 2025 <a href="https://contety.com" target="_blank">contety</a> versiyon 2.5
+        </div>
+
+        <div class="d-none d-lg-inline-block">
+            <a href="https://app.contety.com/contact" class="footer-link fs085 me-4" title="İletişim">İletişim</a>
+            <a href="https://app.contety.com/api/intro" class="footer-link fs085 me-4" title="contety API">contety API</a>
+            <a href="https://contety.com/sozlesmeler/kullanici-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Kullanıcı Sözleşmesi">Kullanıcı Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/gizlilik-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Gizlilik Sözleşmesi">Gizlilik Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/cerez-politikasi" class="footer-link fs085 me-4" target="_blank" title="Çerez Politikası">Çerez Politikası</a>
+        </div>
+    </div>
+</footer>
+
+                <div class="content-backdrop fade"></div>
+            </div>

@@ -1148,20 +1148,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     try {
       const userId = req.user.claims.sub;
 
-      // Mock website data - in production this would connect to actual WordPress sites
-      const mockWebsites = [
-        { id: 8180, url: "https://akyurtnakliyat.org.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-        { id: 8178, url: "https://ankaracagrinakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-        { id: 8174, url: "https://evtasimafirmasi.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-        { id: 8167, url: "https://boztasnakliyat.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-        { id: 8147, url: "https://harekuafor.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-        { id: 2040, url: "https://elisamnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-        { id: 400, url: "https://ankaraozpolatnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-        { id: 33, url: "https://ozpolatnakliyat.com.tr", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: false },
-        { id: 2, url: "https://ozpolatnakliyat.com", type: "WordPress", seoPlugin: "Yoast SEO", gscConnected: true },
-      ];
-
-      res.json(mockWebsites);
+      // Return empty websites list - users will add their own
+      res.json([]);
     } catch (error) {
       console.error("Website list error:", error);
       res.status(500).json({ message: "Web sitesi listesi alınamadı" });
