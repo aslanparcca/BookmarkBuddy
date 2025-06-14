@@ -1637,7 +1637,24 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '',
             'FINAL REMINDER: Keep exact keyword usage under 12 times total. Quality content ranks better than keyword-stuffed content.',
             '',
-            'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph.'
+            'MANDATORY ARTICLE ENDING (CRITICAL):',
+            '- ALWAYS end the article with a "Sıkça Sorulan Sorular" (FAQ) section',
+            '- This section MUST be the last section of every article',
+            '- Include 5-7 relevant questions and detailed answers',
+            '- Use H2 tag for "Sıkça Sorulan Sorular" heading',
+            '- Use H3 tags for each question',
+            '- Provide comprehensive answers that add value to the article',
+            '- Questions should be naturally related to the article topic',
+            '- Include the focus keyword in 1-2 of the FAQ answers naturally',
+            '',
+            'EXAMPLE FAQ STRUCTURE:',
+            '<h2>Sıkça Sorulan Sorular</h2>',
+            '<h3>Question 1 about the topic?</h3>',
+            '<p>Detailed answer explaining the topic...</p>',
+            '<h3>Question 2 about the topic?</h3>',
+            '<p>Comprehensive answer with useful information...</p>',
+            '',
+            'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph. ALWAYS end with FAQ section.'
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
 
