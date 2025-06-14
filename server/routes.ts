@@ -16,6 +16,62 @@ const upload = multer({
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 
+// Helper function to build link instructions for SEO-optimized placement
+function buildLinkInstructions(settings: any): string[] {
+  const instructions = [];
+  
+  // Internal links processing
+  if (settings.internalLinks === "Manuel" && settings.manualInternalLinks) {
+    const internalLinks = settings.manualInternalLinks
+      .split('\n')
+      .map((link: string) => link.trim())
+      .filter((link: string) => link.length > 0 && link.startsWith('http'))
+      .slice(0, 5); // Limit to 5 internal links for SEO best practices
+    
+    if (internalLinks.length > 0) {
+      instructions.push('INTERNAL LINKS (SEO Optimized):');
+      instructions.push(`- Include ${internalLinks.length} internal links naturally within the content`);
+      instructions.push('- Place internal links in contextually relevant paragraphs');
+      instructions.push('- Use descriptive anchor text that relates to the linked content');
+      instructions.push('- Distribute links evenly throughout the article (not all in one section)');
+      instructions.push(`- Internal links to include: ${internalLinks.join(', ')}`);
+      instructions.push('- Format: <a href="URL">descriptive anchor text</a>');
+    }
+  } else if (settings.internalLinks === "Otomatik") {
+    instructions.push('INTERNAL LINKS (Automatic):');
+    instructions.push('- Include 2-3 internal links to related content on the same website');
+    instructions.push('- Use contextually relevant anchor text');
+    instructions.push('- Place links naturally within content flow');
+  }
+  
+  // External links processing
+  if (settings.externalLinks === "Manuel" && settings.manualExternalLinks) {
+    const externalLinks = settings.manualExternalLinks
+      .split('\n')
+      .map((link: string) => link.trim())
+      .filter((link: string) => link.length > 0 && link.startsWith('http'))
+      .slice(0, 3); // Limit to 3 external links for SEO best practices
+    
+    if (externalLinks.length > 0) {
+      instructions.push('EXTERNAL LINKS (SEO Optimized):');
+      instructions.push(`- Include ${externalLinks.length} external links to authoritative sources`);
+      instructions.push('- Use rel="nofollow" for all external links');
+      instructions.push('- Open external links in new tab with target="_blank"');
+      instructions.push('- Place external links to support claims or provide additional information');
+      instructions.push('- Use descriptive anchor text that indicates the linked content');
+      instructions.push(`- External links to include: ${externalLinks.join(', ')}`);
+      instructions.push('- Format: <a href="URL" target="_blank" rel="nofollow">descriptive anchor text</a>');
+    }
+  } else if (settings.externalLinks === "Otomatik") {
+    instructions.push('EXTERNAL LINKS (Automatic):');
+    instructions.push('- Include 1-2 external links to authoritative sources');
+    instructions.push('- Use rel="nofollow" and target="_blank" for external links');
+    instructions.push('- Link to relevant Wikipedia articles or industry authorities');
+  }
+  
+  return instructions;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
