@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
 
       // Create prompt based on titles, settings, and focus keywords
       const keywordsText = focusKeywords && focusKeywords.length > 0 
@@ -178,7 +178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
       // Generate main content
       const prompt = `
@@ -271,7 +271,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
       // Build comprehensive prompt based on all settings
       let prompt = `
@@ -396,7 +396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (!userSettings?.geminiApiKey) return;
 
           const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-2.5-flash" });
+          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-flash" });
 
           let completed = 0;
           let failed = 0;
@@ -580,7 +580,7 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
 
       let generatedCount = 0;
       const results = [];
@@ -779,7 +779,7 @@ Makaleyi HTML formatında, kapsamlı ve özgün olarak yazın.
         .trim();
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       // Create comprehensive prompt for URL rewriting
       let prompt = `Sen deneyimli bir içerik editörü ve yazarsın. Aşağıdaki metni tamamen yeniden yazman gerekiyor.
@@ -870,7 +870,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       const settings = req.body;
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let prompt = "";
       let titles: Array<{title: string, focusKeyword: string}> = [];
@@ -977,7 +977,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       const settings = req.body;
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let prompt = "";
       let titles: Array<{title: string, focusKeyword: string, imageKeyword: string}> = [];
@@ -1131,7 +1131,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       }
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let generatedCount = 0;
 
@@ -1235,7 +1235,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       }
 
       // Initialize Gemini model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let generatedCount = 0;
 

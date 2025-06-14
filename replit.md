@@ -130,7 +130,7 @@ This is a full-stack web application for AI-powered content creation using the G
 Changelog:
 - June 14, 2025. Initial setup
 - June 14, 2025. Completed AI Content Editor with focus keywords system and bulk article generation
-- June 14, 2025. Updated Gemini API to latest 2.5 series models (gemini-2.5-flash as default)
+- June 14, 2025. Updated Gemini API to stable 1.5 series models (gemini-1.5-flash as default)
 - June 14, 2025. Integrated Excel file upload for bulk article creation
 - June 14, 2025. Completely redesigned AI Content Editor interface to match user's reference design
 - June 14, 2025. Added comprehensive interface sections: Genel Ayarlar, Güncel Bilgiler, Görsel Seçenekleri, İçerik Özellikleri, Sitenizde Yayınlama, İç & Dış Linkler
