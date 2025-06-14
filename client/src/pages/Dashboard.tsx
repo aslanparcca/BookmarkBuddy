@@ -11,6 +11,7 @@ import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
 import BulkTemplateV2 from "@/components/pages/BulkTemplateV2";
 import BulkRecipe from "@/components/pages/BulkRecipe";
 import BulkDream from "@/components/pages/BulkDream";
+import ExcelTemplate from "@/components/pages/ExcelTemplate";
 import CustomArticles from "@/components/pages/CustomArticles";
 import ArticleCustomizer from "@/components/pages/ArticleCustomizer";
 import WebSites from "@/components/pages/WebSites";
@@ -24,7 +25,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
-  'bulk-dream' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
+  'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
   'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website';
 
 export default function Dashboard() {
@@ -45,6 +46,7 @@ export default function Dashboard() {
     'bulk-template-v2': 'Toplu Makale V2',
     'bulk-recipe': 'Toplu Yemek Tarifi',
     'bulk-dream': 'Toplu Rüya Tabiri',
+    'excel-template': 'Excel Şablonu',
     'custom-articles': 'Özgünleştirilen Makaleler',
     'optimize-articles': 'Makale Özgünleştir',
     'voice-files': 'Ses Dosyalarım',
@@ -81,6 +83,8 @@ export default function Dashboard() {
         return <BulkRecipe setLoading={setLoading} />;
       case 'bulk-dream':
         return <BulkDream setLoading={setLoading} />;
+      case 'excel-template':
+        return <ExcelTemplate setLoading={setLoading} />;
       case 'custom-articles':
         return <CustomArticles />;
       case 'optimize-articles':

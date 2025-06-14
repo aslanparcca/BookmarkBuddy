@@ -26,6 +26,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
     { id: 'bulk-articles' as PageType, icon: 'fas fa-file-alt', label: 'Toplu Oluşturulan Makaleler', color: 'text-slate-500' },
     { id: 'bulk-template-v1' as PageType, icon: 'fas fa-layer-group', label: 'Toplu Makale V1', color: 'text-slate-500' },
     { id: 'bulk-template-v2' as PageType, icon: 'fas fa-layer-group', label: 'Toplu Makale V2', color: 'text-slate-500' },
+    { id: 'excel-template' as PageType, icon: 'fas fa-file-excel', label: 'Excel Şablonu', color: 'text-green-600' },
     { id: 'bulk-recipe' as PageType, icon: 'fas fa-utensils', label: 'Toplu Yemek Tarifi', color: 'text-slate-500' },
     { id: 'bulk-dream' as PageType, icon: 'fas fa-moon', label: 'Toplu Rüya Tabiri', color: 'text-slate-500' },
     { id: 'custom-articles' as PageType, icon: 'fas fa-clock', label: 'Özgünleştirilen Makaleler', color: 'text-slate-500' },

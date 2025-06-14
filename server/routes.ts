@@ -515,24 +515,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // AI Prompt oluştur
       const aiPrompt = validData.map((item, index) => {
+        const subheadingsList = item.subheadings.length > 0 ? item.subheadings.join(', ') : 'Otomatik oluştur';
         return `
 Makale ${index + 1}:
 Başlık: ${item.title}
-Anahtar Kelimeler: ${item.keywords}
-Açıklama: ${item.description}
+Odak Anahtar Kelime: ${item.focusKeyword}
+Diğer Anahtar Kelimeler: ${item.otherKeywords}
+Makale Konusu: ${item.description}
 Kategori: ${item.category}
-Etiketler: ${item.tags}
 Görsel Anahtar Kelime: ${item.imageKeyword}
-Bölüm Uzunluğu: ${item.sectionLength} kelime
-Alt Başlık Sayısı: ${item.subheadingCount}
+Alt Başlıklar: ${subheadingsList}
+İçerik Uzunluğu: ${item.contentLength}
 Yazım Stili: ${item.writingStyle}
 Dil: ${item.language}
-Meta Açıklama: ${item.metaDescription}
-Odak Anahtar Kelime: ${item.focusKeyword}
 Hedef Kitle: ${item.targetAudience}
 İçerik Tipi: ${item.contentType}
 
-Bu bilgilere göre SEO uyumlu, kaliteli ve özgün makale içeriği oluşturun.
+Bu bilgilere göre SEO uyumlu, kapsamlı ve özgün makale içeriği oluşturun.
+${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.subheadings.join(', ')}` : ''}
         `;
       }).join('\n\n---\n\n');
 
@@ -577,32 +577,39 @@ Bu bilgilere göre SEO uyumlu, kaliteli ve özgün makale içeriği oluşturun.
 
       for (const article of articles) {
         try {
+          const subheadingsText = article.subheadings && article.subheadings.length > 0 
+            ? `Şu alt başlıkları kullanın: ${article.subheadings.join(', ')}` 
+            : 'Alt başlıkları otomatik oluşturun';
+
           const prompt = `
-Türkçe SEO uyumlu makale yazın:
+${article.language || 'Türkçe'} dilinde SEO uyumlu makale yazın:
 
 Başlık: ${article.title}
-Anahtar Kelimeler: ${article.keywords}
-Açıklama: ${article.description || 'Bu konuda detaylı bilgi verici makale'}
+Odak Anahtar Kelime: ${article.focusKeyword}
+Diğer Anahtar Kelimeler: ${article.otherKeywords}
+Makale Konusu: ${article.description || 'Bu konuda detaylı bilgi verici makale'}
 Kategori: ${article.category}
+İçerik Uzunluğu: ${article.contentLength || '800-1200 kelime'}
 Yazım Stili: ${article.writingStyle || 'Profesyonel'}
-Bölüm Uzunluğu: ${article.sectionLength || '300-400'} kelime
-Alt Başlık Sayısı: ${article.subheadingCount || '3-5'}
-Odak Anahtar Kelime: ${article.focusKeyword || article.keywords}
 Hedef Kitle: ${article.targetAudience || 'Genel okuyucu kitlesi'}
 İçerik Tipi: ${article.contentType || 'Bilgilendirici'}
+Görsel Anahtar Kelime: ${article.imageKeyword}
+
+Alt Başlık Talimatları: ${subheadingsText}
 
 Lütfen aşağıdaki kriterlere uygun makale oluşturun:
 - SEO uyumlu H1, H2, H3 başlıkları kullanın
-- Anahtar kelimeleri doğal bir şekilde yerleştirin
-- ${article.sectionLength || '300-400'} kelimelik bölümler halinde yazın
-- ${article.subheadingCount || '3-5'} alt başlık kullanın
+- Odak anahtar kelimeyi doğal bir şekilde yerleştirin
+- Diğer anahtar kelimeleri de içeriğe dahil edin
+- ${article.contentLength || '800-1200 kelime'} uzunluğunda yazın
 - ${article.writingStyle || 'Profesyonel'} bir dil kullanın
 - HTML formatında döndürün
 - Makale sonunda ilgili etiketler ekleyin
+- Görsel anahtar kelimeye uygun resim önerileri ekleyin
 
 ${article.metaDescription ? `Meta Açıklama: ${article.metaDescription}` : ''}
 
-Makaleyi HTML formatında ve eksiksiz olarak yazın.
+Makaleyi HTML formatında, kapsamlı ve özgün olarak yazın.
           `;
 
           const result = await model.generateContent(prompt);
