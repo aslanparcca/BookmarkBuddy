@@ -72,6 +72,37 @@ export default function Articles() {
     },
   });
 
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest('DELETE', '/api/articles');
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+      toast({
+        title: "Toplu Silme Başarılı",
+        description: `${data.deletedCount} makale başarıyla silindi.`,
+      });
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Oturum Süresi Doldu",
+          description: "Tekrar giriş yapılıyor...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Hata",
+        description: error.message || "Makaleler silinirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const sendToWebsiteMutation = useMutation({
     mutationFn: async (data: { articleIds: number[], websiteId: string, category: string, publishStatus: string }) => {
       return await apiRequest("POST", "/api/articles/send-to-website", data);

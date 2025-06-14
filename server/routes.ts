@@ -187,6 +187,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete('/api/articles', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      const deletedCount = await storage.deleteAllArticles(userId);
+      
+      res.json({ 
+        message: `${deletedCount} makale başarıyla silindi`,
+        deletedCount 
+      });
+    } catch (error) {
+      console.error("Error deleting all articles:", error);
+      res.status(500).json({ message: "Makaleler silinirken bir hata oluştu" });
+    }
+  });
+
   // AI content generation
   app.post('/api/generate-content', isAuthenticated, async (req: any, res) => {
     try {

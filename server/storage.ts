@@ -29,6 +29,7 @@ export interface IStorage {
   getArticleById(id: number, userId: string): Promise<Article | undefined>;
   updateArticle(id: number, userId: string, updates: Partial<InsertArticle>): Promise<Article | undefined>;
   deleteArticle(id: number, userId: string): Promise<boolean>;
+  deleteAllArticles(userId: string): Promise<number>;
   
   // Bulk job operations
   createBulkJob(job: InsertBulkJob): Promise<BulkJob>;
@@ -98,7 +99,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getArticlesByUserId(userId: string, limit = 20, offset = 0): Promise<Article[]> {
+  async getArticlesByUserId(userId: string, limit = 100, offset = 0): Promise<Article[]> {
     return await db
       .select()
       .from(articles)
@@ -129,7 +130,14 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .delete(articles)
       .where(and(eq(articles.id, id), eq(articles.userId, userId)));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
+  }
+
+  async deleteAllArticles(userId: string): Promise<number> {
+    const result = await db
+      .delete(articles)
+      .where(eq(articles.userId, userId));
+    return result.rowCount || 0;
   }
 
   // Bulk job operations
