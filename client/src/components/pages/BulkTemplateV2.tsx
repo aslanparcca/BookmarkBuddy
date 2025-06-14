@@ -766,19 +766,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 </Select>
               </div>
 
-              <div>
-                <Label htmlFor="subheadingCount">Alt Başlık Sayısı (H2)</Label>
-                <Select value={settings.subheadingCount} onValueChange={(value) => setSettings({...settings, subheadingCount: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Lütfen bir alt başlık sayısı seçiniz" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({length: 20}, (_, i) => (
-                      <SelectItem key={i+1} value={String(i+1)}>{i+1}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+
 
               <div>
                 <Label htmlFor="writingStyle">Yazı Stili</Label>
@@ -1252,48 +1240,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         </Card>
       )}
 
-      {/* Görsel Seçenekleri */}
-      {showStep2 && (
-        <Card className="border-2 border-primary">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Image className="w-5 h-5" />
-              Görsel Seçenekleri
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="image-source">Makale Resmi</Label>
-                <Select value={settings.imageSource} onValueChange={(value) => setSettings({...settings, imageSource: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Lütfen bir seçim yapınız" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Görsel istemiyorum</SelectItem>
-                    <SelectItem value="unsplash">Unsplash (Ücretsiz)</SelectItem>
-                    <SelectItem value="pexels">Pexels (Ücretsiz)</SelectItem>
-                    <SelectItem value="pixabay">Pixabay (Ücretsiz)</SelectItem>
-                    <SelectItem value="google">Google (Ücretsiz)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            {settings.imageSource !== 'none' && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">Resim Anahtar Kelimesi Hakkında:</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Lütfen yukarıdaki formda her makale için resim anahtar kelimesi giriniz</li>
-                  <li>• Bu servis ücretsiz bir stok görsel servisidir ve her anahtar kelimeniz için görsel bulunamayabilir</li>
-                  <li>• Lütfen İngilizce bir anahtar kelime giriniz</li>
-                  <li>• Lütfen makale başlığınızı resim anahtar kelimesi olarak yazmayınız</li>
-                </ul>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+
 
 
       {/* Final Action */}
