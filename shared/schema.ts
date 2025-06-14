@@ -47,7 +47,7 @@ export const articles = pgTable("articles", {
   status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, published, archived
   category: varchar("category", { length: 100}),
   keywords: text("keywords").array(),
-  focusKeyword: varchar("focus_keyword", { length: 200}),
+  focusKeyword: text("focus_keyword"),
   wordCount: integer("word_count").default(0),
   readingTime: integer("reading_time").default(0),
   metaDescription: text("meta_description"),
