@@ -12,7 +12,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import PlaceholderPage from "@/components/pages/PlaceholderPage";
 import { Toaster } from "@/components/ui/toaster";
 
-export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'analytics' | 'settings' | 
+export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
   'bulk-dream' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
   'my-images' | 'create-image' | 'help-sss';
@@ -27,7 +27,7 @@ export default function Dashboard() {
     'wp-editor': 'WP Makalesi V1',
     'bulk-editor': 'Tüm Şablonlar',
     'articles': 'İçeriklerim',
-    'analytics': 'Yeni Özellik Önerin',
+
     'settings': 'WP Makalesi V2',
     'url-rewrite': 'URL Rewrite',
     'bulk-articles': 'Toplu Oluşturulan Makaleler',
@@ -54,8 +54,7 @@ export default function Dashboard() {
         return <BulkEditor setLoading={setLoading} />;
       case 'articles':
         return <Articles />;
-      case 'analytics':
-        return <Analytics />;
+
       case 'settings':
         return <WordPressEditorV2 setLoading={setLoading} />;
       case 'url-rewrite':
