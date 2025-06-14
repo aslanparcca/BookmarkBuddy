@@ -1311,33 +1311,51 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       for (const titleData of titles) {
         try {
           const prompt = `
-Başlık: ${titleData.title}
-Odak Anahtar Kelime: ${titleData.focusKeyword}
-${titleData.imageKeyword ? `Görsel Anahtar Kelime: ${titleData.imageKeyword}` : ''}
+SEO FOCUSED ARTICLE CREATION INSTRUCTIONS
 
-Bu bilgilere göre aşağıdaki özelliklerle kapsamlı bir makale oluştur:
+BASIC INFORMATION:
+- Title: ${titleData.title}
+- Focus Keyword: ${titleData.focusKeyword}
+${titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : ''}
 
-1. Makale Yapısı:
-   - Giriş paragrafı (odak anahtar kelimeyi içeren)
-   - Ana içerik bölümleri (${settings.sectionLength === 's' ? '3-4 bölüm' : '5-6 bölüm'})
-   - Sonuç paragrafı
+ARTICLE STRUCTURE AND LENGTH:
+- Target Length: ${settings.sectionLength === 's' ? '1,000-1,500 words' : '1,500-2,000 words'}
+- Paragraph structure: Each paragraph 100-150 words
+- Main sections: ${settings.sectionLength === 's' ? '5-7 sections' : '7-10 sections'}
 
-2. İçerik Özellikleri:
-   - Uzunluk: ${settings.sectionLength === 's' ? '500-700 kelime' : '800-1200 kelime'}
-   - Dil: Türkçe
-   - Ton: ${settings.writingStyle || 'Profesyonel'}
-   - SEO uyumlu içerik
+SEO REQUIREMENTS:
+- Use focus keyword naturally with 1-2% density
+- Add LSI keywords and synonyms
+- Create H1 (main title), H2 (section headers), H3 (subheaders) hierarchy
+- Include focus keyword in first paragraph within first 100 words
+- Use focus keyword again in conclusion paragraph
 
-3. Teknik Gereksinimler:
-   - HTML formatında döndür
-   - H2, H3 başlıkları kullan
-   - Paragrafları <p> etiketi ile sarmala
-   - Odak anahtar kelimeyi doğal şekilde dağıt
+CONTENT QUALITY:
+- Readability: Short and clear sentences
+- Value-focused: Useful information for readers
+- Original: Unique, non-copied content
+- Reliable: Accurate and current information
+- Tone: ${settings.writingStyle || 'Professional and trustworthy'}
 
-${settings.metaDescription ? '4. Meta açıklama (150-160 karakter) ekle' : ''}
-${settings.excerpt ? '5. Makale özeti (100-150 kelime) oluştur' : ''}
+STRUCTURAL REQUIREMENTS:
+- Introduction paragraph: Topic introduction and focus keyword (150-200 words)
+- Main sections: Each 200-300 words
+- Conclusion paragraph: Summary and call-to-action (100-150 words)
+- Transitions: Smooth transitions between sections
 
-Makaleyi HTML formatında, kapsamlı ve özgün olarak yaz.
+TECHNICAL FORMAT:
+- Return ONLY clean HTML (do not use markdown code blocks)
+- Use h1 for main title
+- Use h2 for section headers
+- Use h3 for subheaders
+- Use p for paragraphs
+- Use strong for emphasis
+- Use ul/li for lists (where appropriate)
+
+${settings.metaDescription ? 'ADDITION: Create meta description (150-160 characters)' : ''}
+${settings.excerpt ? 'ADDITION: Create article summary (100-150 words)' : ''}
+
+IMPORTANT: Create the article in Turkish language with high quality, SEO-optimized and reader-friendly content. Return only HTML content, no other explanations.
           `;
 
           const result = await model.generateContent(prompt);

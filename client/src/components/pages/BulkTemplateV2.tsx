@@ -632,10 +632,10 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="s">Kısa [100-200 kelime]</SelectItem>
-                    <SelectItem value="m">Orta [150-300 kelime]</SelectItem>
-                    <SelectItem value="l">Uzun [200-400 kelime]</SelectItem>
-                    <SelectItem value="xl">Çok Uzun [400-800 kelime]</SelectItem>
+                    <SelectItem value="s">Kısa [1.000-1.500 kelime]</SelectItem>
+                    <SelectItem value="m">Orta [1.200-1.700 kelime]</SelectItem>
+                    <SelectItem value="l">Uzun [1.500-2.000 kelime]</SelectItem>
+                    <SelectItem value="xl">Çok Uzun [1.500-2.000 kelime]</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
