@@ -1,22 +1,69 @@
-export default function BulkArticles() {
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { FileStack, Play } from "lucide-react";
+import { PageType } from "@/pages/Dashboard";
+
+interface BulkArticlesProps {
+  setCurrentPage: (page: PageType) => void;
+}
+
+export default function BulkArticles({ setCurrentPage }: BulkArticlesProps) {
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Toplu Oluşturulan Makaleler</h1>
-        <p className="text-slate-600 mt-2">Toplu olarak oluşturduğunuz makaleleri görüntüleyin ve yönetin</p>
-      </div>
-      
-      <div className="bg-white rounded-lg border border-slate-200 p-6">
-        <div className="text-center py-12">
-          <div className="h-16 w-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i className="fas fa-file-alt text-2xl"></i>
+    <div className="container mx-auto p-6 max-w-4xl">
+      {/* Header */}
+      <h1 className="text-2xl font-semibold text-gray-800 mb-8">
+        Toplu Oluşturulan Makalelerim
+      </h1>
+
+      {/* Main Content Card */}
+      <Card className="border-0 shadow-none">
+        <CardContent className="flex flex-col items-center justify-center py-16 px-8 text-center">
+          {/* Stacked Files Icon */}
+          <div className="relative mb-8">
+            <div className="w-20 h-16 bg-purple-200 rounded-lg absolute -top-2 -left-2 opacity-60"></div>
+            <div className="w-20 h-16 bg-purple-300 rounded-lg absolute -top-1 -left-1 opacity-80"></div>
+            <div className="w-20 h-16 bg-purple-500 rounded-lg relative flex items-center justify-center">
+              <FileStack className="w-8 h-8 text-white" />
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Henüz Toplu Makale Bulunmuyor</h3>
-          <p className="text-slate-600">
-            Toplu makale oluşturma özelliğini kullanarak buraya makaleler ekleyebilirsiniz.
+
+          {/* Empty State Message */}
+          <h2 className="text-lg font-medium text-gray-700 mb-2">
+            Toplu oluşturulan bir makaleniz bulunmuyor.
+          </h2>
+          
+          <p className="text-gray-500 mb-8 max-w-md">
+            Aşağıdaki butonlara tıklayarak toplu makale oluşturabilirsiniz.
           </p>
-        </div>
-      </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 mb-8">
+            <Button
+              onClick={() => setCurrentPage('bulk-template-v1')}
+              className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-0 px-6 py-3"
+              variant="outline"
+            >
+              Toplu Makale Oluştur V1
+            </Button>
+            
+            <Button
+              onClick={() => setCurrentPage('bulk-template-v2')}
+              className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-0 px-6 py-3"
+              variant="outline"
+            >
+              Toplu Makale Oluştur V2
+            </Button>
+          </div>
+
+          {/* YouTube Video Link */}
+          <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-center gap-3 text-red-600">
+            <Play className="w-4 h-4 fill-current" />
+            <span className="text-sm font-medium">
+              Toplu Makale Oluşturma Yardım Videosu
+            </span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -143,6 +143,7 @@ Changelog:
 - June 14, 2025. Removed "Yeni Özellik Önerin" menu item from sidebar navigation and updated routing system
 - June 14, 2025. Implemented URL Rewrite functionality with complete interface matching reference design including URL input, Genel Ayarlar, Görsel Seçenekleri, İçerik Özellikleri, Yayınlama, and İç & Dış Linkler sections
 - June 14, 2025. Added backend API endpoint for URL content fetching, HTML parsing, and AI-powered content rewriting using Gemini 2.5-flash model
+- June 14, 2025. Created "Toplu Oluşturulan Makalelerim" page with exact design match including stacked file icons, empty state messaging, navigation buttons to bulk creation tools, and YouTube help video link
 ```
 
 ## User Preferences

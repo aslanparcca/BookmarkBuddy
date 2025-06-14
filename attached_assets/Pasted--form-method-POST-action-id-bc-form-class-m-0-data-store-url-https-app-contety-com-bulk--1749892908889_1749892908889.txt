@@ -1,0 +1,353 @@
+<form method="POST" action="" id="bc-form" class="m-0" data-store-url="https://app.contety.com/bulk-content" data-request-url="https://app.contety.com/bulk-content/request" spellcheck="false">
+        <input type="hidden" name="_token" value="DEZBZ3J9dMaVlfDge6JvFgWJ0SibRyq5l6oEhrCj" autocomplete="off">
+        <div class="card mb-4" id="bc-form-step-1">
+            <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between py-3">
+                <h5 class="m-0 p-0 d-flex flex-row align-items-center">Toplu Makale Oluştur V1<i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#bulk-content-video-modal"></i></h5>
+
+                <div class="p-0 m-0 d-flex flex-row align-content-center">
+                    <button type="button" class="btn btn-sm bg-label-secondary border-0 fw-medium me-2" title="Bilgilendirme" data-bs-toggle="modal" data-bs-target="#generate-title-modal"><i class="bx bx-info-circle fs-5 text-s me-1"></i> Bilgilendirme</button>
+                </div>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="d-flex flex-column flex-md-row">
+    <div class="w-100 w-md-40 w-lg-30 w-xxl-25 pe-0 me-0 pe-md-5 me-md-5 border-end">
+        <div class="form-check mb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="1" id="generateType1" data-target="#keywordContainer" checked="">
+            <label class="form-check-label" for="generateType1">
+                <span class="fw-bold">Anahtar Kelime</span>
+                <small class="d-block">Girilen anahtar kelimelere göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom border-top border-dashed border-start-0 border-end-0 py-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="2" id="generateType2" data-target="#websiteContainer">
+            <label class="form-check-label" for="generateType2">
+                <span class="fw-bold">Web Siteniz</span>
+                <small class="d-block">Kayıtlı web sitelerinize göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom  border-dashed border-start-0 border-end-0 border-top-0 pb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="3" id="generateType3" data-target="#competitorContainer">
+            <label class="form-check-label" for="generateType3">
+                <span class="fw-bold">Rakip Siteler</span>
+                <small class="d-block">Rakip sitelerin içeriklerine göre öneriler oluşturulur</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-3 border-bottom  border-dashed border-start-0 border-end-0 border-top-0 pb-3">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="4" id="generateType4" data-target="#manualTitleContainer">
+            <label class="form-check-label" for="generateType4">
+                <span class="fw-bold">Başlıkları Kendim Gireceğim</span>
+                <small class="d-block">Başlıkları kendiniz yazabilir veya kopyala/yapıştır yapabilirsiniz</small>
+            </label>
+        </div>
+
+        <div class="form-check mb-4">
+            <input name="generate_type" class="bcgt-radio sela-primary form-check-input" type="radio" value="excel" id="generateTypeExcel" data-target="#excelUploadContainer">
+            <label class="form-check-label" for="generateTypeExcel">
+                <span class="fw-bold">Excel Dosyası Yükleyeceğim</span>
+                <small class="d-block">Başlık ve alt başlıkları Excel dosyası olarak yükleyebilirsiniz</small>
+            </label>
+        </div>
+    </div>
+
+    <div class="w-100 w-md-60 w-lg-70 w-xxl-75 mt-4 mt-md-0">
+        
+        
+        <div class="position-relative mb-4">
+            <label class="form-label" for="language_id">
+    Dil </label>
+<select class="select2 form-select select2-hidden-accessible" name="language_id" id="language_id" data-show-html="1" data-is-lang="1" data-placeholder="Lütfen bir dil seçiniz" data-allow-clear="false" data-select2-id="language_id" tabindex="-1" aria-hidden="true"><option value="1" data-select2-id="2">Türkçe</option><option value="2" data-select2-id="3">İngilizce</option><option value="5" data-select2-id="4">Almanca</option><option value="31" data-select2-id="5">Arnavutça</option><option value="39" data-select2-id="6">Azerice</option><option value="33" data-select2-id="7">Boşnakça</option><option value="18" data-select2-id="8">Bulgarca</option><option value="13" data-select2-id="9">Çekçe</option><option value="8" data-select2-id="10">Danca</option><option value="41" data-select2-id="11">Endonezce</option><option value="21" data-select2-id="12">Estonca</option><option value="10" data-select2-id="13">Felemenkçe</option><option value="9" data-select2-id="14">Fince</option><option value="3" data-select2-id="15">Fransızca</option><option value="28" data-select2-id="16">Hırvatça</option><option value="6" data-select2-id="17">İspanyolca</option><option value="12" data-select2-id="18">İsveççe</option><option value="7" data-select2-id="19">İtalyanca</option><option value="40" data-select2-id="20">Katalanca</option><option value="11" data-select2-id="21">Lehçe</option><option value="25" data-select2-id="22">Letonca</option><option value="24" data-select2-id="23">Litvanca</option><option value="16" data-select2-id="24">Macarca</option><option value="30" data-select2-id="25">Makedonca</option><option value="14" data-select2-id="26">Norveççe</option><option value="26" data-select2-id="27">Portekizce</option><option value="17" data-select2-id="28">Rumence</option><option value="22" data-select2-id="29">Rusça</option><option value="29" data-select2-id="30">Sırpça</option><option value="19" data-select2-id="31">Slovakça</option><option value="20" data-select2-id="32">Slovence</option><option value="48" data-select2-id="33">Tayca</option><option value="47" data-select2-id="34">Vietnamca</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 967.641px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-language_id-container"><span class="select2-selection__rendered" id="select2-language_id-container" role="textbox" aria-readonly="true" title="Türkçe"><span><img src="//static.contety.com/img/flags/4x3/tr.svg" width="16" loading="lazy" class="align-baseline">&nbsp;&nbsp;Türkçe</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+        </div>
+
+        <div>
+            <div class="bct-cont mb-4" id="keywordContainer" role="tabpanel">
+                <div class="mb-4">
+                    <label class="form-label" for="tagifyKeywords">
+    Anahtar Kelimeler </label>
+                    <tags class="tagify form-control tagify--noTags tagify--empty" tabindex="-1">
+            <span contenteditable="" tabindex="0" data-placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" aria-placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false"></span>
+                &ZeroWidthSpace;
+        </tags><input name="keywords" class="form-control" type="text" id="tagifyKeywords" placeholder="Anahtar kelimeleri aralarına virgül koyarak giriniz" maxlength="500" tabindex="-1">
+                 </div>
+
+                <div class="row">                    <div class="col-12 mb-4">
+                        <div class="form-check custom-option custom-option-basic checked">
+                            <label class="form-check-label custom-option-content" for="keywordType1">
+                                <input name="keyword_type" class="form-check-input" type="radio" value="1" id="keywordType1" checked="">
+                                <span class="custom-option-header"><span class="h6 mb-0">Anahtar kelimeler beraber değerlendirilsin</span></span>
+                                <span class="custom-option-body"><small>Anahtar kelimelerin hepsini kapsayacak başlıklar oluşturulur</small></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check custom-option custom-option-basic">
+                            <label class="form-check-label custom-option-content" for="keywordType2">
+                                <input name="keyword_type" class="form-check-input" type="radio" value="2" id="keywordType2">
+                                <span class="custom-option-header"><span class="h6 mb-0">Anahtar kelimeler ayrı ayrı değerlendirilsin</span></span>
+                                <span class="custom-option-body"><small>Anahtar kelimeler birbirinden bağımsız değerlendirilerek başlıklar oluşturulur</small></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none position-relative" id="websiteContainer" role="tabpanel">
+                <label class="form-label" for="user_website_s">
+    Web Siteniz </label>
+                <select class="select2 form-select select2-hidden-accessible" name="website_id" id="user_website_s" data-placeholder="Lütfen bir web sitesi seçiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="user_website_s" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="36"></option><option value="8180">https://akyurtnakliyat.org.tr</option><option value="8178">https://ankaracagrinakliyat.com</option><option value="400">https://ankaraozpolatnakliyat.com</option><option value="8167">https://boztasnakliyat.com.tr</option><option value="2040">https://elisamnakliyat.com</option><option value="8174">https://evtasimafirmasi.com</option><option value="8147">https://harekuafor.com.tr</option><option value="2">https://ozpolatnakliyat.com</option><option value="33">https://ozpolatnakliyat.com.tr</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="35" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-user_website_s-container"><span class="select2-selection__rendered" id="select2-user_website_s-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir web sitesi seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <div class="form-text text-body">- Bu seçenek <u>sadece WordPress sistemler</u> için çalışmaktadır.</div>
+                <div class="form-text text-body">- <a href="https://app.contety.com/account/website" title="Web Sitelerim" class="fw-medium">Web Sitelerim</a> bölümünden yeni bir site ekleyebilirsiniz.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="competitorContainer" role="tabpanel">
+                <label class="form-label" for="competitor_url">
+    Rakip Site URL Adresi </label>
+                <input name="competitor_url" class="form-control" type="text" id="competitor_url" placeholder="https://www.ornek-domain.com şeklinde giriniz">
+                <div class="form-text text-body">- Bu seçenek <u>sadece WordPress sistemler</u> için çalışmaktadır.</div>
+                <div class="form-text text-body">- WordPress harici sistemler için hata mesajı görüntülenecektir.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="manualTitleContainer" role="tabpanel">
+                <label class="form-label" for="custom_title">
+    Makale Başlıkları </label>
+                <textarea name="custom_title" class="form-control auto-size" id="custom_title" rows="10" placeholder="Lütfen her satıra sadece 1 adet başlık yazınız" spellcheck="false" style="overflow-x: hidden; overflow-wrap: break-word;"></textarea>
+                <div class="form-text text-body">* Lütfen <u>her satıra sadece 1 adet başlık</u> yazınız.</div>
+                <div class="form-text text-body">* En fazla 40 adet başlık girebilirsiniz.</div>
+            </div>
+
+            <div class="bct-cont mb-4 d-none" id="excelUploadContainer" role="tabpanel">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <label for="excel-file" class="form-label">Excel Dosyası</label>
+                        <input class="form-control" type="file" id="excel-file" name="excel_file" accept=".xlxs,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <div class="form-text text-body pb-0">
+                           <ul class="ps-3">
+                               <li>Örnek Excel dosyasını <a href="//static.contety.com/help/file/contety-ornek-toplu-makale-excel-3.xlsx" class="fw-medium text-decoration-underline" target="_blank" title="Örnek Excel dosyasını indirin">buradan</a> indirebilirsiniz. Lütfen dosya hakkındaki <span class="text-danger cursor-pointer fw-medium text-decoration-underline" title="Excel Dosyası Özellikleri" data-bs-toggle="modal" data-bs-target="#excel-help-modal">gereksinimleri</span> dikkatlice okuduğunuzdan emin olunuz.</li>
+                           </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 text-black fw-medium">
+                        <i class="bx bx-down-arrow-alt"></i><i class="bx bx-down-arrow-alt"></i> Lütfen aşağıdaki formdan makale özelliklerini seçiniz.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+                            <div class="d-flex flex-row justify-content-start" id="bcr-create-btn-cont">
+                    <div class="input-group w-auto">
+                        <input type="number" class="form-control w-px-75" name="title_count" id="bulk_title_count" placeholder="Adet" min="1" max="40" value="10">
+                        <button class="btn btn ib-spn-btnv2 btn-primary fw-medium" type="button" id="bcr-create-btn" data-type="content">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Başlık Oluştur</span>
+</button>
+                    </div>
+                </div>
+                    </div>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div class="card mb-4 bc-form-step-2 none-excel d-none">
+            <div class="card-header border-bottom py-3">
+                <h5 class="card-title mb-0">Makale Başlıkları</h5>
+            </div>
+            <div class="card-body mt-2">
+                <div class="alert alert-info d-flex flex-row align-items-center mt-2">
+                    <i class="bx bx-info-circle me-2 fs-4"></i><div>Lütfen makale başlıkları, odak anahtar kelimeler ve resim anahtar kelimelerini kontrol ederek gerekli gördüğünüz düzenlemeleri yapmayı unutmayın.</div>
+                </div>
+
+                <table class="table table-borderless mb-4">
+                    <thead>
+                    <tr>
+                        <th class="td-buticont w-70 ps-0 fs-6">Makale Başlığı</th>
+                        <th class="td-bufkcont ps-2 fs-6">Odak Anahtar Kelime</th>
+                        <th class="td-buimcont d-none ps-2 fs-6">Resim Anahtar Kelimesi <i class="bx bxs-help-circle text-body fs-6 ms-1" id="bulk-content-image-icon-helper" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="Lütfen <strong><u>İngilizce</u></strong> bir resim anahtar kelimesi yazınız"></i></th>
+                        <th class="w-px-30"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="bc-titles-cont"> </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-4 bc-form-step-2 d-none">
+            <div class="card-header border-bottom py-3">
+                <h5 class="card-title mb-0">Makale Özellikleri</h5>
+            </div>
+            <div class="card-body mt-4">
+                <div class="row">
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="tone_of_voice_id">
+    Yazı Stili </label>
+<select class="select2 form-select select2-hidden-accessible" name="tone_of_voice_id" id="tone_of_voice_id" data-placeholder="Lütfen bir yazı stili seçiniz" data-allow-clear="true" data-select2-id="tone_of_voice_id" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="38"></option><option value="112">Agresif</option><option value="192">Akademik</option><option value="204">Alçakgönüllü</option><option value="30">Arkadaşça</option><option value="221">Asık Suratlı / Somurtkan</option><option value="8">Bilgilendirici</option><option value="209">Bitkin</option><option value="106">Ciddi</option><option value="111">Coşkulu</option><option value="213">Dalgın / Düşünceli</option><option value="231">Dalkavukça / Yaltakçı</option><option value="226">Dehşete Düşmüş</option><option value="237">Depresif</option><option value="220">Destekleyici</option><option value="108">Diplomatik</option><option value="38">Dramatik</option><option value="114">Dürüst / Açık Sözlü</option><option value="219">Düşmanca</option><option value="227">Düşünceli (Başkalarını Düşünen)</option><option value="228">Düşünceli (Düşünceye Dalmış)</option><option value="198">Duygusal</option><option value="7">Eğlenceli</option><option value="116">Eleştirel</option><option value="27">Empatik</option><option value="180">Endişeli</option><option value="201">Enerjik</option><option value="9">Esprili / Hazırcevap</option><option value="248">Felsefi</option><option value="205">Flörtöz</option><option value="20">Gayri resmi</option><option value="256">Gazeteci</option><option value="134">Gerçekçi</option><option value="189">Gergin</option><option value="202">Gizemli</option><option value="24">Günlük Konuşma Dili</option><option value="129">Gururlu</option><option value="263">Haber Formatı (Ekonomi Haberleri)</option><option value="261">Haber Formatı (Genel Haber)</option><option value="262">Haber Formatı (Politika Haberleri)</option><option value="264">Haber Formatı (Sansasyonel Haberler)</option><option value="265">Haber Formatı (Teknoloji Haberleri)</option><option value="238">Hayal Kırıklığına Uğramış</option><option value="184">Hayran</option><option value="123">Heyecanlı</option><option value="257">Hikaye Anlatıcı</option><option value="240">Histerik</option><option value="188">Hüsrana Uğramış</option><option value="259">Huysuz</option><option value="113">İddialı</option><option value="5">İkna Edici / İnandırıcı</option><option value="6">İlham Verici </option><option value="133">İnatçı</option><option value="110">İronik</option><option value="121">Israrcı</option><option value="122">İstekli</option><option value="16">İyimser</option><option value="217">Kafası Karışık</option><option value="135">Kaprisli</option><option value="17">Karamsar</option><option value="246">Kararsız</option><option value="128">Kasvetli</option><option value="186">Kaygısız/Gamsız</option><option value="239">Kayıtsız / Umursamaz</option><option value="118">Kendinden Emin</option><option value="252">Kendini Beğenmiş</option><option value="214">Kibar</option><option value="187">Kibirli</option><option value="236">Kıskanç</option><option value="197">Kışkırtıcı / Provakatif</option><option value="179">Kızgın</option><option value="234">Korkmuş</option><option value="216">Küçümseyici</option><option value="222">Küstah</option><option value="244">Masum</option><option value="117">Melankolik</option><option value="235">Memnun / Hoşnut</option><option value="124">Meraklı</option><option value="249">Metaforik</option><option value="243">Meydan Okuyucu</option><option value="194">Minimalist</option><option value="185">Minnettar</option><option value="31">Mizahi</option><option value="229">Monoton (Donuk / Sıkıcı)</option><option value="105">Motive Edici</option><option value="125">Mutlu</option><option value="210">Nazik</option><option value="193">Nostaljik</option><option value="130">Öfkeli</option><option value="255">Öğretici</option><option value="254">Otoriter</option><option value="258">Öznel</option><option value="250">Özür Dileyici</option><option value="212">Paniğe Kapılmış</option><option value="200">Pastoral</option><option value="253">Patronluk Taslayan</option><option value="340">Pazarlama (Dostane ve Samimi)</option><option value="341">Pazarlama (İkna Edici ve Emin)</option><option value="339">Pazarlama (Profesyonel ve Güven Verici)</option><option value="131">Pişman</option><option value="215">Pozitif</option><option value="1">Profesyonel</option><option value="260">Rahat / Relaks</option><option value="232">Rahatlatıcı</option><option value="3">Resmi</option><option value="107">Romantik</option><option value="241">Sabırsız</option><option value="178">Sakin</option><option value="109">Samimi</option><option value="225">Sarkastik / İğneleyici</option><option value="132">Şaşırmış</option><option value="218">Şaşkın</option><option value="182">Saygılı</option><option value="251">Saygısız</option><option value="196">Şefkatli</option><option value="120">Sempatik</option><option value="247">Sessiz</option><option value="191">Şiirsel</option><option value="230">Sinirli</option><option value="11">Sohbet Tarzı</option><option value="181">Sorgulayıcı</option><option value="183">Suçlayıcı</option><option value="245">Suçlu</option><option value="115">Şüpheci</option><option value="127">Tarafsız / Objektif</option><option value="199">Tartışmacı</option><option value="206">Tehditkar</option><option value="190">Teknik</option><option value="203">Temkinli</option><option value="119">Teşvik Edici</option><option value="233">Tiksindirici</option><option value="208">Toleranslı</option><option value="195">Tutkulu</option><option value="126">Umutlu</option><option value="242">Umutsuz / Çaresiz</option><option value="211">Utangaç / Mahcup</option><option value="224">Vizyoner</option><option value="2">Yaratıcı</option><option value="223">Yargılayıcı</option><option value="207">Yorgun</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="37" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-tone_of_voice_id-container"><span class="select2-selection__rendered" id="select2-tone_of_voice_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir yazı stili seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="chatgpt_version">
+    Yapay Zeka Modeli </label>
+
+<select class="select2 form-select text-white select2-hidden-accessible" name="chatgpt_version" id="chatgpt_version" data-show-html="1" data-placeholder="Lütfen bir yapay zeka modeli seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="chatgpt_version" tabindex="-1" aria-hidden="true">
+    <option value=""></option>
+
+    <optgroup label="OpenAI">
+    <option value="gpt4o_mini" selected="" title="GPT-4o mini" data-select2-id="40">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="gpt4_1_nano" title="GPT-4.1 nano">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 nano&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1_mini" title="GPT-4.1 mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1 mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 2 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4_1" title="GPT-4.1">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4.1&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gpt4o" title="GPT-4o">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4o&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o4_mini" title="OpenAI o4-mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o4-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="openai_o3_mini" title="OpenAI o3-mini">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;o3-mini&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    <option value="chatgpt3.5_turbo" title="GPT-3.5 Turbo">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-3.5 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="chatgpt4_turbo" title="GPT-4 Turbo">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;GPT-4 Turbo&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 10 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+
+    <optgroup label="Google Gemini">
+    
+            <option value="gemini_2.0_flash" title="Gemini 2.0 Flash">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 2.0 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+            <option value="gemini_1.5_flash" title="Gemini 1.5 Flash">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Flash&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 1 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    
+    
+            <option value="gemini_1.5_pro" title="Gemini 1.5 Pro">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Gemini 1.5 Pro&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 kelime: 5 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+        </optgroup>
+</select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="39" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-chatgpt_version-container"><span class="select2-selection__rendered" id="select2-chatgpt_version-container" role="textbox" aria-readonly="true" title="GPT-4o mini">
+        <div class="d-flex flex-row justify-content-between align-items-center"><div>GPT-4o mini</div><div class="badge bg-label-primary fs085">1 kelime: 1 kredi</div></div>
+    </span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+    </div>
+
+    <div class="col-md-6 position-relative none-excel">
+        <label class="form-label" for="subheading_count">
+    Alt Başlık Sayısı </label>
+        <select class="select2 form-select select2-hidden-accessible" name="subheading_count" id="subheading_count" data-placeholder="Lütfen bir alt başlık sayısı seçiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="subheading_count" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="42"></option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="41" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-subheading_count-container"><span class="select2-selection__rendered" id="select2-subheading_count-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Lütfen bir alt başlık sayısı seçiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label d-flex flex-row align-items-center align-content-center" for="output_length">
+    <span class="me-1">Makale Uzunluğu</span><i class="bx bx-help-circle cursor-pointer fw-normal text-secondary fs-6" modal-id="content-length-modal" data-bs-toggle="modal" data-bs-target="#content-length-modal"></i> </label>
+
+<select class="select2 form-select text-white select2-hidden-accessible" name="output_length" id="output_length" data-show-html="1" data-placeholder="Lütfen bir uzunluk seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="output_length" tabindex="-1" aria-hidden="true">
+    <option value=""></option>
+    <option value="s" title="Kısa">Kısa</option>
+    <option value="m" selected="" title="Orta" data-select2-id="44">Orta</option>
+
+            <option value="l" title="Uzun">Uzun</option>
+    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="43" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-output_length-container"><span class="select2-selection__rendered" id="select2-output_length-container" role="textbox" aria-readonly="true" title="Orta">Orta</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="folder_id">
+    Klasör </label>
+<select class="select2 form-select select2-hidden-accessible" name="folder_id" id="folder_id" data-placeholder="Makaleleriniz için bir klasör seçebilirsiniz" data-allow-clear="true" data-minimum-results-for-search="Infinity" data-select2-id="folder_id" tabindex="-1" aria-hidden="true"><option value="" data-select2-id="46"></option><option value="11275">Akyurt Nakliyat</option><option value="11163">Ankara Özpolat</option><option value="11108">Asansörlü Nakliyat</option><option value="11259">Boztaş Nakliyat</option><option value="11054">Çağrı</option><option value="11267">Ev Taşıma Firması</option><option value="11248">Hare Kuaför</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="45" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-folder_id-container"><span class="select2-selection__rendered" id="select2-folder_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Makaleleriniz için bir klasör seçebilirsiniz</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+    </div>
+
+    <div class="col-md-6 position-relative mb-4">
+        <label class="form-label" for="faq">
+    Sıkça Sorulan Sorular </label>
+<select class="select2 form-select select2-hidden-accessible" name="faq" id="faq" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="faq" tabindex="-1" aria-hidden="true"><option value="0" data-select2-id="48">Hayır</option><option value="1">Evet (Normal)</option><option value="2">Evet (Normal + Schema)</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="47" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-faq-container"><span class="select2-selection__rendered" id="select2-faq-container" role="textbox" aria-readonly="true" title="Hayır">Hayır</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+    </div>
+
+    <div class="col-12 position-relative mb-4 none-excel">
+        <label class="form-label" for="bulkImages">
+    Makale Resmi </label>
+<select class="select2 form-select select2-hidden-accessible" name="image_source" id="bulkImages" data-image-source="1" data-placeholder="Lütfen bir seçim yapınız" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="bulkImages" tabindex="-1" aria-hidden="true"><option value="0" data-select2-id="50">Görsel istemiyorum</option><option value="1">Unsplash (Ücretsiz)</option><option value="5">Pexels (Ücretsiz)</option><option value="6">Pixabay (Ücretsiz)</option><option value="3">Google (Ücretsiz)</option></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="49" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-bulkImages-container"><span class="select2-selection__rendered" id="select2-bulkImages-container" role="textbox" aria-readonly="true" title="Görsel istemiyorum">Görsel istemiyorum</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-1">
+            <ul class="ps-3">
+                <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için resim anahtar kelimesi giriniz.</li>
+                <li>Bu servis ücretsiz bir stok görsel servisidir ve her anahtar kelimeniz için görsel <span class="fw-bold text-underline">bulunamayabilir.</span></li>
+                <li>Lütfen <span class="fw-bold text-underline text-danger">İngilizce</span> bir anahtar kelime giriniz.</li>
+                <li>Lütfen makale başlığınızı resim anahtar kelimesi olarak <span class="fw-bold text-underline">yazmayınız</span>.</li>
+                <li>Lütfen makalenizde görmek istediğiniz görsele dair bir anahtar kelime giriniz.</li>
+            </ul>
+        </div>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-2">
+            <ul class="ps-3">
+                <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için Bing Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                <li>Bulunan resimler ile Bing Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+            </ul>
+        </div>
+
+        <div class="d-none form-text text-body mt-1 image-keywords-cont" id="image-keywords-cont-3">
+            <ul class="ps-3">
+                <li>Lütfen <span class="fw-bold text-underline text-danger">yukarıdaki formda</span> her makale için Google Resimler servisinde kullanılacak arama terimini giriniz.</li>
+                <li>Bulunan resimler ile Google Resimler sitesindeki sonuçlar arasında farklılıklar olabilir.</li>
+                <li>Bulunan resimlerde lisans sorunları olabilir.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-1">
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" name="meta_description" id="meta_description" value="1">
+            <label class="form-check-label fw-medium" for="meta_description">
+                Meta Açıklama <span class="d-block form-text mt-0">Makalenin meta açıklaması oluşturulur.</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-1">
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" name="excerpt" id="excerpt" value="1">
+            <label class="form-check-label fw-medium" for="excerpt">
+                Makale Özeti <span class="d-block form-text mt-0">Makalenin kısa bir özeti (excerpt) çıkarılır.</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <button class="btn btn ib-spn-btnv2 btn-primary mt-4" type="button" id="bc-create-btn">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Toplu Makale Oluştur</span>
+</button>
+</div>
+            </div>
+        </div>
+    </form>

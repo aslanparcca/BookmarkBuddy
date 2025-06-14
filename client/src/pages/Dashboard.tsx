@@ -6,6 +6,7 @@ import WordPressEditor from "@/components/pages/WordPressEditor";
 import WordPressEditorV2 from "@/components/pages/WordPressEditorV2";
 import URLRewrite from "@/components/pages/URLRewrite";
 import BulkEditor from "@/components/pages/BulkEditor";
+import BulkArticles from "@/components/pages/BulkArticles";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
@@ -61,7 +62,7 @@ export default function Dashboard() {
       case 'url-rewrite':
         return <URLRewrite />;
       case 'bulk-articles':
-        return <PlaceholderPage title="Toplu Oluşturulan Makaleler" description="Toplu olarak oluşturduğunuz makaleleri görüntüleyin ve yönetin" icon="fas fa-file-alt" iconColor="text-blue-600" />;
+        return <BulkArticles setCurrentPage={setCurrentPage} />;
       case 'bulk-template-v1':
         return <PlaceholderPage title="Toplu Makale V1" description="Toplu makale oluşturma şablonu versiyon 1" icon="fas fa-layer-group" iconColor="text-purple-600" />;
       case 'bulk-template-v2':
