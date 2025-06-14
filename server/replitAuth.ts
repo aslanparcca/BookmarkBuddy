@@ -12,6 +12,11 @@ if (!process.env.REPLIT_DOMAINS) {
   throw new Error("Environment variable REPLIT_DOMAINS not provided");
 }
 
+// Set ISSUER_URL if not provided
+if (!process.env.ISSUER_URL) {
+  process.env.ISSUER_URL = "https://replit.com/oidc";
+}
+
 const getOidcConfig = memoize(
   async () => {
     return await client.discovery(
@@ -102,6 +107,8 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
+    console.log("Login attempt for hostname:", req.hostname);
+    console.log("Available domains:", process.env.REPLIT_DOMAINS);
     passport.authenticate(`replitauth:${req.hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
