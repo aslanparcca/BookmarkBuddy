@@ -34,7 +34,7 @@ export default function Articles() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: articles = [], isLoading } = useQuery({
+  const { data: articles = [], isLoading } = useQuery<any[]>({
     queryKey: ['/api/articles'],
     enabled: true,
   });
