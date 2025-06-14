@@ -71,6 +71,10 @@ interface BulkV2Settings {
   
   // İçerik Özellikleri (Array)
   contentFeatures: string[];
+  
+  // İç & Dış Linkler
+  internalLinks: string;
+  externalLinks: string;
 }
 
 interface GeneratedTitle {
@@ -139,11 +143,13 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     tags: "",
     publishStatus: "draft",
     publishDate: "",
-    contentFeatures: [] as string[]
+    contentFeatures: [] as string[],
+    internalLinks: "Yok",
+    externalLinks: "Yok"
   });
 
   // Fetch websites
-  const { data: websites = [] } = useQuery<Website[]>({
+  const websitesQuery = useQuery<Website[]>({
     queryKey: ['/api/websites'],
     retry: false,
   });
@@ -215,6 +221,20 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         variant: "destructive",
       });
       setLoading(false);
+    },
+  });
+
+  // Website sync mutation for category loading
+  const syncWebsiteMutation = useMutation({
+    mutationFn: async (websiteId: number) => {
+      return await apiRequest("POST", `/api/websites/${websiteId}/sync`, {});
+    },
+    onSuccess: () => {
+      // Refetch websites to get updated categories
+      websitesQuery.refetch();
+    },
+    onError: (error: Error) => {
+      console.error("Website sync error:", error);
     },
   });
 
@@ -975,7 +995,19 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="website">Web Sitesi</Label>
-                <Select value={settings.website} onValueChange={(value) => setSettings({...settings, website: value})}>
+                <Select 
+                  value={settings.website} 
+                  onValueChange={(value) => {
+                    setSettings({...settings, website: value, categoryId: ""});
+                    // Trigger category sync when website is selected
+                    if (value && value !== "none") {
+                      const selectedWebsite = websites.find(w => w.id.toString() === value);
+                      if (selectedWebsite) {
+                        syncWebsiteMutation.mutate(selectedWebsite.id);
+                      }
+                    }
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
