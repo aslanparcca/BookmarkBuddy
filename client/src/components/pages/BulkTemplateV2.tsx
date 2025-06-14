@@ -614,72 +614,9 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         </CardContent>
       </Card>
 
-      {/* Step 2: Generated Titles (Only show if titles are generated) */}
-      {showStep2 && (
-        <Card className="border-2 border-primary">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Heading className="w-5 h-5 text-primary" />
-              Makale Başlıkları
-            </CardTitle>
-          </CardHeader>
 
-          <CardContent>
-            <Alert className="mb-6">
-              <Info className="w-4 h-4" />
-              <AlertDescription>
-                Lütfen makale başlıkları, odak anahtar kelimeler ve resim anahtar kelimelerini kontrol ederek gerekli gördüğünüz düzenlemeleri yapmayı unutmayın.
-              </AlertDescription>
-            </Alert>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-2 font-medium">Makale Başlığı</th>
-                    <th className="text-left p-2 font-medium">Odak Anahtar Kelime</th>
-                    {imageSource !== "0" && (
-                      <th className="text-left p-2 font-medium">Resim Anahtar Kelimesi</th>
-                    )}
-                    <th className="w-8"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {generatedTitles.map((title, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="p-2">
-                        <Input
-                          value={title.title}
-                          onChange={(e) => updateGeneratedTitle(index, 'title', e.target.value)}
-                        />
-                      </td>
-                      <td className="p-2">
-                        <Input
-                          value={title.focusKeyword}
-                          onChange={(e) => updateGeneratedTitle(index, 'focusKeyword', e.target.value)}
-                        />
-                      </td>
-                      {imageSource !== "0" && (
-                        <td className="p-2">
-                          <Input
-                            value={title.imageKeyword}
-                            onChange={(e) => updateGeneratedTitle(index, 'imageKeyword', e.target.value)}
-                          />
-                        </td>
-                      )}
-                      <td className="p-2">
-                        <Button variant="ghost" size="sm">×</Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Step 3: General Settings */}
+      {/* Step 2: General Settings - Excel dosyası yüklendiğinde göster */}
       {showStep2 && (
         <Card className="border-2 border-primary">
           <CardHeader>
