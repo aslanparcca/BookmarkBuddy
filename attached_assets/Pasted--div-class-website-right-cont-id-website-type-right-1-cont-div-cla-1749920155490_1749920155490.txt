@@ -1,0 +1,56 @@
+<div class="website-right-cont" id="website-type-right-1-cont">
+                            <div class="nav-align-top">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-rank-math btn-sm me-2 active" role="tab" data-bs-toggle="tab" data-bs-target="#rank-math-seo-code-block" aria-controls="rank-math-seo-code-block" aria-selected="true">Rank Math SEO</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button type="button" class="btn btn-label-yoast btn-sm" role="tab" data-bs-toggle="tab" data-bs-target="#yoast-seo-code-block" aria-controls="yoast-seo-code-block" aria-selected="false" tabindex="-1">Yoast SEO</button>
+        </li>
+    </ul>
+
+    <div class="tab-content shadow-none p-0">
+        <div class="tab-pane fade active show" id="rank-math-seo-code-block" role="tabpanel">
+            <div class="mb-3">
+                <strong style="color:#724bb7">Rank Math SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+            </div>
+
+            <div class="cursor-pointer cccd border p-2 rounded" id="rank-math-seo-codes" data-clipboard-target="#rank-math-seo-codes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="<small>Kopyalandı</small>" data-bs-trigger="manual">
+                                                                                    <pre class="hljs p-0 m-0" style="display: block; background: rgb(255, 255, 255); padding: 0.5em; color: rgb(51, 51, 51); overflow-x: auto;">add_action(<span class="hljs-string" style="color: rgb(223, 80, 0);">'rest_api_init'</span>, <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span> </span>{
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'rank_math_focus_keyword'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'rank_math_description'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+});</pre></div>
+        </div>
+        <div class="tab-pane fade" id="yoast-seo-code-block" role="tabpanel">
+            <div class="mb-3">
+                <strong style="color:#a61e69">Yoast SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
+            </div>
+            <div class="cursor-pointer cccd border p-2 rounded" id="yoast-seo-codes" data-clipboard-target="#yoast-seo-codes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="<small>Kopyalandı</small>" data-bs-trigger="manual">
+                                                                                    <pre class="hljs p-0 m-0" style="display: block; background: rgb(255, 255, 255); padding: 0.5em; color: rgb(51, 51, 51); overflow-x: auto;">add_action(<span class="hljs-string" style="color: rgb(223, 80, 0);">'rest_api_init'</span>, <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span> </span>{
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'_yoast_wpseo_focuskw'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+    register_meta(<span class="hljs-string" style="color: rgb(223, 80, 0);">'post'</span>, <span class="hljs-string" style="color: rgb(223, 80, 0);">'_yoast_wpseo_metadesc'</span>, <span class="hljs-keyword" style="color: rgb(167, 29, 93);">array</span>(
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'show_in_rest'</span>  =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'single'</span>        =&gt; <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'type'</span>          =&gt; <span class="hljs-string" style="color: rgb(223, 80, 0);">'string'</span>,
+        <span class="hljs-string" style="color: rgb(223, 80, 0);">'auth_callback'</span> =&gt; <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(167, 29, 93);">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword" style="color: rgb(167, 29, 93);">return</span> <span class="hljs-keyword" style="color: rgb(167, 29, 93);">true</span>;}
+    ));
+});</pre></div>
+        </div>
+    </div>
+</div>
+                        </div>

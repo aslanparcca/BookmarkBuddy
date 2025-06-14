@@ -10,8 +10,6 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 const websiteSchema = z.object({
   type: z.string(),
   url: z.string().url("Geçerli bir URL giriniz"),
-  username: z.string().min(1, "Kullanıcı adı gereklidir"),
-  application_key: z.string().min(1, "Uygulama parolası gereklidir"),
   wp_username: z.string().min(1, "WordPress kullanıcı adı gereklidir"),
   wp_app_password: z.string().min(1, "WordPress uygulama şifresi gereklidir"),
   seo_plugin: z.string(),
@@ -39,12 +37,10 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
     resolver: zodResolver(websiteSchema),
     defaultValues: {
       type: "1",
-      url: "",
-      username: "",
-      application_key: "",
-      wp_username: "",
-      wp_app_password: "",
-      seo_plugin: "yok",
+      url: "https://bestwebstudio.com.tr",
+      wp_username: "bestwebstudio",
+      wp_app_password: "poZg 5PfB gcEe rwuS 5OY6 lPba",
+      seo_plugin: "yoast_seo",
       woocommerce: "0",
       xenforo_api_key: "",
       xenforo_api_key_type: "1",
@@ -175,45 +171,6 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                   {selectedType === "1" && (
                     <div className="website-type-cont">
                       <div className="mb-4">
-                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2" htmlFor="username">
-                          <span className="mr-1">Kullanıcı Adı</span>
-                          <i className="fas fa-question-circle cursor-pointer text-gray-400 text-sm ml-1"></i>
-                          <span className="text-red-500 ml-1">*</span>
-                        </label>
-                        <input 
-                          {...form.register("username")}
-                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          type="text"
-                          placeholder="Lütfen web sitenizdeki kullanıcı isminizi giriniz"
-                          maxLength={255}
-                        />
-                        <div className="text-sm text-gray-500 mt-1">
-                          Lütfen web sitenizdeki kullanıcı adını giriniz. Girdiğiniz kullanıcının <strong>"yönetici"</strong> veya <strong>"editör"</strong> yetkisi olması gerekmektedir.
-                        </div>
-                        {form.formState.errors.username && (
-                          <p className="text-red-500 text-sm mt-1">{form.formState.errors.username.message}</p>
-                        )}
-                      </div>
-
-                      <div className="mb-4">
-                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2" htmlFor="application_key">
-                          <span className="mr-1">Uygulama Parolası</span>
-                          <i className="fas fa-question-circle cursor-pointer text-gray-400 text-sm ml-1"></i>
-                          <span className="text-red-500 ml-1">*</span>
-                        </label>
-                        <input 
-                          {...form.register("application_key")}
-                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          type="text"
-                          placeholder="Lütfen web sitenizdeki uygulama parolanızı giriniz"
-                          maxLength={255}
-                        />
-                        {form.formState.errors.application_key && (
-                          <p className="text-red-500 text-sm mt-1">{form.formState.errors.application_key.message}</p>
-                        )}
-                      </div>
-
-                      <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="wp_username">
                           <span className="mr-1">WordPress Kullanıcı Adı</span>
                           <i className="fas fa-question-circle cursor-pointer text-gray-400 text-sm ml-1"></i>
@@ -226,6 +183,9 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                           placeholder="WordPress kullanıcı adınızı giriniz"
                           maxLength={255}
                         />
+                        <div className="text-sm text-gray-500 mt-1">
+                          WordPress yönetici panelindeki kullanıcı adınızı giriniz. Kullanıcının <strong>"Yönetici"</strong> yetkisi olması gerekmektedir.
+                        </div>
                         {form.formState.errors.wp_username && (
                           <p className="text-red-500 text-sm mt-1">{form.formState.errors.wp_username.message}</p>
                         )}
