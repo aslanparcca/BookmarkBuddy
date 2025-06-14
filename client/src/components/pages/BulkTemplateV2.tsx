@@ -84,6 +84,7 @@ interface GeneratedTitle {
   otherKeywords?: string;
   subheadings?: string[];
   companyName?: string;
+  contentLength?: string;
 }
 
 interface Website {
@@ -271,7 +272,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
           imageKeyword: article.otherKeywords ? article.otherKeywords.split(',')[0].trim() : article.focusKeyword,
           otherKeywords: article.otherKeywords,
           subheadings: article.subheadings || [],
-          companyName: article.companyName || ''
+          companyName: article.companyName || '',
+          contentLength: article.contentLength || ''
         }));
         
         setGeneratedTitles(articlesData);

@@ -184,6 +184,7 @@ Changelog:
 - June 14, 2025. Enhanced "Diğer Anahtar Kelimeler" processing: improved AI prompt to properly utilize secondary keywords from Excel file, added explicit keyword distribution instructions, system now uses both focus keyword and all secondary keywords naturally throughout article sections
 - June 14, 2025. Added "Firma" field support to Excel processing: system now reads company name from "Firma" column in Excel files and naturally mentions the company throughout generated articles when relevant, updated GeneratedTitle interface and AI prompt to include company branding
 - June 14, 2025. Implemented Excel-based content length control: removed manual "Bölüm Uzunluğu" field from Genel Ayarlar, system now reads "Bölüm Uzunluğu" column from Excel (S=800-1,200 words, M=1,200-1,700 words, L=1,700-2,200 words, XL=2,200-2,700 words, XXL=2,700-3,200 words), enhanced AI prompt to use Excel length indicators instead of manual settings, strengthened company name mention instructions in AI prompt for better integration
+- June 14, 2025. Fixed Excel data flow issue: corrected frontend-to-backend data mapping to properly pass company name and content length from Excel files, updated GeneratedTitle interface to include contentLength field, enhanced debug logging to track Excel data processing, system now correctly uses both "Firma" and "Bölüm Uzunluğu" columns from Excel in AI article generation
 ```
 
 ## User Preferences
