@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,13 +27,27 @@ interface ArticleEditModalProps {
 
 export default function ArticleEditModal({ article, isOpen, onClose }: ArticleEditModalProps) {
   const [formData, setFormData] = useState({
-    title: article?.title || "",
-    content: article?.content || "",
-    status: article?.status || "draft",
-    category: article?.category || "",
-    focusKeyword: article?.focusKeyword || "",
-    metaDescription: article?.metaDescription || "",
+    title: "",
+    content: "",
+    status: "draft",
+    category: "",
+    focusKeyword: "",
+    metaDescription: "",
   });
+
+  // Update form data when article changes
+  useEffect(() => {
+    if (article) {
+      setFormData({
+        title: article.title || "",
+        content: article.content || "",
+        status: article.status || "draft",
+        category: article.category || "",
+        focusKeyword: article.focusKeyword || "",
+        metaDescription: article.metaDescription || "",
+      });
+    }
+  }, [article]);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
