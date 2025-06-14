@@ -425,63 +425,7 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
             </div>
           </div>
 
-          <div className="col-md-6 col-lg-5">
-            <div className="card h-100">
-              <div className="card-header border-bottom py-3">
-                <h5 className="m-0 p-0">SEO Eklenti Kodları</h5>
-              </div>
 
-              <div className="card-body pt-4">
-                <div className="nav-align-top">
-                  <ul className="flex space-x-2 mb-3" role="tablist">
-                    <li>
-                      <button 
-                        type="button" 
-                        className="px-3 py-1 bg-purple-100 text-purple-600 rounded text-sm hover:bg-purple-200"
-                        onClick={() => {/* Toggle to Rank Math tab */}}
-                      >
-                        Rank Math SEO
-                      </button>
-                    </li>
-                    <li>
-                      <button 
-                        type="button" 
-                        className="px-3 py-1 bg-green-100 text-green-600 rounded text-sm hover:bg-green-200"
-                        onClick={() => {/* Toggle to Yoast tab */}}
-                      >
-                        Yoast SEO
-                      </button>
-                    </li>
-                  </ul>
-
-                  <div className="tab-content">
-                    <div className="tab-pane">
-                      <div className="mb-3">
-                        <strong className="text-green-600">Yoast SEO</strong> eklentisi için odak anahtar kelime ve meta açıklama alanlarının doldurulabilmesi için aşağıdaki kodu web sitenizde kullandığınız temanızın <code className="bg-gray-100 px-1 rounded"><strong>functions.php</strong></code> dosyasının en sonuna ekleyin:
-                      </div>
-
-                      <div className="cursor-pointer border p-3 rounded bg-gray-50 font-mono text-sm overflow-x-auto">
-                        <pre>{`add_action('rest_api_init', function() {
-    register_meta('post', '_yoast_wpseo_focuskw', array(
-        'show_in_rest'  => true,
-        'single'        => true,
-        'type'          => 'string',
-        'auth_callback' => function(){return true;}
-    ));
-    register_meta('post', '_yoast_wpseo_metadesc', array(
-        'show_in_rest'  => true,
-        'single'        => true,
-        'type'          => 'string',
-        'auth_callback' => function(){return true;}
-    ));
-});`}</pre>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
