@@ -321,31 +321,58 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
         </div>
 
         {/* Content Features Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="h-10 w-10 bg-emerald-100 text-emerald-600 flex items-center justify-center rounded-lg">
-              <i className="fas fa-magic"></i>
+        <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="h-6 w-6 bg-purple-500 text-white flex items-center justify-center rounded text-xs font-semibold">
+              <i className="fas fa-magic text-xs"></i>
             </div>
-            <h3 className="text-lg font-semibold text-slate-900">İçerik Özellikleri</h3>
+            <h3 className="text-base font-medium text-slate-800">İçerik Özellikleri</h3>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-2">
             {[
-              { key: 'includeIntro', label: 'Giriş Paragrafı' },
-              { key: 'includeFaq', label: 'FAQ Bölümü' },
-              { key: 'includeConclusion', label: 'Sonuç Bölümü' },
+              { key: 'includeIntro', label: 'SSS Eklensin' },
+              { key: 'includeFaq', label: 'Makale Özetli' },
+              { key: 'includeConclusion', label: 'Aile Yazısı' },
               { key: 'includeMetaDescription', label: 'Meta Açıklama' },
-              { key: 'includeSubheadings', label: 'Alt Başlıklar' },
-              { key: 'includeInternalLinks', label: 'İç Bağlantılar' },
+              { key: 'includeSubheadings', label: 'Tablo' },
+              { key: 'includeInternalLinks', label: 'Liste' },
             ].map((feature) => (
-              <label key={feature.key} className="flex items-center space-x-3 p-3 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+              <label key={feature.key} className="flex items-center space-x-2 text-xs cursor-pointer">
                 <Checkbox
                   checked={settings[feature.key as keyof typeof settings] as boolean}
                   onCheckedChange={(checked) => setSettings({...settings, [feature.key]: checked})}
+                  className="h-4 w-4"
                 />
-                <span className="text-sm font-medium text-slate-700">{feature.label}</span>
+                <span className="text-slate-700">{feature.label}</span>
               </label>
             ))}
+          </div>
+        </div>
+
+        {/* İç & Dış Linkler Card */}
+        <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="h-6 w-6 bg-blue-500 text-white flex items-center justify-center rounded text-xs font-semibold">
+              <i className="fas fa-link text-xs"></i>
+            </div>
+            <h3 className="text-base font-medium text-slate-800">İç & Dış Linkler</h3>
+          </div>
+          
+          <div className="space-y-2">
+            <div>
+              <Label className="text-sm text-slate-600">İç Linkler</Label>
+              <Select value="Yok" onValueChange={() => {}}>
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Yok">Yok</SelectItem>
+                  <SelectItem value="Örnekli">Örnekli</SelectItem>
+                  <SelectItem value="Manuel">Manuel</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -353,27 +380,26 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
         <Button
           onClick={() => generateMutation.mutate()}
           disabled={generateMutation.isPending}
-          className="w-full bg-primary-600 text-white py-4 rounded-xl font-semibold hover:bg-primary-700 shadow-lg"
+          className="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 text-sm"
         >
           {generateMutation.isPending ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              İçerik Oluşturuluyor...
+              Makale Oluştur
             </>
           ) : (
             <>
-              <i className="fas fa-magic mr-2"></i>
-              İçerik Oluştur
+              Makale Oluştur
             </>
           )}
         </Button>
       </div>
 
       {/* Editor Panel */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col">
-        <div className="p-6 border-b border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-900">Oluşturulan İçerik</h3>
-          <p className="text-slate-500 text-sm mt-1">AI tarafından oluşturulan makalenizi düzenleyebilirsiniz</p>
+      <div className="bg-white rounded-lg border border-slate-200 flex flex-col">
+        <div className="p-4 border-b border-slate-200">
+          <h3 className="text-base font-medium text-slate-800">Oluşturulan İçerik</h3>
+          <p className="text-slate-500 text-sm mt-1">Yapay zeka tarafından oluşturulan makalenizi burada görüntüleyebilirsiniz</p>
         </div>
         
         <div className="flex-1">
