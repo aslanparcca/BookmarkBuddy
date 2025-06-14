@@ -18,6 +18,7 @@ interface Article {
   category?: string;
   focusKeyword?: string;
   metaDescription?: string;
+  summary?: string;
 }
 
 interface ArticleEditModalProps {
