@@ -585,8 +585,12 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       let generatedCount = 0;
       const results = [];
 
+      console.log("Processing articles:", articles.length);
+      
       for (const article of articles) {
         try {
+          console.log("Processing article:", article.title);
+          
           const subheadingsText = article.subheadings && article.subheadings.length > 0 
             ? `Şu alt başlıkları kullanın: ${article.subheadings.join(', ')}` 
             : 'Alt başlıkları otomatik oluşturun';

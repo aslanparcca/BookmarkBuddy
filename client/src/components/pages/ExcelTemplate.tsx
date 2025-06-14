@@ -103,7 +103,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
       setGenerationProgress(100);
       toast({
         title: "Makaleler Oluşturuldu!",
-        description: `${data.count}/${data.total} makale başarıyla oluşturuldu.`,
+        description: `${data.count || 0}/${data.total || 0} makale başarıyla oluşturuldu.`,
       });
     },
     onError: (error: Error) => {
