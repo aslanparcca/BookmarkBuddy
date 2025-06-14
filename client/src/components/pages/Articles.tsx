@@ -8,9 +8,14 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
+import ArticleViewModal from "@/components/ArticleViewModal";
+import ArticleEditModal from "@/components/ArticleEditModal";
 
 export default function Articles() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -163,6 +168,10 @@ export default function Articles() {
                           variant="ghost"
                           size="sm"
                           className="text-slate-400 hover:text-primary-600"
+                          onClick={() => {
+                            setSelectedArticle(article);
+                            setIsEditModalOpen(true);
+                          }}
                         >
                           <i className="fas fa-edit"></i>
                         </Button>
@@ -170,6 +179,10 @@ export default function Articles() {
                           variant="ghost"
                           size="sm"
                           className="text-slate-400 hover:text-emerald-600"
+                          onClick={() => {
+                            setSelectedArticle(article);
+                            setIsViewModalOpen(true);
+                          }}
                         >
                           <i className="fas fa-eye"></i>
                         </Button>
@@ -210,6 +223,30 @@ export default function Articles() {
           </div>
         </>
       )}
+
+      {/* Modals */}
+      <ArticleViewModal
+        article={selectedArticle}
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false);
+          setSelectedArticle(null);
+        }}
+        onEdit={(article) => {
+          setIsViewModalOpen(false);
+          setSelectedArticle(article);
+          setIsEditModalOpen(true);
+        }}
+      />
+
+      <ArticleEditModal
+        article={selectedArticle}
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedArticle(null);
+        }}
+      />
     </div>
   );
 }
