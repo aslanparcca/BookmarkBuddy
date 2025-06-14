@@ -1,21 +1,36 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
+import { isUnauthorizedError } from "@/lib/authUtils";
 import ArticleViewModal from "@/components/ArticleViewModal";
 import ArticleEditModal from "@/components/ArticleEditModal";
+
+interface Website {
+  id: number;
+  url: string;
+  type: string;
+  categories?: string[];
+}
 
 export default function Articles() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedArticles, setSelectedArticles] = useState<number[]>([]);
+  const [isSendDialogOpen, setIsSendDialogOpen] = useState(false);
+  const [selectedWebsite, setSelectedWebsite] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -23,6 +38,18 @@ export default function Articles() {
     queryKey: ['/api/articles'],
     enabled: true,
   });
+
+  // Fetch websites
+  const { data: websites = [] } = useQuery<Website[]>({
+    queryKey: ['/api/websites'],
+    retry: false,
+  });
+
+  // Categories for selected website
+  const categories = useMemo(() => {
+    const selectedWebsiteData = websites.find(w => w.id.toString() === selectedWebsite);
+    return selectedWebsiteData?.categories || [];
+  }, [websites, selectedWebsite]);
 
   const deleteMutation = useMutation({
     mutationFn: async (articleId: number) => {
@@ -44,10 +71,78 @@ export default function Articles() {
     },
   });
 
+  const sendToWebsiteMutation = useMutation({
+    mutationFn: async (data: { articleIds: number[], websiteId: string, category: string }) => {
+      return await apiRequest("POST", "/api/articles/send-to-website", data);
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Başarılı",
+        description: `${selectedArticles.length} makale siteye gönderildi`,
+      });
+      setSelectedArticles([]);
+      setIsSendDialogOpen(false);
+      setSelectedWebsite("");
+      setSelectedCategory("");
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Oturum Süresi Doldu",
+          description: "Tekrar giriş yapılıyor...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Hata",
+        description: error.message || "Makale gönderilirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const filteredArticles = articles.filter((article: any) =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (article.category && article.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  // Selection functions
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedArticles(filteredArticles.map((article: any) => article.id));
+    } else {
+      setSelectedArticles([]);
+    }
+  };
+
+  const handleSelectArticle = (articleId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedArticles(prev => [...prev, articleId]);
+    } else {
+      setSelectedArticles(prev => prev.filter(id => id !== articleId));
+    }
+  };
+
+  const handleSendToWebsite = () => {
+    if (!selectedWebsite || !selectedCategory) {
+      toast({
+        title: "Hata",
+        description: "Lütfen site ve kategori seçin",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    sendToWebsiteMutation.mutate({
+      articleIds: selectedArticles,
+      websiteId: selectedWebsite,
+      category: selectedCategory
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -112,6 +207,70 @@ export default function Articles() {
             />
             <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
           </div>
+          
+          {selectedArticles.length > 0 && (
+            <Dialog open={isSendDialogOpen} onOpenChange={setIsSendDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">
+                  <i className="fas fa-paper-plane mr-2"></i>
+                  Siteye Gönder ({selectedArticles.length})
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Siteye Gönder</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Web Sitesi</label>
+                    <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Site seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {websites.map((website) => (
+                          <SelectItem key={website.id} value={website.id.toString()}>
+                            {website.url}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {selectedWebsite && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Kategori</label>
+                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Kategori seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category, index) => (
+                            <SelectItem key={index} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setIsSendDialogOpen(false)}>
+                      İptal
+                    </Button>
+                    <Button 
+                      onClick={handleSendToWebsite}
+                      disabled={sendToWebsiteMutation.isPending || !selectedWebsite || !selectedCategory}
+                    >
+                      {sendToWebsiteMutation.isPending ? "Gönderiliyor..." : "Gönder"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+          
           <Button className="bg-primary-600 hover:bg-primary-700">
             <i className="fas fa-plus mr-2"></i>
             Yeni Makale
@@ -135,6 +294,12 @@ export default function Articles() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12">
+                    <Checkbox
+                      checked={selectedArticles.length === filteredArticles.length && filteredArticles.length > 0}
+                      onCheckedChange={handleSelectAll}
+                    />
+                  </TableHead>
                   <TableHead>Başlık</TableHead>
                   <TableHead>Kategori</TableHead>
                   <TableHead>Durum</TableHead>
@@ -145,6 +310,12 @@ export default function Articles() {
               <TableBody>
                 {filteredArticles.map((article: any) => (
                   <TableRow key={article.id} className="hover:bg-slate-50">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedArticles.includes(article.id)}
+                        onCheckedChange={(checked) => handleSelectArticle(article.id, checked as boolean)}
+                      />
+                    </TableCell>
                     <TableCell>
                       <div>
                         <h4 className="font-medium text-slate-900">{article.title}</h4>
@@ -186,6 +357,81 @@ export default function Articles() {
                         >
                           <i className="fas fa-eye"></i>
                         </Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-slate-400 hover:text-blue-600"
+                              onClick={() => {
+                                setSelectedArticles([article.id]);
+                                setSelectedWebsite("");
+                                setSelectedCategory("");
+                              }}
+                            >
+                              <i className="fas fa-paper-plane"></i>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                              <DialogTitle>Siteye Gönder</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Makale</label>
+                                <div className="p-2 bg-gray-50 rounded text-sm">
+                                  {article.title}
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Web Sitesi</label>
+                                <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Site seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {websites.map((website) => (
+                                      <SelectItem key={website.id} value={website.id.toString()}>
+                                        {website.url}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              {selectedWebsite && (
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Kategori</label>
+                                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Kategori seçin" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {categories.map((category, index) => (
+                                        <SelectItem key={index} value={category}>
+                                          {category}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              )}
+                              
+                              <div className="flex justify-end space-x-2">
+                                <DialogTrigger asChild>
+                                  <Button variant="outline">İptal</Button>
+                                </DialogTrigger>
+                                <Button 
+                                  onClick={handleSendToWebsite}
+                                  disabled={sendToWebsiteMutation.isPending || !selectedWebsite || !selectedCategory}
+                                >
+                                  {sendToWebsiteMutation.isPending ? "Gönderiliyor..." : "Gönder"}
+                                </Button>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
                         <Button
                           variant="ghost"
                           size="sm"
