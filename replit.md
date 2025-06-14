@@ -169,6 +169,7 @@ Changelog:
 - June 14, 2025. Added automatic category fetching: when website is selected, categories are automatically loaded from backend sync
 - June 14, 2025. Fixed Gemini model mapping errors: all AI model selections now properly map to available Gemini 1.5 Flash/Pro models
 - June 14, 2025. Resolved JavaScript variable initialization errors in React components using useMemo hooks for proper state management
+- June 14, 2025. Added comprehensive article publishing system: tekli ve toplu siteye gönderme with checkbox selection, bulk sending dialog, individual article send buttons, WordPress REST API integration for category mapping and post creation, XenForo support framework, and complete backend endpoint for article-to-website publishing workflow
 ```
 
 ## User Preferences

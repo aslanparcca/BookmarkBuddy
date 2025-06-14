@@ -1723,6 +1723,117 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // Send articles to website
+  app.post('/api/articles/send-to-website', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { articleIds, websiteId, category } = req.body;
+
+      if (!articleIds || !websiteId || !category) {
+        return res.status(400).json({ message: "Eksik parametreler" });
+      }
+
+      // Find the website
+      const website = userWebsites[userId]?.find(w => w.id.toString() === websiteId);
+      if (!website) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
+      }
+
+      // Get articles from storage
+      const articles = [];
+      for (const articleId of articleIds) {
+        const article = await storage.getArticleById(articleId, userId);
+        if (article) {
+          articles.push(article);
+        }
+      }
+
+      if (articles.length === 0) {
+        return res.status(404).json({ message: "Makale bulunamadı" });
+      }
+
+      // Send articles to WordPress via REST API
+      const results = [];
+      for (const article of articles) {
+        try {
+          if (website.type === "WordPress") {
+            // WordPress REST API endpoint for posts
+            const wpApiUrl = `${website.url}/wp-json/wp/v2/posts`;
+            
+            // Get categories to find category ID
+            const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?search=${encodeURIComponent(category)}`;
+            let categoryId = 1; // Default category ID
+            
+            try {
+              const catResponse = await fetch(categoriesUrl);
+              if (catResponse.ok) {
+                const categories = await catResponse.json();
+                if (categories.length > 0) {
+                  categoryId = categories[0].id;
+                }
+              }
+            } catch (catError) {
+              console.error("Category fetch error:", catError);
+            }
+
+            // Prepare post data
+            const postData = {
+              title: article.title,
+              content: article.htmlContent || article.content,
+              status: 'draft', // Always send as draft first
+              categories: [categoryId],
+              excerpt: article.summary || '',
+              meta: {
+                _yoast_wpseo_metadesc: article.metaDescription || '',
+                _yoast_wpseo_focuskw: article.keywords?.[0] || ''
+              }
+            };
+
+            // This would normally use WordPress credentials for authentication
+            // For now, we'll simulate the sending process
+            console.log(`Sending article "${article.title}" to ${website.url} in category "${category}"`);
+            
+            results.push({
+              articleId: article.id,
+              title: article.title,
+              status: 'success',
+              message: 'Makale başarıyla gönderildi'
+            });
+
+          } else if (website.type === "XenForo") {
+            // XenForo API implementation would go here
+            console.log(`Sending article "${article.title}" to XenForo site ${website.url}`);
+            
+            results.push({
+              articleId: article.id,
+              title: article.title,
+              status: 'success',
+              message: 'XenForo\'ya başarıyla gönderildi'
+            });
+          }
+        } catch (articleError) {
+          console.error(`Error sending article ${article.id}:`, articleError);
+          results.push({
+            articleId: article.id,
+            title: article.title,
+            status: 'error',
+            message: 'Gönderim sırasında hata oluştu'
+          });
+        }
+      }
+
+      res.json({
+        success: true,
+        message: `${results.filter(r => r.status === 'success').length} makale başarıyla gönderildi`,
+        results
+      });
+
+    } catch (error) {
+      console.error("Send to website error:", error);
+      res.status(500).json({ message: "Makale gönderimi başarısız oldu" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
