@@ -1781,10 +1781,16 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
             }
 
             // Prepare post data with SEO meta fields
-            const focusKeyword = article.focusKeyword || article.keywords?.[0] || '';
+            let focusKeyword = article.focusKeyword || article.keywords?.[0] || '';
+            
+            // Extract only the first keyword if it's a comma-separated list
+            if (focusKeyword && focusKeyword.includes(',')) {
+              focusKeyword = focusKeyword.split(',')[0].trim();
+            }
+            
             console.log('Article SEO Debug:', {
               articleId: article.id,
-              focusKeyword: article.focusKeyword,
+              originalFocusKeyword: article.focusKeyword,
               keywords: article.keywords,
               finalFocusKeyword: focusKeyword,
               metaDescription: article.metaDescription
