@@ -252,6 +252,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // WordPress V2 generation route
+  app.post('/api/wordpress/generate-v2', isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req.user as any)?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const settings = req.body;
+      const userSettings = await storage.getUserSettings(userId);
+      
+      if (!userSettings?.geminiApiKey) {
+        return res.status(400).json({ message: "Gemini API key not configured. Please update your settings." });
+      }
+
+      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      
+      // Build comprehensive prompt based on all settings
+      let prompt = `
+        Türkçe bir WordPress makalesi oluştur. Detaylı ayarlar:
+        
+        Odak Anahtar Kelime: "${settings.focusKeyword}"
+        Makale Başlığı: "${settings.articleTitle || settings.focusKeyword + ' Hakkında Kapsamlı Rehber'}"
+        
+        Yazı Özellikleri:
+        - Dil: ${settings.language}
+        - Uzunluk: ${settings.sectionLength}
+        - Yazı Stili: ${settings.writingStyle || 'Genel'}
+        - Anlatıcı: ${settings.narrator || 'Genel'}
+        
+        İçerik Gereksinimleri:
+        ${settings.faqNormal ? '- Sıkça sorulan sorular bölümü ekle' : ''}
+        ${settings.faqSchema ? '- Sıkça sorulan sorular (Schema yapısında)' : ''}
+        ${settings.table ? '- İlgili tablo ekle' : ''}
+        ${settings.list ? '- Madde işaretli listeler kullan' : ''}
+        ${settings.quote ? '- İlgili alıntılar ekle' : ''}
+        ${settings.boldText ? '- Önemli kelimeleri kalın yap' : ''}
+        ${settings.italicText ? '- Vurgu için italik kullan' : ''}
+        
+        Anahtar Kelimeler: ${settings.keywords || settings.focusKeyword}
+        
+        Makale şunları içermelidir:
+        - SEO uyumlu giriş paragrafı
+        - ${settings.h2Count || 8} adet H2 alt başlık ile organize edilmiş içerik
+        - Her bölümde detaylı açıklamalar
+        - Sonuç ve özet paragrafı
+        
+        Odak anahtar kelimeyi doğal bir şekilde makale boyunca ${Math.ceil(settings.sectionLength === 'Çok Uzun (1.500-2.000 kelime)' ? 15 : 8)} kez kullan.
+        Lütfen sadece makale içeriğini döndür, başka açıklama ekleme.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const content = result.response.text();
+      const title = settings.articleTitle || content.split('\n')[0].replace('#', '').trim();
+      
+      // Generate additional content based on settings
+      let metaDescription = '';
+      let summary = '';
+      let youtubeVideo = '';
+      
+      if (settings.metaDescription) {
+        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
+        metaDescription = metaResult.response.text().trim();
+      }
+      
+      if (settings.articleSummary) {
+        const summaryResult = await model.generateContent(`Bu makale için 3-4 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
+        summary = summaryResult.response.text().trim();
+      }
+      
+      if (settings.youtubeVideo) {
+        const videoResult = await model.generateContent(`Bu makale konusu için YouTube video script'i oluştur: "${settings.focusKeyword}". Sadece video açıklamasını döndür.`);
+        youtubeVideo = videoResult.response.text().trim();
+      }
+
+      // Calculate reading time and word count
+      const wordCount = content.split(' ').length;
+      const readingTime = Math.ceil(wordCount / 200);
+
+      // Save article to database
+      const article = await storage.createArticle({
+        userId,
+        title,
+        content,
+        keywords: [settings.focusKeyword, ...(settings.keywords ? settings.keywords.split(',').map((k: string) => k.trim()) : [])],
+        status: 'draft',
+        wordCount,
+        readingTime
+      });
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, wordCount);
+
+      res.json({ 
+        success: true,
+        article: {
+          ...article,
+          metaDescription,
+          summary,
+          youtubeVideo
+        }
+      });
+    } catch (error) {
+      console.error("WordPress V2 generation error:", error);
+      res.status(500).json({ message: "Failed to generate WordPress V2 article" });
+    }
+  });
+
   // Bulk upload
   app.post('/api/bulk-upload', isAuthenticated, upload.single('excelFile'), async (req: any, res) => {
     try {
