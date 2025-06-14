@@ -751,6 +751,123 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     }
   });
 
+  // Bulk Titles V2 endpoint
+  app.post('/api/bulk-titles-v2', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const settings = req.body;
+
+      // Initialize Gemini model
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+      let prompt = "";
+      let titles: Array<{title: string, focusKeyword: string, imageKeyword: string}> = [];
+
+      switch(settings.generateType) {
+        case "1": // Anahtar Kelime
+          if (!settings.keywords) {
+            return res.status(400).json({ message: "Anahtar kelimeler gerekli" });
+          }
+          
+          const keywords = settings.keywords.split(',').map((k: string) => k.trim());
+          
+          if (settings.keywordType === "1") {
+            // Beraber değerlendirme
+            prompt = `${settings.titleCount} adet Türkçe makale başlığı oluştur. Anahtar kelimeler: ${keywords.join(', ')}. 
+            Bu kelimelerin hepsini kapsayacak başlıklar oluştur. Her başlık için odak anahtar kelime ve İngilizce resim anahtar kelimesi belirle.
+            JSON formatında döndür: [{"title": "başlık", "focusKeyword": "anahtar kelime", "imageKeyword": "image keyword"}]`;
+          } else {
+            // Ayrı ayrı değerlendirme
+            for (const keyword of keywords.slice(0, settings.titleCount)) {
+              titles.push({
+                title: `${keyword} Hakkında Kapsamlı Rehber`,
+                focusKeyword: keyword,
+                imageKeyword: keyword.toLowerCase().replace(/[^a-zA-Z0-9]/g, ' ')
+              });
+            }
+          }
+          break;
+
+        case "2": // Web Sitesi
+          if (!settings.websiteId) {
+            return res.status(400).json({ message: "Web sitesi seçimi gerekli" });
+          }
+          prompt = `Bir WordPress sitesi için ${settings.titleCount} adet makale başlığı öner. 
+          Her başlık için odak anahtar kelime ve İngilizce resim anahtar kelimesi belirle.
+          JSON formatında döndür: [{"title": "başlık", "focusKeyword": "anahtar kelime", "imageKeyword": "image keyword"}]`;
+          break;
+
+        case "3": // Rakip Site
+          if (!settings.competitorUrl) {
+            return res.status(400).json({ message: "Rakip site URL'si gerekli" });
+          }
+          prompt = `${settings.competitorUrl} sitesine benzer içerikler için ${settings.titleCount} adet makale başlığı oluştur.
+          Her başlık için odak anahtar kelime ve İngilizce resim anahtar kelimesi belirle.
+          JSON formatında döndür: [{"title": "başlık", "focusKeyword": "anahtar kelime", "imageKeyword": "image keyword"}]`;
+          break;
+
+        case "4": // Manuel Başlıklar
+          if (!settings.customTitle) {
+            return res.status(400).json({ message: "Makale başlıkları gerekli" });
+          }
+          const customTitles = settings.customTitle.split('\n').filter((t: string) => t.trim());
+          titles = customTitles.slice(0, settings.titleCount).map((title: string) => ({
+            title: title.trim(),
+            focusKeyword: title.trim().split(' ').slice(0, 2).join(' '),
+            imageKeyword: title.trim().split(' ').slice(0, 2).join(' ').toLowerCase()
+          }));
+          break;
+
+        case "excel": // Excel Upload
+          // Excel processing would be handled here
+          return res.status(501).json({ message: "Excel işleme henüz desteklenmiyor" });
+
+        default:
+          return res.status(400).json({ message: "Geçersiz oluşturma tipi" });
+      }
+
+      // Generate titles using AI if prompt is set
+      if (prompt && titles.length === 0) {
+        const result = await model.generateContent(prompt);
+        const content = result.response.text();
+        
+        try {
+          // Try to parse JSON response
+          const cleanContent = content.replace(/```json\n?|\n?```/g, '').trim();
+          titles = JSON.parse(cleanContent);
+        } catch (parseError) {
+          // Fallback: create titles from response text
+          const lines = content.split('\n').filter(line => line.trim());
+          titles = lines.slice(0, settings.titleCount).map((line, index) => ({
+            title: line.replace(/^\d+\.?\s*/, '').trim(),
+            focusKeyword: `keyword${index + 1}`,
+            imageKeyword: `image${index + 1}`
+          }));
+        }
+      }
+
+      // Ensure we have the requested number of titles
+      while (titles.length < settings.titleCount) {
+        titles.push({
+          title: `Makale Başlığı ${titles.length + 1}`,
+          focusKeyword: `anahtar kelime ${titles.length + 1}`,
+          imageKeyword: `image keyword ${titles.length + 1}`
+        });
+      }
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, JSON.stringify(titles).length);
+
+      res.json({ 
+        success: true,
+        titles: titles.slice(0, settings.titleCount)
+      });
+    } catch (error) {
+      console.error("Bulk titles V2 generation error:", error);
+      res.status(500).json({ message: "Başlık oluşturma işlemi başarısız oldu" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

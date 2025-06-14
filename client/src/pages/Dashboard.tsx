@@ -8,6 +8,7 @@ import URLRewrite from "@/components/pages/URLRewrite";
 import BulkEditor from "@/components/pages/BulkEditor";
 import BulkArticles from "@/components/pages/BulkArticles";
 import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
+import BulkTemplateV2 from "@/components/pages/BulkTemplateV2";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
@@ -67,7 +68,7 @@ export default function Dashboard() {
       case 'bulk-template-v1':
         return <BulkTemplateV1 setLoading={setLoading} />;
       case 'bulk-template-v2':
-        return <PlaceholderPage title="Toplu Makale V2" description="Toplu makale oluşturma şablonu versiyon 2" icon="fas fa-layer-group" iconColor="text-purple-600" />;
+        return <BulkTemplateV2 setLoading={setLoading} />;
       case 'bulk-recipe':
         return <PlaceholderPage title="Toplu Yemek Tarifi" description="Toplu yemek tarifi oluşturma araçları" icon="fas fa-utensils" iconColor="text-orange-600" />;
       case 'bulk-dream':
