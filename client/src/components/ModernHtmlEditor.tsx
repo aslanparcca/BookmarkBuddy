@@ -73,18 +73,12 @@ export default function ModernHtmlEditor({
     onChange(e.target.value);
   };
 
-  const toolbarGroups = [
+  const toolbarGroups: { name: string; items: ToolbarItem[] }[] = [
     {
       name: "clipboard",
       items: [
         { command: "undo", icon: "fas fa-undo", tooltip: "Geri Al" },
         { command: "redo", icon: "fas fa-redo", tooltip: "İleri Al" },
-      ]
-    },
-    {
-      name: "editing",
-      items: [
-        { command: "selectAll", icon: "fas fa-select-all", tooltip: "Tümünü Seç" },
       ]
     },
     {
@@ -121,42 +115,6 @@ export default function ModernHtmlEditor({
       ]
     },
     {
-      name: "insert",
-      items: [
-        {
-          command: "insertImage",
-          icon: "fas fa-image",
-          tooltip: "Resim Ekle",
-          onClick: () => {
-            const url = prompt('Resim URL\'sini girin:');
-            if (url) insertHtml(`<img src="${url}" alt="Resim" style="max-width: 100%; height: auto;" />`);
-          }
-        },
-        {
-          command: "insertTable",
-          icon: "fas fa-table",
-          tooltip: "Tablo Ekle",
-          onClick: () => {
-            const rows = prompt('Satır sayısı:', '3');
-            const cols = prompt('Sütun sayısı:', '3');
-            if (rows && cols) {
-              let table = '<table border="1" style="border-collapse: collapse; width: 100%;"><tbody>';
-              for (let i = 0; i < parseInt(rows); i++) {
-                table += '<tr>';
-                for (let j = 0; j < parseInt(cols); j++) {
-                  table += '<td style="padding: 8px; border: 1px solid #ddd;">&nbsp;</td>';
-                }
-                table += '</tr>';
-              }
-              table += '</tbody></table>';
-              insertHtml(table);
-            }
-          }
-        },
-        { command: "insertHorizontalRule", icon: "fas fa-minus", tooltip: "Yatay Çizgi" },
-      ]
-    },
-    {
       name: "styles",
       items: [
         {
@@ -168,33 +126,7 @@ export default function ModernHtmlEditor({
             { label: "Başlık 1", value: "h1" },
             { label: "Başlık 2", value: "h2" },
             { label: "Başlık 3", value: "h3" },
-            { label: "Başlık 4", value: "h4" },
-            { label: "Başlık 5", value: "h5" },
-            { label: "Başlık 6", value: "h6" },
           ]
-        },
-      ]
-    },
-    {
-      name: "colors",
-      items: [
-        {
-          command: "foreColor",
-          icon: "fas fa-font",
-          tooltip: "Yazı Rengi",
-          onClick: () => {
-            const color = prompt('Renk kodunu girin (örn: #ff0000):');
-            if (color) executeCommand('foreColor', color);
-          }
-        },
-        {
-          command: "backColor",
-          icon: "fas fa-fill-drip",
-          tooltip: "Arka Plan Rengi",
-          onClick: () => {
-            const color = prompt('Arka plan rengi kodunu girin (örn: #ffff00):');
-            if (color) executeCommand('backColor', color);
-          }
         },
       ]
     },
@@ -204,7 +136,6 @@ export default function ModernHtmlEditor({
         { command: "justifyLeft", icon: "fas fa-align-left", tooltip: "Sola Hizala" },
         { command: "justifyCenter", icon: "fas fa-align-center", tooltip: "Ortala" },
         { command: "justifyRight", icon: "fas fa-align-right", tooltip: "Sağa Hizala" },
-        { command: "justifyFull", icon: "fas fa-align-justify", tooltip: "İki Yana Yasla" },
       ]
     },
     {
@@ -230,13 +161,13 @@ export default function ModernHtmlEditor({
             <div key={groupIndex} className="flex items-center">
               {group.items.map((item, itemIndex) => (
                 <div key={itemIndex} className="relative">
-                  {item.dropdown ? (
+                  {'dropdown' in item && item.dropdown ? (
                     <select
                       onChange={(e) => executeCommand(item.command, e.target.value)}
                       className="px-2 py-1 text-xs border border-slate-300 rounded bg-white hover:bg-slate-50 focus:outline-none focus:ring-1 focus:ring-primary-500"
                       title={item.tooltip}
                     >
-                      {item.dropdown.map((option, optIndex) => (
+                      {item.dropdown.map((option: any, optIndex: number) => (
                         <option key={optIndex} value={option.value}>
                           {option.label}
                         </option>
@@ -247,8 +178,8 @@ export default function ModernHtmlEditor({
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className={`h-8 w-8 p-0 hover:bg-slate-200 ${item.active ? 'bg-slate-300' : ''}`}
-                      onClick={() => item.onClick ? item.onClick() : executeCommand(item.command)}
+                      className={`h-8 w-8 p-0 hover:bg-slate-200 ${'active' in item && item.active ? 'bg-slate-300' : ''}`}
+                      onClick={() => 'onClick' in item && item.onClick ? item.onClick() : executeCommand(item.command)}
                       title={item.tooltip}
                     >
                       <i className={`${item.icon} text-xs`}></i>
