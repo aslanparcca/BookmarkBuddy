@@ -903,7 +903,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Henüz web siteniz bulunmuyor</SelectItem>
+                    <SelectItem value="none">Henüz web siteniz bulunmuyor</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -915,7 +915,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
+                    <SelectItem value="none">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
