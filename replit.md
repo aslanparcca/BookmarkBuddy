@@ -179,6 +179,7 @@ Changelog:
 - June 14, 2025. Completed BulkTemplateV2 interface enhancements: fixed category auto-update when website is selected, added comprehensive Güncel Bilgiler section with search configuration options, implemented İç & Dış Linkler section with internal/external link density controls, resolved all JavaScript errors including category.id undefined issues with proper error handling
 - June 14, 2025. Cleaned up BulkTemplateV2 interface: removed duplicate Görsel Seçenekleri section (bottom one), removed Alt Başlık Sayısı (H2) field as this will be auto-populated from Excel, streamlined interface to show only necessary manual configuration fields
 - June 14, 2025. Removed manual "Makale Başlıkları" textarea field from BulkTemplateV2: Excel files now automatically populate article titles, eliminating need for manual title entry and streamlining Excel workflow
+- June 14, 2025. Fixed Excel subheading detection: system now properly reads Alt Başlık 1-20 columns from Excel and forces AI to use these exact headings instead of generating new ones, ensuring Excel template structure is maintained in generated articles
 ```
 
 ## User Preferences

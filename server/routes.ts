@@ -1441,6 +1441,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           if (settings.italicText) contentFeatures.push('- Use <em> tags for emphasis on key terms and concepts');
           if (settings.quote) contentFeatures.push('- Include 2-3 relevant quotes in <blockquote> tags from experts or studies');
 
+          // Check if Excel subheadings are provided
+          const hasExcelSubheadings = titleData.subheadings && Array.isArray(titleData.subheadings) && titleData.subheadings.length > 0;
+          
           const promptParts = [
             'Create a Turkish SEO-focused article. Never use markdown code blocks. Return only clean HTML.',
             '',
@@ -1448,6 +1451,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             `- Title: ${titleData.title}`,
             `- Focus Keyword: ${titleData.focusKeyword}`,
             titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : '',
+            titleData.otherKeywords ? `- Other Keywords: ${titleData.otherKeywords}` : '',
             '',
             'ARTICLE STRUCTURE:',
             `- Target Length: ${
@@ -1456,9 +1460,12 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
               settings.sectionLength === 'l' ? '1,500-2,000 words' :
               settings.sectionLength === 'xl' ? '2,000-2,500 words' : '1,500-2,000 words'
             }`,
-            `- Main H2 sections: ${settings.subheadingCount || '7-10'} sections`,
+            hasExcelSubheadings ? 
+              `- REQUIRED H2 sections (USE THESE EXACT HEADINGS): ${titleData.subheadings.join(', ')}` :
+              `- Main H2 sections: ${settings.subheadingCount || '7-10'} sections`,
             `- Subheading type: ${settings.subheadingType === 'h2h3' ? 'Use both H2 and H3 tags (H2 for main sections, H3 for subsections)' : 'Use only H2 tags for main sections'}`,
             `- Writing Style: ${settings.writingStyle || 'Professional and trustworthy'}`,
+            hasExcelSubheadings ? '\nIMPORTANT: You MUST use the provided H2 headings in the exact order listed above. Do not change or reorder them.' : '',
             '',
             'CONTENT FEATURES (MUST IMPLEMENT):',
             contentFeatures.length > 0 ? contentFeatures.join('\n') : '- Use standard article format',
