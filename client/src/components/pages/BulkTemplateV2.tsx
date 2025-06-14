@@ -150,9 +150,9 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   // Fetch categories for selected website using useMemo
   const categories = useMemo(() => {
-    const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
+    const selectedWebsite = websites.find(w => w.id.toString() === settings.websiteId);
     return selectedWebsite?.categories || [];
-  }, [websites, settings.website]);
+  }, [websites, settings.websiteId]);
 
   const generateTitlesMutation = useMutation({
     mutationFn: async (settings: BulkV2Settings) => {
@@ -1028,22 +1028,17 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
               <div>
                 <Label htmlFor="category">Kategori</Label>
-                <Select value={settings.category} onValueChange={(value) => setSettings({...settings, category: value})}>
+                <Select value={settings.categoryId} onValueChange={(value) => setSettings({...settings, categoryId: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    {!settings.website || settings.website === "none" ? (
-                      <SelectItem value="none">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
-                    ) : categories.length === 0 ? (
-                      <SelectItem value="none">Bu web sitesinde kategori bulunamadı</SelectItem>
-                    ) : (
-                      categories.map((category, index) => (
-                        <SelectItem key={index} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))
-                    )}
+                    <SelectItem value="">Kategori seçiniz</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id.toString()}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
