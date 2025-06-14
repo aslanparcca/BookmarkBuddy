@@ -207,9 +207,49 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     },
   });
 
-  const handleFileSelect = (file: File) => {
-    // Excel file processing will be handled here
+  const handleFileSelect = async (file: File) => {
     console.log("Excel file selected:", file.name);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/process-excel-template', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log("Excel processing response:", data);
+      
+      if (data.success && data.articles) {
+        // Excel'den gelen makaleleri başlık listesine dönüştür
+        const titles = data.articles.map((article: any) => ({
+          title: article.title,
+          focusKeyword: article.focusKeyword,
+          imageKeyword: article.focusKeyword.toLowerCase().replace(/[^a-zA-Z0-9]/g, ' ')
+        }));
+        
+        setGeneratedTitles(titles);
+        setShowStep2(true);
+        
+        toast({
+          title: "Başarılı",
+          description: `${titles.length} adet makale Excel'den yüklendi!`,
+        });
+      }
+    } catch (error) {
+      console.error("Excel processing error:", error);
+      toast({
+        title: "Hata",
+        description: "Excel dosyası işlenirken hata oluştu",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleGenerateArticles = () => {

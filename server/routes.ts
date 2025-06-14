@@ -1060,8 +1060,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           break;
 
         case "excel": // Excel Upload
-          // Excel processing would be handled here
-          return res.status(501).json({ message: "Excel işleme henüz desteklenmiyor" });
+          // Excel dosyası frontend'de işlenecek, burada sadece boş response döndürüyoruz
+          titles = [];
+          break;
 
         default:
           return res.status(400).json({ message: "Geçersiz oluşturma tipi" });
