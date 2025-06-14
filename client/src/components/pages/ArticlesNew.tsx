@@ -50,7 +50,7 @@ export default function ArticlesNew() {
 
   const offset = (currentPage - 1) * perPage;
 
-  const { data: responseData, isLoading } = useQuery<ArticleResponse>({
+  const { data: responseData, isLoading, refetch } = useQuery({
     queryKey: ['/api/articles', { limit: perPage, offset, search: searchQuery }],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -61,16 +61,16 @@ export default function ArticlesNew() {
         params.append('search', searchQuery);
       }
       const response = await apiRequest('GET', `/api/articles?${params}`);
-      console.log('Articles API Response:', response);
-      return response as ArticleResponse;
+      const data = await response.json();
+      console.log('Articles API Response:', data);
+      return data;
     },
-    enabled: true,
-    staleTime: 0, // Force fresh data
-    gcTime: 0, // Don't cache (v5 renamed from cacheTime)
+    staleTime: 0,
+    gcTime: 0,
   });
 
-  const articles = responseData?.articles || [];
-  const pagination = responseData?.pagination || { limit: 25, offset: 0, total: 0, hasMore: false };
+  const articles = (responseData as any)?.articles || [];
+  const pagination = (responseData as any)?.pagination || { limit: 25, offset: 0, total: 0, hasMore: false };
 
   // Fetch websites
   const { data: websites = [] } = useQuery<Website[]>({
