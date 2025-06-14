@@ -1515,9 +1515,11 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '- The content should be the complete article body',
             '',
             'SEO REQUIREMENTS:',
-            '- Use focus keyword naturally with 1-2% density',
+            `- Primary focus keyword: "${titleData.focusKeyword}" (use with 1-2% density)`,
             '- Include focus keyword in first paragraph within first 100 words',
-            '- Use related keywords throughout content',
+            titleData.otherKeywords ? `- Secondary keywords to use naturally: ${titleData.otherKeywords}` : '',
+            '- Distribute all keywords naturally throughout sections',
+            '- Use keyword variations and synonyms',
             '- Create proper H2, H3 hierarchy',
             '',
             'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph.'

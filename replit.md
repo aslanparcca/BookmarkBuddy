@@ -181,6 +181,7 @@ Changelog:
 - June 14, 2025. Removed manual "Makale Başlıkları" textarea field from BulkTemplateV2: Excel files now automatically populate article titles, eliminating need for manual title entry and streamlining Excel workflow
 - June 14, 2025. Fixed Excel subheading detection: system now properly reads Alt Başlık 1-20 columns from Excel and forces AI to use these exact headings instead of generating new ones, ensuring Excel template structure is maintained in generated articles
 - June 14, 2025. Fixed Excel subheading processing workflow: identified that manual "Makale Başlıkları" field was blocking Excel processing, removed it completely, added comprehensive debug logging, updated GeneratedTitle interface to include subheadings and otherKeywords fields, now Excel alt başlık data flows from file reading through frontend to backend AI generation
+- June 14, 2025. Enhanced "Diğer Anahtar Kelimeler" processing: improved AI prompt to properly utilize secondary keywords from Excel file, added explicit keyword distribution instructions, system now uses both focus keyword and all secondary keywords naturally throughout article sections
 ```
 
 ## User Preferences
