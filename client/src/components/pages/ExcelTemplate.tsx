@@ -203,13 +203,15 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
 
       {/* Step 1: File Upload */}
       {step === 1 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Upload className="w-5 h-5" />
-              Excel Dosyası Yükle
-            </CardTitle>
-          </CardHeader>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Upload className="w-5 h-5" />
+                  Excel Dosyası Yükle
+                </CardTitle>
+              </CardHeader>
           <CardContent className="space-y-6">
             <div className="text-center">
               <FileSpreadsheet className="w-16 h-16 mx-auto text-green-500 mb-4" />

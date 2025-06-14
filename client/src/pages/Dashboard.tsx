@@ -11,7 +11,7 @@ import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
 import BulkTemplateV2 from "@/components/pages/BulkTemplateV2";
 import BulkRecipe from "@/components/pages/BulkRecipe";
 import BulkDream from "@/components/pages/BulkDream";
-import ExcelTemplate from "@/components/pages/ExcelTemplate";
+import ExcelTemplate from "@/components/pages/ExcelTemplateNew";
 import CustomArticles from "@/components/pages/CustomArticles";
 import ArticleCustomizer from "@/components/pages/ArticleCustomizer";
 import WebSites from "@/components/pages/WebSites";
