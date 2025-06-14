@@ -15,19 +15,19 @@ interface ExcelTemplateProps {
 
 interface ProcessedArticle {
   title: string;
-  keywords: string;
+  focusKeyword: string;
+  otherKeywords: string;
   description: string;
   category: string;
   tags: string;
   imageKeyword: string;
-  sectionLength: string;
-  subheadingCount: string;
+  subheadings: string[];
   writingStyle: string;
   language: string;
   metaDescription: string;
-  focusKeyword: string;
   targetAudience: string;
   contentType: string;
+  contentLength: string;
 }
 
 interface GenerationResult {
@@ -271,13 +271,13 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
                     </div>
                     <div className="space-y-1 text-sm">
                       <div><span className="font-medium">Kategori:</span> {article.category}</div>
-                      <div><span className="font-medium">Anahtar Kelimeler:</span> {article.keywords}</div>
-                      <div><span className="font-medium">Yazım Stili:</span> {article.writingStyle}</div>
+                      <div><span className="font-medium">Odak Anahtar:</span> {article.focusKeyword}</div>
+                      <div><span className="font-medium">Diğer Kelimeler:</span> {article.otherKeywords}</div>
                     </div>
                     <div className="space-y-1 text-sm">
                       <div><span className="font-medium">Dil:</span> {article.language}</div>
-                      <div><span className="font-medium">Bölüm Uzunluğu:</span> {article.sectionLength}</div>
-                      <div><span className="font-medium">Alt Başlık:</span> {article.subheadingCount}</div>
+                      <div><span className="font-medium">İçerik Uzunluğu:</span> {article.contentLength}</div>
+                      <div><span className="font-medium">Alt Başlık:</span> {article.subheadings.length} adet</div>
                     </div>
                   </div>
                 </div>

@@ -159,6 +159,9 @@ Changelog:
 - June 14, 2025. Removed 9 example websites from default listing and implemented "Yeni Web Sitesi Ekle" form with complete WordPress and XenForo configuration options
 - June 14, 2025. Added comprehensive website addition interface matching provided HTML template with SEO plugin codes, user authentication fields, and multi-platform support
 - June 14, 2025. Integrated WordPress website addition workflow with navigation between Web Sitelerim list and add website form, plus backend API for website creation
+- June 14, 2025. Created Excel Template system for bulk article generation with advanced column mapping supporting "Makale Başlığı", "Odak Anahtar Kelime", "Diğer Anahtar Kelimeler", "Alt Başlık 1-20" structure matching user's provided Excel template
+- June 14, 2025. Implemented comprehensive Excel processing backend API with intelligent column detection, 20 sub-heading support, and advanced AI prompt generation for bulk article creation with Gemini 2.5-flash integration
+- June 14, 2025. Added Excel Template to sidebar navigation with dedicated interface featuring 3-step workflow: file upload → article review → generation results with detailed progress tracking and error handling
 ```
 
 ## User Preferences
