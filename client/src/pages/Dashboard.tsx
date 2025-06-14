@@ -10,6 +10,9 @@ import BulkArticles from "@/components/pages/BulkArticles";
 import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
 import BulkTemplateV2 from "@/components/pages/BulkTemplateV2";
 import BulkRecipe from "@/components/pages/BulkRecipe";
+import BulkDream from "@/components/pages/BulkDream";
+import CustomArticles from "@/components/pages/CustomArticles";
+import ArticleCustomizer from "@/components/pages/ArticleCustomizer";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
@@ -73,11 +76,11 @@ export default function Dashboard() {
       case 'bulk-recipe':
         return <BulkRecipe setLoading={setLoading} />;
       case 'bulk-dream':
-        return <PlaceholderPage title="Toplu Rüya Tabiri" description="Toplu rüya tabiri içerik oluşturma araçları" icon="fas fa-moon" iconColor="text-indigo-600" />;
+        return <BulkDream setLoading={setLoading} />;
       case 'custom-articles':
-        return <PlaceholderPage title="Özgünleştirilen Makaleler" description="Özelleştirilmiş ve özgünleştirilmiş makaleleriniz" icon="fas fa-clock" iconColor="text-teal-600" />;
+        return <CustomArticles />;
       case 'optimize-articles':
-        return <PlaceholderPage title="Makale Özgünleştir" description="Mevcut makalelerinizi özgünleştirme araçları" icon="fas fa-cog" iconColor="text-gray-600" />;
+        return <ArticleCustomizer />;
       case 'voice-files':
         return <PlaceholderPage title="Ses Dosyalarım" description="Oluşturduğunuz ses dosyalarını görüntüleyin ve yönetin" icon="fas fa-volume-up" iconColor="text-blue-600" />;
       case 'voice-reader':

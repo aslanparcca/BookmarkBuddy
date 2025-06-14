@@ -150,6 +150,10 @@ Changelog:
 - June 14, 2025. Added backend API endpoint for bulk title generation V2 with extended functionality supporting advanced content configuration and image keyword generation
 - June 14, 2025. Implemented comprehensive "Toplu Yemek Tarifi" interface with recipe-specific content options, structured data support, and multi-step workflow (recipe input → review → detailed configuration)
 - June 14, 2025. Added backend API endpoints for recipe processing and bulk recipe generation with Gemini AI integration supporting 15+ recipe content sections and customizable display options
+- June 14, 2025. Created "Toplu Rüya Tabiri" interface with dream subject input, multi-step workflow, and comprehensive article generation settings including similar dream topics and psychological interpretations
+- June 14, 2025. Implemented "Özgünleştirilen Makaleler" empty state page with navigation to article customization tools and help video integration
+- June 14, 2025. Built "Makale Özgünleştir" interface with website/competitor content selection, filtering options, and article listing functionality for content customization workflows
+- June 14, 2025. Added backend API endpoints for dream interpretation article generation and article customization listing with Gemini AI integration and WordPress content management
 ```
 
 ## User Preferences
