@@ -572,12 +572,15 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
       }
 
       const userSettings = await storage.getUserSettings(userId);
-      if (!userSettings?.geminiApiKey) {
+      
+      // Environment variable'dan veya kullanıcı ayarlarından API anahtarını al
+      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY;
+      if (!apiKey) {
         return res.status(400).json({ message: "Gemini API anahtarı bulunamadı. Lütfen ayarlarınızı kontrol edin." });
       }
 
-      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-      const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-2.5-flash" });
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-2.5-flash" });
 
       let generatedCount = 0;
       const results = [];
