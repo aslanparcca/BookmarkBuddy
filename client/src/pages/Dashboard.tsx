@@ -13,6 +13,7 @@ import BulkRecipe from "@/components/pages/BulkRecipe";
 import BulkDream from "@/components/pages/BulkDream";
 import CustomArticles from "@/components/pages/CustomArticles";
 import ArticleCustomizer from "@/components/pages/ArticleCustomizer";
+import WebSites from "@/components/pages/WebSites";
 import Articles from "@/components/pages/Articles";
 import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
@@ -23,7 +24,7 @@ import { Toaster } from "@/components/ui/toaster";
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
   'bulk-dream' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
-  'my-images' | 'create-image' | 'help-sss';
+  'my-images' | 'create-image' | 'help-sss' | 'websites';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('editor');
@@ -49,7 +50,8 @@ export default function Dashboard() {
     'voice-reader': 'Metin Seslendir',
     'my-images': 'Resimlerim',
     'create-image': 'Yeni Resim Oluştur',
-    'help-sss': 'Yardım & SSS'
+    'help-sss': 'Yardım & SSS',
+    'websites': 'Web Sitelerim'
   };
 
   const renderPage = () => {

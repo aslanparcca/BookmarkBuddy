@@ -1,0 +1,321 @@
+<div class="card">
+        <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between pt-3 pb-2">
+            <h5 class="card-title mb-2 mb-md-0">Web Sitelerim <small class="fs085 text-muted">(9)</small></h5>
+
+            <div class="d-flex flex-column flex-md-row">
+                <form class="me-2 mb-2 mb-md-0">
+                    <label for="uws-url" class="d-none">Web Sitelerinde Ara</label>
+                    <input type="text" name="filter[url]" id="uws-url" class="form-control" placeholder="URL Ara" value="">
+                </form>
+                <button class="btn btn-warning me-2 fw-medium" id="new-blogger-site-btn" type="button" data-url="https://accounts.google.com/o/oauth2/v2/auth?response_type=code&amp;access_type=offline&amp;client_id=458247813814-gpruticnghjorctlaj08471pp9gh2gh1.apps.googleusercontent.com&amp;redirect_uri=https%3A%2F%2Fapp.contety.com%2Faccount%2Fwebsite%2Fblogger%2Fcallback&amp;state=%7B%22h%22%3A%22b6a5e594cdb280c83bc989a7fd16e3e6%22%2C%22i%22%3A12878%7D&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fblogger&amp;include_granted_scopes=true&amp;prompt=consent" data-source="https://app.contety.com/account/website/blogger/callback"><i class="bx bxl-blogger me-2"></i> Blogger</button>
+                <a class="btn btn-primary me-2 fw-medium" href="https://app.contety.com/account/website/create?type=1" title="Yeni WordPress Web Sitesi Ekle"><i class="bx bxs-plus-circle me-2"></i> WordPress</a>
+                <a class="btn btn-info m-0 fw-medium" href="https://app.contety.com/account/website/create?type=3" title="Yeni XenForo Web Sitesi Ekle"><i class="bx bxs-plus-circle me-2"></i> XenForo</a>
+            </div>
+        </div>
+
+        <div class="card-body p-0 table-responsive">
+                            <table class="table table-light-border table-striped" id="website-list-table">
+    <thead class="bg-light">
+    <tr class="text-nowrap">
+        <th class="fw-bold">#</th>
+        <th class="fw-bold">URL</th>
+        <th class="fw-bold text-center">Tür</th>
+        <th class="fw-bold text-center">SEO Eklentisi</th>
+        <th class="fw-bold text-center" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Google Search Console (GSC) Entegrasyonu">GSC</th>
+        <th class="fw-bold text-end"></th>
+    </tr>
+    </thead>
+    <tbody>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">1</td>
+            <td>
+                <a href="https://app.contety.com/account/website/8180" title="Bilgileri Düzenle">https://akyurtnakliyat.org.tr</a> <a href="https://akyurtnakliyat.org.tr" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8180" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8180#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="8180" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="8180"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">2</td>
+            <td>
+                <a href="https://app.contety.com/account/website/8178" title="Bilgileri Düzenle">https://ankaracagrinakliyat.com</a> <a href="https://ankaracagrinakliyat.com" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-x fw-bold fs-5 text-danger"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8178" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8178#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="8178" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="8178"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">3</td>
+            <td>
+                <a href="https://app.contety.com/account/website/8174" title="Bilgileri Düzenle">https://evtasimafirmasi.com</a> <a href="https://evtasimafirmasi.com" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8174" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8174#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="8174" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="8174"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">4</td>
+            <td>
+                <a href="https://app.contety.com/account/website/8167" title="Bilgileri Düzenle">https://boztasnakliyat.com.tr</a> <a href="https://boztasnakliyat.com.tr" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8167" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8167#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="8167" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="8167"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">5</td>
+            <td>
+                <a href="https://app.contety.com/account/website/8147" title="Bilgileri Düzenle">https://harekuafor.com.tr</a> <a href="https://harekuafor.com.tr" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8147" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/8147#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="8147" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="8147"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">6</td>
+            <td>
+                <a href="https://app.contety.com/account/website/2040" title="Bilgileri Düzenle">https://elisamnakliyat.com</a> <a href="https://elisamnakliyat.com" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/2040" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/2040#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="2040" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="2040"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">7</td>
+            <td>
+                <a href="https://app.contety.com/account/website/400" title="Bilgileri Düzenle">https://ankaraozpolatnakliyat.com</a> <a href="https://ankaraozpolatnakliyat.com" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-x fw-bold fs-5 text-danger"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/400" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/400#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="400" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="400"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">8</td>
+            <td>
+                <a href="https://app.contety.com/account/website/33" title="Bilgileri Düzenle">https://ozpolatnakliyat.com.tr</a> <a href="https://ozpolatnakliyat.com.tr" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-x fw-bold fs-5 text-danger"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/33" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/33#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="33" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="33"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+            <tr>
+            <td class="fw-bold py-3 ps-4 pe-0 w-px-20">9</td>
+            <td>
+                <a href="https://app.contety.com/account/website/2" title="Bilgileri Düzenle">https://ozpolatnakliyat.com</a> <a href="https://ozpolatnakliyat.com" target="_blank" class="text-muted"><i class="bx bx-link-external"></i></a>
+                                                                </td>
+            <td class="text-center">
+                                    <span class="badge bg-label-primary">WordPress</span>
+                            </td>
+            <td class="text-center">
+                                    <span class="badge yoast-badge-1">Yoast SEO</span>
+                            </td>
+            <td class="text-center">
+                                    <i class="bx bx-check fw-bold fs-5 text-success"></i>
+                            </td>
+            <td class="text-end">
+                                <button class="btn btn-icon dropdown-toggle hide-arrow ms-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded me-2"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                                        <li>
+                        <a href="https://app.contety.com/account/website/2" title="Bilgileri Düzenle" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxs-edit me-2"></i><span class="align-middle">Düzenle</span></a>
+                    </li>
+                                        <li>
+                        <a href="https://app.contety.com/account/website/2#gsc-cont" title="Google Search Console Entegrasyonu" class="dropdown-item fs-6 d-flex flex-row align-items-center"><i class="bx bxl-google me-2"></i><span class="align-middle">GSC Entegrasyonu</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Kategori ve Etiketleri Güncelle" class="dropdown-item fs-6 syn-website-data-btn d-flex flex-row align-items-center" data-id="2" data-title="Kategori ve etiketler güncelleniyor..."><i class="bx bx-sync me-2"></i><span class="align-middle">Kategori ve Etiketleri Güncelle</span></a>
+                    </li>
+                                        <li>
+                        <a href="javascript:void(0);" title="Sil" class="dropdown-item text-danger del-website-btn fs-6 d-flex flex-row align-items-center" data-id="2"><i class="bx bx-trash me-2"></i><span class="align-middle">Sil</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+</table>
+                    </div>
+
+            </div>
