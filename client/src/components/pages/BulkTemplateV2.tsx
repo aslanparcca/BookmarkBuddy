@@ -154,9 +154,58 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     },
   });
 
+  const generateArticlesMutation = useMutation({
+    mutationFn: async (data: { titles: GeneratedTitle[], settings: BulkV2Settings }) => {
+      return await apiRequest("POST", "/api/generate-bulk-articles-v2", data);
+    },
+    onSuccess: (data: any) => {
+      toast({
+        title: "Başarılı",
+        description: `${data.successCount} makale oluşturuldu!`,
+      });
+      setLoading(false);
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Oturum Süresi Doldu",
+          description: "Tekrar giriş yapılıyor...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Hata",
+        description: error.message || "Makale oluşturma işlemi başarısız oldu",
+        variant: "destructive",
+      });
+      setLoading(false);
+    },
+  });
+
   const handleFileSelect = (file: File) => {
     // Excel file processing will be handled here
     console.log("Excel file selected:", file.name);
+  };
+
+  const handleGenerateArticles = () => {
+    if (generatedTitles.length === 0) {
+      toast({
+        title: "Hata",
+        description: "Önce başlık oluşturmanız gerekiyor",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    generateArticlesMutation.mutate({
+      titles: generatedTitles,
+      settings
+    });
   };
 
   const handleGenerateTitles = () => {
@@ -854,8 +903,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="8180">https://akyurtnakliyat.org.tr</SelectItem>
-                    <SelectItem value="8178">https://ankaracagrinakliyat.com</SelectItem>
+                    <SelectItem value="">Henüz web siteniz bulunmuyor</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -867,9 +915,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="uncategorized">Kategorisiz</SelectItem>
-                    <SelectItem value="blog">Blog</SelectItem>
-                    <SelectItem value="news">Haberler</SelectItem>
+                    <SelectItem value="">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -907,9 +953,14 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         <Card className="border-2 border-primary">
           <CardContent className="pt-6">
             <div className="flex justify-center">
-              <Button size="lg" className="px-8">
+              <Button 
+                size="lg" 
+                className="px-8"
+                onClick={handleGenerateArticles}
+                disabled={generateArticlesMutation.isPending}
+              >
                 <Edit className="w-4 h-4 mr-2" />
-                Makaleleri Oluştur
+                {generateArticlesMutation.isPending ? "Oluşturuluyor..." : "Makaleleri Oluştur"}
               </Button>
             </div>
           </CardContent>

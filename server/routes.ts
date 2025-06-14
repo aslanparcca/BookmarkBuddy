@@ -1290,6 +1290,98 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
     }
   });
 
+  // Generate bulk articles V2 endpoint
+  app.post('/api/generate-bulk-articles-v2', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { titles, settings } = req.body;
+
+      if (!titles || !Array.isArray(titles) || titles.length === 0) {
+        return res.status(400).json({ message: "Başlık listesi gerekli" });
+      }
+
+      console.log(`Processing ${titles.length} articles for bulk generation V2`);
+
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+      let successCount = 0;
+      let failedCount = 0;
+
+      for (const titleData of titles) {
+        try {
+          const prompt = `
+Başlık: ${titleData.title}
+Odak Anahtar Kelime: ${titleData.focusKeyword}
+${titleData.imageKeyword ? `Görsel Anahtar Kelime: ${titleData.imageKeyword}` : ''}
+
+Bu bilgilere göre aşağıdaki özelliklerle kapsamlı bir makale oluştur:
+
+1. Makale Yapısı:
+   - Giriş paragrafı (odak anahtar kelimeyi içeren)
+   - Ana içerik bölümleri (${settings.sectionLength === 's' ? '3-4 bölüm' : '5-6 bölüm'})
+   - Sonuç paragrafı
+
+2. İçerik Özellikleri:
+   - Uzunluk: ${settings.sectionLength === 's' ? '500-700 kelime' : '800-1200 kelime'}
+   - Dil: Türkçe
+   - Ton: ${settings.writingStyle || 'Profesyonel'}
+   - SEO uyumlu içerik
+
+3. Teknik Gereksinimler:
+   - HTML formatında döndür
+   - H2, H3 başlıkları kullan
+   - Paragrafları <p> etiketi ile sarmala
+   - Odak anahtar kelimeyi doğal şekilde dağıt
+
+${settings.metaDescription ? '4. Meta açıklama (150-160 karakter) ekle' : ''}
+${settings.excerpt ? '5. Makale özeti (100-150 kelime) oluştur' : ''}
+
+Makaleyi HTML formatında, kapsamlı ve özgün olarak yaz.
+          `;
+
+          const result = await model.generateContent(prompt);
+          const content = result.response.text();
+          const wordCount = content.split(/\s+/).length;
+          const readingTime = Math.ceil(wordCount / 200);
+
+          // Save article to database
+          const savedArticle = await storage.createArticle({
+            userId,
+            title: titleData.title,
+            content,
+            htmlContent: content,
+            wordCount,
+            readingTime,
+            status: settings.publishStatus || 'draft',
+            focusKeyword: titleData.focusKeyword,
+            metaDescription: settings.metaDescription ? `${titleData.title} hakkında kapsamlı bilgiler. ${titleData.focusKeyword} ile ilgili detayları öğrenin.` : null,
+          });
+
+          successCount++;
+
+          // Track API usage
+          await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+        } catch (error) {
+          console.error(`Bulk V2 article generation error for ${titleData.title}:`, error);
+          failedCount++;
+        }
+      }
+
+      res.json({ 
+        success: true,
+        successCount,
+        failedCount,
+        message: `${successCount} makale başarıyla oluşturuldu${failedCount > 0 ? `, ${failedCount} makale başarısız oldu` : ''}`
+      });
+
+    } catch (error) {
+      console.error("Bulk articles V2 generation error:", error);
+      res.status(500).json({ message: "Makale oluşturma işlemi başarısız oldu" });
+    }
+  });
+
   // List articles for customization endpoint
   app.post('/api/list-articles-for-customization', isAuthenticated, async (req: any, res) => {
     try {
