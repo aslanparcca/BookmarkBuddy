@@ -310,40 +310,121 @@ export default function Articles() {
             </Select>
 
             {/* Actions dropdown */}
-            <div className="relative">
+            <div className="relative group">
               <Button variant="ghost" size="sm" className="p-1">
                 <i className="fas fa-ellipsis-v text-lg"></i>
                 <span className="sr-only md:not-sr-only md:ml-1 text-xs">İşlemler</span>
               </Button>
               
-              {/* Actions menu - show when there are selected articles */}
-              {selectedArticles.length > 0 && (
-                <div className="absolute right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg p-2 z-10 min-w-[200px]">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-blue-600 hover:bg-blue-50"
-                    onClick={() => setIsSendDialogOpen(true)}
-                  >
-                    <i className="fas fa-paper-plane mr-2"></i>
-                    Seçilenleri Web Sitemde Yayınla
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-red-600 hover:bg-red-50"
-                    onClick={() => {
+              {/* Actions menu */}
+              <div className="absolute right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-10 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2"
+                  onClick={() => {
+                    if (selectedArticles.length > 0) {
+                      setIsSendDialogOpen(true);
+                    } else {
+                      toast({
+                        title: "Uyarı",
+                        description: "Lütfen önce makale seçin",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  <i className="fas fa-globe text-blue-500"></i>
+                  Seçilenleri Web Sitemde Yayınla
+                </button>
+                
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                  onClick={() => {
+                    if (selectedArticles.length > 0) {
+                      // Export selected articles as CSV/Excel
+                      toast({
+                        title: "Bilgi",
+                        description: "Klasöre taşıma özelliği yakında eklenecek",
+                      });
+                    } else {
+                      toast({
+                        title: "Uyarı",
+                        description: "Lütfen önce makale seçin",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  <i className="fas fa-folder text-slate-500"></i>
+                  Seçilenleri Klasöre Taşı
+                </button>
+                
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                  onClick={() => {
+                    if (selectedArticles.length > 0) {
+                      // Download as HTML
+                      toast({
+                        title: "Bilgi",
+                        description: "HTML indirme özelliği yakında eklenecek",
+                      });
+                    } else {
+                      toast({
+                        title: "Uyarı",
+                        description: "Lütfen önce makale seçin",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  <i className="fas fa-download text-slate-500"></i>
+                  Seçilenleri İndir (HTML)
+                </button>
+                
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                  onClick={() => {
+                    if (selectedArticles.length > 0) {
+                      // Download as TXT
+                      toast({
+                        title: "Bilgi",
+                        description: "TXT indirme özelliği yakında eklenecek",
+                      });
+                    } else {
+                      toast({
+                        title: "Uyarı",
+                        description: "Lütfen önce makale seçin",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  <i className="fas fa-download text-slate-500"></i>
+                  Seçilenleri İndir (TXT)
+                </button>
+                
+                <hr className="my-2 border-slate-200" />
+                
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  onClick={() => {
+                    if (selectedArticles.length > 0) {
                       if (window.confirm(`${selectedArticles.length} makaleyi silmek istediğinizden emin misiniz?`)) {
                         bulkDeleteSelectedMutation.mutate(selectedArticles);
                       }
-                    }}
-                    disabled={bulkDeleteSelectedMutation.isPending}
-                  >
-                    <i className="fas fa-trash mr-2"></i>
-                    Seçilenleri Sil
-                  </Button>
-                </div>
-              )}
+                    } else {
+                      toast({
+                        title: "Uyarı",
+                        description: "Lütfen önce makale seçin",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                  disabled={bulkDeleteSelectedMutation.isPending}
+                >
+                  <i className="fas fa-trash text-red-500"></i>
+                  Seçilenleri Sil
+                </button>
+              </div>
             </div>
           </div>
         </div>
