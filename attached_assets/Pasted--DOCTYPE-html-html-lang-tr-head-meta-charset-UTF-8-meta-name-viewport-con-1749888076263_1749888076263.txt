@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Destekli AI İçerik ve SEO Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .active-link { background-color: #4f46e5; color: white; }
+        .content-hidden { display: none; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .loader, .btn-sm-loader {
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5;
+            width: 40px;
+            height: 40px;
+        }
+        .btn-sm-loader {
+             border: 2px solid rgba(79, 70, 229, 0.2);
+            border-top-color: #4f46e5;
+            width: 16px;
+            height: 16px;
+        }
+        .toast { transition: all 0.5s ease-in-out; }
+        .editor-toolbar button {
+            background: transparent; border: none; border-radius: 6px; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center; color: #475569;
+        }
+        .editor-toolbar button:hover { background-color: #e2e8f0; }
+        .editor-toolbar button.active { background-color: #e0e7ff; color: #4f46e5; }
+        .editor-tab { border-bottom: 2px solid transparent; }
+        .editor-tab.active { border-bottom-color: #4f46e5; color: #3730a3; font-weight: 600; }
+        .custom-label { display: flex; align-items: center; user-select: none; }
+        .custom-label input { margin-right: 0.5rem; }
+        .card {
+            background-color: white; border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+        }
+        .form-input {
+            width: 100%; border-radius: 8px; border: 1px solid #cbd5e1;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: all 0.2s ease-in-out;
+        }
+        .form-input:focus { box-shadow: 0 0 0 2px white, 0 0 0 4px #4f46e5; border-color: #4f46e5; }
+        #main-editor.prose h2, #wp-main-editor.prose h2 { margin-top: 1.5em; margin-bottom: 1em; }
+        #main-editor.prose h3, #wp-main-editor.prose h3 { margin-top: 1.2em; margin-bottom: 0.8em; }
+        #main-editor.prose p, #wp-main-editor.prose p { margin-bottom: 1em; line-height: 1.6; }
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); }
+        .bulk-nav-item {
+            display: flex; align-items: center; padding: 0.75rem; border-radius: 0.5rem;
+            cursor: pointer; transition: background-color 0.2s; border: 1px solid transparent;
+        }
+        .bulk-nav-item.active {
+            background-color: #eef2ff;
+            color: #4338ca;
+            font-weight: 600;
+            border-color: #c7d2fe;
+        }
+        .bulk-nav-item:not(.active):hover { background-color: #f1f5f9; }
+        .file-drop-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .file-drop-zone.dragover {
+            background-color: #eef2ff;
+            border-color: #4f46e5;
+        }
+        .accordion-header { cursor: pointer; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <div id="loading-overlay" class="fixed inset-0 z-50 flex-col items-center justify-center bg-black bg-opacity-75 content-hidden">
+        <div class="loader"></div>
+        <p class="text-white mt-4 text-lg">Yapay Zeka Çalışıyor...</p>
+    </div>
+    
+    <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3"></div>
+
+    <div class="flex h-screen">
+        <aside id="sidebar" class="bg-gray-900 text-gray-400 w-64 space-y-6 py-7 px-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out z-30">
+            <a href="#" class="text-white flex items-center space-x-3 px-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg><span class="text-xl font-bold">AI İçerik Panel</span></a>
+            <nav id="nav-menu">
+                <a href="#editor" class="nav-link active-link flex items-center space-x-3 py-2.5 px-4 rounded-lg transition duration-200 hover:bg-gray-700 hover:text-white"><span>AI İçerik Editörü</span></a>
+                <a href="#wp-editor" class="nav-link flex items-center space-x-3 py-2.5 px-4 rounded-lg transition duration-200 hover:bg-gray-700 hover:text-white"><span>WordPress Makalesi V2</span></a>
+                <a href="#bulk-editor" class="nav-link flex items-center space-x-3 py-2.5 px-4 rounded-lg transition duration-200 hover:bg-gray-700 hover:text-white"><span>Toplu Makale Oluştur</span></a>
+                <a href="#articles" class="nav-link flex items-center space-x-3 py-2.5 px-4 rounded-lg transition duration-200 hover:bg-gray-700 hover:text-white"><span>İçeriklerim</span></a>
+                <a href="#settings" class="nav-link flex items-center space-x-3 py-2.5 px-4 rounded-lg transition duration-200 hover:bg-gray-700 hover:text-white"><span>Entegrasyonlar</span></a>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="flex justify-between items-center p-4 bg-slate-50 border-b">
+                 <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden"><svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20M4 12H20M4 18H11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <h1 id="page-title" class="text-2xl font-bold text-gray-800 ml-2">AI İçerik Editörü</h1>
+                </div>
+                 <div id="header-buttons" class="flex items-center space-x-4">
+                 </div>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto p-8">
+                <div id="editor-content" class="page-content">
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <div class="space-y-8">
+                            <div class="card"><div class="flex items-center space-x-3 mb-6 border-b pb-4"><div class="h-10 w-10 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-lg font-bold">H</div><h3 class="text-lg font-semibold text-gray-900">Makale Başlıkları</h3></div><div id="titles-container" class="space-y-4"></div><button id="add-title-row" class="mt-4 text-sm text-indigo-600 font-semibold hover:text-indigo-800">+ Yeni Başlık Ekle</button></div>
+                            <div class="card"><h3 class="text-lg font-semibold text-gray-900 mb-6 border-b pb-4">Genel Ayarlar</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4"><div><label class="block text-sm font-medium text-gray-700 mb-1">Yazı Türü</label><select id="article-type" class="form-input p-2"><option>Blog Yazısı</option><option>Haber Makalesi</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Anlatıcı / Bakış Açısı</label><select id="point-of-view" class="form-input p-2"><option>3. Tekil Şahıs</option><option>1. Tekil Şahıs</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Alt Başlık Sayısı</label><select id="subheading-count" class="form-input p-2"><option>Otomatik</option><option>10</option><option>20</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Alt Başlık Tipi</label><select id="subheading-type" class="form-input p-2"><option>H2</option><option>H2 ve H3 Karışık</option></select></div></div></div>
+                             <div class="card"><div class="flex items-center space-x-3 mb-6 border-b pb-4"><div class="h-10 w-10 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-lg font-bold"><i class="fas fa-cogs"></i></div><h3 class="text-lg font-semibold text-gray-900">İçerik Özellikleri</h3></div><div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><label class="custom-label"><input type="checkbox" id="include-faq-normal" class="rounded text-indigo-600"> SSS (Normal)</label><label class="custom-label"><input type="checkbox" id="include-faq-schema" class="rounded text-indigo-600"> SSS (Schema)</label><label class="custom-label"><input type="checkbox" id="include-meta" class="rounded text-indigo-600"> Meta Açıklama</label><label class="custom-label"><input type="checkbox" id="include-summary" class="rounded text-indigo-600"> Makale Özeti</label><label class="custom-label"><input type="checkbox" id="include-table" class="rounded text-indigo-600"> Tablo</label><label class="custom-label"><input type="checkbox" id="include-list" class="rounded text-indigo-600"> Liste</label><label class="custom-label"><input type="checkbox" id="include-bold" class="rounded text-indigo-600" checked> Kalın Yazılar</label><label class="custom-label"><input type="checkbox" id="include-italic" class="rounded text-indigo-600"> İtalik Yazılar</label><label class="custom-label"><input type="checkbox" id="include-blockquote" class="rounded text-indigo-600"> Alıntı</label></div></div>
+                             <div class="card"><div class="flex items-center space-x-3 mb-6 border-b pb-4"><div class="h-10 w-10 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-lg font-bold"><i class="fas fa-link"></i></div><h3 class="text-lg font-semibold text-gray-900">İç & Dış Linkler</h3></div><div><label class="block text-sm font-medium text-gray-700 mb-1">İç Linkler</label><select id="internal-links" class="form-input p-2"><option value="yok">Yok</option><option value="otomatik">Otomatik</option><option value="manuel">Manuel</option></select></div><div id="manual-links-container" class="mt-4 content-hidden"><label class="block text-sm font-medium text-gray-700 mb-1">Eklenecek Linkler (Her satıra bir link)</label><textarea id="manual-links-textarea" class="form-input p-2 w-full" rows="4" placeholder="https://ornek.com/link-1&#10;https://ornek.com/link-2"></textarea></div></div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-lg flex flex-col h-full">
+                            <h3 class="text-lg font-semibold p-6 border-b">Oluşturulan İçerik</h3>
+                            <div id="single-main-editor" class="p-8 flex-grow overflow-y-auto focus:outline-none prose max-w-none" contenteditable="true"><p class="text-gray-400">Yapay zeka tarafından oluşturulan makaleniz burada görünecek...</p></div>
+                        </div>
+                    </div>
+                </div>
+                 <div id="wp-editor-content" class="page-content content-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                             <div class="card space-y-4">
+                                <div><label class="block text-sm font-medium text-gray-700">Makale Başlığı</label><input type="text" id="wp-article-title" class="form-input p-2 mt-1" placeholder="Makale başlığını buraya girin..."></div>
+                                <div><label class="block text-sm font-medium text-gray-700">Makale</label><div class="mt-1 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col"><div id="wp-editor-toolbar" class="editor-toolbar flex items-center p-2 border-b bg-slate-50 space-x-1"><button data-command="bold" class="rounded hover:bg-gray-200"><i class="fas fa-bold"></i></button><button data-command="italic" class="rounded hover:bg-gray-200"><i class="fas fa-italic"></i></button><button data-command="underline" class="rounded hover:bg-gray-200"><i class="fas fa-underline"></i></button><div class="w-px h-5 bg-gray-300 mx-1"></div><button data-command="formatBlock" data-value="H2" class="rounded hover:bg-gray-200 font-bold text-lg">H2</button><button data-command="formatBlock" data-value="H3" class="rounded hover:bg-gray-200 font-bold text-base">H3</button><div class="w-px h-5 bg-gray-300 mx-1"></div><button data-command="insertUnorderedList" class="rounded hover:bg-gray-200"><i class="fas fa-list-ul"></i></button><button data-command="insertOrderedList" class="rounded hover:bg-gray-200"><i class="fas fa-list-ol"></i></button></div><div id="wp-main-editor" class="p-4 h-[calc(100vh-25rem)] overflow-y-auto focus:outline-none prose max-w-none" contenteditable="true"></div></div></div>
+                             </div>
+                        </div>
+                        <div id="right-sidebar" class="lg:col-span-1 space-y-6">
+                        </div>
+                    </div>
+                </div>
+                 <div id="bulk-editor-content" class="page-content content-hidden">
+                    <div class="card">
+                        <div class="flex justify-between items-start mb-6"><h2 class="text-xl font-bold text-gray-900">Toplu Makale Oluştur V2</h2><button class="text-sm text-gray-500 hover:text-indigo-600 flex items-center space-x-1"><i class="fas fa-info-circle"></i><span>Bilgilendirme</span></button></div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-8"><div class="md:col-span-1"><div id="bulk-nav" class="space-y-2"><div class="bulk-nav-item active"><input type="radio" name="bulk-source" class="form-radio text-indigo-600" checked><span>Excel Dosyası Yükleyeceğim</span></div></div></div><div class="md:col-span-3"><div><label class="block text-sm font-medium text-gray-700 mb-1">Dil</label><select class="form-input p-2 w-full md:w-1/3"><option>Türkçe</option><option>English</option></select></div><div class="mt-6"><label class="block text-sm font-medium text-gray-700 mb-1">Excel Dosyası</label><div id="file-drop-zone" class="file-drop-zone text-gray-500"><input type="file" id="excel-file-input" class="hidden" accept=".xlsx, .xls"><p><i class="fas fa-file-excel text-2xl mb-2 text-green-600"></i></p><p>Dosyayı buraya sürükleyin veya <span class="font-semibold text-indigo-600">seçmek için tıklayın</span></p></div><p class="text-xs text-gray-500 mt-2">Örnek Excel dosyasını <a href="#" id="download-example" class="text-indigo-600 hover:underline">buradan</a> indirebilirsiniz.</p></div><div id="excel-preview" class="mt-8 content-hidden"><h4 class="font-semibold text-gray-800 mb-2">Yüklenen Veri Önizlemesi</h4><div class="overflow-x-auto max-h-64 border rounded-lg"><table class="w-full text-sm"><thead id="excel-preview-head" class="bg-gray-50 text-left text-xs text-gray-600 uppercase sticky top-0"></thead><tbody id="excel-preview-body" class="divide-y"></tbody></table></div></div></div></div>
+                    </div>
+                 </div>
+                 <div id="articles-content" class="page-content content-hidden">
+                     <div class="card">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">İçeriklerim</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-slate-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Makale Başlığı</th>
+                                        <th scope="col" class="px-6 py-3">Odak Kelimeler</th>
+                                        <th scope="col" class="px-6 py-3">Oluşturma Tarihi</th>
+                                        <th scope="col" class="px-6 py-3 text-right">Eylemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="articles-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                 </div>
+                <div id="settings-content" class="page-content content-hidden">
+                    <div class="card max-w-4xl mx-auto">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">WordPress Entegrasyonları</h3>
+                        <div id="wp-sites-container" class="space-y-4 mb-6"></div>
+                        <div class="border-t pt-6">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Yeni Site Ekle</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input id="new-wp-url" type="url" class="form-input p-2" placeholder="https://siteniz.com">
+                                <input id="new-wp-user" type="text" class="form-input p-2" placeholder="Kullanıcı Adı">
+                                <input id="new-wp-pass" type="password" class="form-input p-2" placeholder="Uygulama Şifresi">
+                            </div>
+                             <button id="add-wp-site" class="mt-4 text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2">Site Ekle</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- STATE ---
+    let savedArticles = [];
+    let savedWpSites = [];
+    let excelData = [];
+    const mockCategories = {
+        'ornek-sitem.com': ['Teknoloji', 'Yazılım', 'Donanım', 'Oyun'],
+        'blogum.net': ['Sağlık', 'Beslenme', 'Spor', 'Diyet']
+    };
+    const updatedMockCategories = {
+        'ornek-sitem.com': ['AI', 'Gelecek Teknolojileri', 'Mobil Uygulamalar', 'Güncel Kategori'],
+        'blogum.net': ['Mental Sağlık', 'Fitness Programları', 'Yeni Kategori']
+    }
+
+    // --- ELEMENTS ---
+    const pageTitle = document.getElementById('page-title');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pageContents = document.querySelectorAll('.page-content');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const toastContainer = document.getElementById('toast-container');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const headerButtons = document.getElementById('header-buttons');
+    
+    // --- TEMPLATES ---
+    const rightSidebarHTML = `<div class="card"><div class="accordion-header flex items-center justify-between"><h3 class="text-lg font-semibold text-gray-900">Sitenizde Yayınlama</h3><i class="fas fa-chevron-down"></i></div><div class="accordion-content mt-4 space-y-4"><div><label class="block text-sm font-medium text-gray-700 mb-1">Web Sitesi</label><select id="publish-website-wp" class="form-input p-2"><option value="">Lütfen bir web sitesi seçiniz</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label><select id="publish-category-wp" class="form-input p-2" disabled><option>Lütfen önce bir site seçin</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Etiketler</label><input id="publish-tags-wp" type="text" class="form-input p-2" placeholder="Lütfen önce bir site seçin" disabled></div></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Yayın Durumu</label><select id="publish-status-wp" class="form-input p-2"><option>Taslak</option><option>Yayınla</option><option>Zamanla</option></select></div></div></div><div class="card"><div class="accordion-header flex items-center justify-between"><h3 class="text-lg font-semibold text-gray-900">Makale Özeti & Meta Açıklama</h3><i class="fas fa-chevron-down"></i></div><div class="accordion-content mt-4 space-y-4"><div><label class="block text-sm font-medium text-gray-700 mb-1">Odak Anahtar Kelime</label><input id="focus-keyword" type="text" class="form-input p-2"></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Kalıcı Bağlantı</label><input id="slug" type="text" class="form-input p-2"></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Makale Özeti</label><textarea id="summary" class="form-input p-2" rows="3"></textarea></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Meta Açıklama</label><textarea id="meta-description" class="form-input p-2" rows="3"></textarea></div></div></div><div class="card"><div class="accordion-header flex items-center justify-between"><h3 class="text-lg font-semibold text-gray-900">Makale Bilgileri</h3><i class="fas fa-chevron-down"></i></div><div class="accordion-content mt-4"><ul class="text-sm text-gray-700 space-y-2"><li class="flex justify-between"><span>Kelime Sayısı:</span><span id="stat-words" class="font-semibold">0</span></li><li class="flex justify-between"><span>Karakter Sayısı:</span><span id="stat-chars" class="font-semibold">0</span></li><li class="flex justify-between"><span>Okuma Süresi:</span><span id="stat-reading-time" class="font-semibold">~0 dk</span></li></ul></div></div>`;
+
+    // --- GEMINI API SETUP ---
+    const API_KEY = ""; // Intentionally empty.
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    
+    const callGeminiAPI = async (prompt) => {
+        showLoading(true);
+        try {
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                let errorMsg = `API Error (${response.status}): ${response.statusText}`;
+                try { const errorData = await response.json(); if (errorData.error && errorData.error.message) errorMsg += ` - ${errorData.error.message}`; } catch (e) { /* Ignore */ }
+                throw new Error(errorMsg);
+            }
+            const data = await response.json();
+            if (data.candidates && data.candidates.length > 0) return data.candidates[0].content.parts[0].text;
+            throw new Error("Yapay zekadan geçerli bir yanıt alınamadı.");
+        } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            showToast(error.message, 'error');
+            return null;
+        } finally {
+            showLoading(false);
+        }
+    };
+    
+    // --- FUNCTIONS ---
+    const showLoading = (isLoading) => {
+        loadingOverlay.classList.toggle('content-hidden', !isLoading);
+        loadingOverlay.classList.toggle('flex', isLoading);
+    };
+
+    const showToast = (message, type = 'success') => {
+        const toast = document.createElement('div');
+        toast.className = `toast transform-gpu opacity-0 translate-y-2 flex items-center w-full max-w-xs p-4 mb-4 text-gray-800 bg-white rounded-xl shadow-lg`;
+        toast.innerHTML = `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">${type === 'success' ? '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' : '<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>'}</svg></div><div class="ml-3 text-sm font-semibold">${message}</div>`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => { toast.classList.remove('opacity-0', 'translate-y-2'); }, 100);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px)'; setTimeout(() => toast.remove(), 500); }, 4000);
+    };
+
+    const buildArticlePrompt = (title, keywords, pageId) => {
+        if (!title || !keywords) { showToast("Lütfen başlık ve anahtar kelime alanlarını doldurun.", "error"); return null; }
+
+        let prompt = `Sen SEO ve içerik pazarlama alanında uzman bir yazarsın. Görevin, aşağıdaki kriterlere göre profesyonel, kapsamlı ve SEO odaklı bir makale oluşturmak.\n\n`;
+        prompt += `**ANA KONU:**\n* **Makale Başlığı:** "${title}"\n* **Odak Anahtar Kelimeler:** ${keywords}\n\n`;
+        
+        const editorPage = document.getElementById(pageId);
+        if(editorPage && !editorPage.classList.contains('content-hidden')) {
+            prompt += `**KRİTERLER:**\n`;
+            prompt += `* **İdeal Giriş Paragrafı:** Bu çok önemli. Giriş paragrafı, okuyucunun sorununa doğrudan hitap etmeli ve makalenin bu soruna nasıl bir çözüm sunacağını anlatmalıdır. Anahtar kelimeyi ("${keywords}") 1-2 kez, doğal bir akış içinde kullan. Ayrıca, konuyla ilgili LSI (Latent Semantic Indexing) kelimeleri (eş anlamlılar, bağlantılı terimler) kullanarak zenginleştir. Dil akıcı ve insani olmalı.\n`;
+            prompt += `* Yazı Türü: ${document.getElementById('article-type').value}\n`;
+            prompt += `* Bakış Açısı: ${document.getElementById('point-of-view').value}\n`;
+            prompt += `* Alt Başlık Sayısı: ${document.getElementById('subheading-count').value === 'Otomatik' ? 'Konunun gerektirdiği kadar, bolca' : document.getElementById('subheading-count').value}\n`;
+            prompt += `* Alt Başlık Tipi: ${document.getElementById('subheading-type').value}\n\n`;
+            
+            prompt += `**İSTENEN İÇERİK ÖZELLİKLERİ:**\n`;
+            if (document.getElementById('include-faq-normal')?.checked) prompt += `* Makale sonunda 'Sıkça Sorulan Sorular' başlıklı bir H2 bölümü oluştur ve konuyla ilgili soruları H3 başlıklarıyla yanıtla.\n`;
+            if (document.getElementById('include-faq-schema')?.checked) prompt += `* Makale sonunda Schema.org uyumlu bir Sıkça Sorulan Sorular (SSS) bölümü ekle.\n`;
+            if (document.getElementById('include-meta')?.checked) prompt += `* Makalenin başına, SEO uyumlu bir meta açıklama metni ekle (<!-- META: ... --> formatında).\n`;
+            if (document.getElementById('include-summary')?.checked) prompt += `* Makalenin başına, kısa bir özet ekle (<!-- SUMMARY: ... --> formatında).\n`;
+            if (document.getElementById('include-table')?.checked) prompt += `* Konuyla ilgili karşılaştırmalı veya bilgilendirici bir HTML tablosu ekle.\n`;
+            if (document.getElementById('include-list')?.checked) prompt += `* Konuyla ilgili madde imli veya numaralı bir liste ekle.\n`;
+            if (document.getElementById('include-bold')?.checked) prompt += `* Önemli anahtar kelimeleri ve kavramları <strong> etiketiyle kalınlaştır.\n`;
+            if (document.getElementById('include-italic')?.checked) prompt += `* Gerekli yerlerde <em> veya <i> etiketleriyle vurgu yap.\n`;
+            if (document.getElementById('include-blockquote')?.checked) prompt += `* Konuyla ilgili anlamlı bir alıntıyı <blockquote> etiketi içinde belirt.\n`;
+            
+            const internalLinksSelect = document.getElementById('internal-links');
+            if(internalLinksSelect) {
+                const internalLinkOption = internalLinksSelect.value;
+                if(internalLinkOption === 'otomatik') {
+                    prompt += `* Akıllı İç Linkleme: Makalenin kelime sayısını dikkate alarak her 150-200 kelimede bir olacak şekilde, metin içinde alakalı anahtar kelimelere doğal ve anlamlı linkler ekle (örnek: <a href="#">sigortalı taşımacılık hizmetimiz</a>).\n`;
+                    prompt += `* **ÖNEMLİ LİNKLEME KURALI:** Makalenin giriş paragrafına kesinlikle link ekleme. Linkler, giriş paragrafından sonraki alt başlıklar ve paragraflarda kullanılmalıdır.\n`;
+                }
+                if(internalLinkOption === 'manuel') {
+                    const manualLinks = document.getElementById('manual-links-textarea').value.trim();
+                    if(manualLinks) {
+                        prompt += `* Aşağıdaki linkleri metin içinde en doğal ve alakalı yerlere yerleştir:\n${manualLinks}\n`;
+                        prompt += `* **ÖNEMLİ LİNKLEME KURALI:** Makalenin giriş paragrafına kesinlikle link ekleme. Linkler, giriş paragrafından sonraki alt başlıklar ve paragraflarda kullanılmalıdır.\n`;
+                    }
+                }
+            }
+        }
+
+        prompt += `\n**ÇIKTI KURALLARI:**\n`;
+        prompt += `* **En Önemli Kural:** Yanıtın **SADECE** ve **SADECE** ham, temiz ve geçerli HTML kodu içermelidir.\n`;
+        prompt += `* **KESİNLİKLE** ana başlığı ("${mainTitle}") içeriğin içine tekrar <h1> etiketi olarak ekleme. İçerik doğrudan giriş paragrafı veya ilk alt başlık ile başlamalıdır.\n`;
+        prompt += `* Kesinlikle \`\`\`html veya başka markdown işaretleri kullanma.\n`;
+        prompt += `* HTML dışında hiçbir açıklama ekleme.\n`;
+        return prompt;
+    };
+    
+    // --- EVENT LISTENERS & UI LOGIC ---
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            navLinks.forEach(l => l.classList.remove('active-link'));
+            link.classList.add('active-link');
+            const targetId = link.getAttribute('href').substring(1) + '-content';
+            pageContents.forEach(p => { if (p) p.classList.add('content-hidden'); });
+            const activePage = document.getElementById(targetId);
+            if(activePage) activePage.classList.remove('content-hidden');
+            pageTitle.textContent = link.querySelector('span').textContent;
+            initPage(targetId);
+        });
+    });
+
+    function initPage(pageId) {
+        headerButtons.innerHTML = '';
+        if (pageId === 'editor-content') {
+            headerButtons.innerHTML = `<button id="generate-article-button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center space-x-2 shadow-sm"><span>✨</span><span>Makale Oluştur</span></button>`;
+            initEditorPage();
+        } else if (pageId === 'wp-editor-content') {
+            headerButtons.innerHTML = `<button id="update-article-button" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center space-x-2 shadow-sm"><span>Güncelle</span></button>`;
+            initWpEditorPage();
+        } else if (pageId === 'bulk-editor-content') {
+            headerButtons.innerHTML = `<button id="generate-all-articles-button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center space-x-2 shadow-sm"><span>✨</span><span>Tüm Makaleleri Oluştur</span></button>`;
+            initBulkEditorPage();
+        } else if (pageId === 'articles-content') {
+            initArticlesPage();
+        } else if (pageId === 'settings-content') {
+            initSettingsPage();
+        }
+    }
+
+    function initEditorPage() {
+        const titlesContainer = document.getElementById('titles-container');
+        const addTitleRowBtn = document.getElementById('add-title-row');
+        const generateArticleBtn = document.getElementById('generate-article-button');
+        const internalLinksSelect = document.getElementById('internal-links');
+        const manualLinksContainer = document.getElementById('manual-links-container');
+        const faqNormalCheckbox = document.getElementById('include-faq-normal');
+        const faqSchemaCheckbox = document.getElementById('include-faq-schema');
+        const publishWebsiteSelect = document.getElementById('publish-website');
+
+        const addTitleRow = () => {
+            if (!titlesContainer) return;
+            const rowCount = titlesContainer.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'title-row flex items-center space-x-3';
+            div.innerHTML = `<span class="text-sm font-medium text-gray-500">${rowCount}.</span><div class="flex-grow grid grid-cols-2 gap-3"><input type="text" class="title-input form-input p-2 text-sm" placeholder="Lütfen bir başlık yazınız"><input type="text" class="keywords-input form-input p-2 text-sm" placeholder="Odak anahtar kelime..."></div><button class="remove-title-row p-2 text-gray-400 hover:text-red-500 rounded-md hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>`;
+            titlesContainer.appendChild(div);
+        };
+        
+        const handleGenerateArticle = async () => {
+            const firstTitleRow = titlesContainer.querySelector('.title-row');
+            if (!firstTitleRow) { showToast("Lütfen en az bir makale başlığı ekleyin.", "error"); return; }
+            const title = firstTitleRow.querySelector('.title-input').value;
+            const keywords = firstTitleRow.querySelector('.keywords-input').value;
+            const prompt = buildArticlePrompt(title, keywords, 'editor-content');
+            if (!prompt) return;
+
+            const result = await callGeminiAPI(prompt);
+            if (result) {
+                let cleanResult = result.replace(/```html/g, '').replace(/```/g, '').trim();
+                const metaMatch = cleanResult.match(/<!-- META: (.*?) -->/);
+                if(metaMatch) showToast(`Meta: ${metaMatch[1]}`, 'success');
+                cleanResult = cleanResult.replace(/<!-- META: (.*?) -->/, '');
+                
+                savedArticles.push({ id: Date.now(), title, keywords, content: cleanResult, date: new Date().toLocaleDateString('tr-TR') });
+                
+                document.getElementById('single-main-editor').innerHTML = cleanResult.trim();
+                showToast("Makale başarıyla oluşturuldu ve kaydedildi!", "success");
+                
+                const publishTagsInput = document.getElementById('publish-tags');
+                if (publishTagsInput) publishTagsInput.value = keywords;
+            }
+        };
+
+        if(addTitleRowBtn && titlesContainer && !titlesContainer.querySelector('.title-row')) addTitleRow();
+        
+        addTitleRowBtn.onclick = addTitleRow;
+        titlesContainer.onclick = (e) => { if (e.target.closest('.remove-title-row')) e.target.closest('.remove-title-row').parentElement.remove(); };
+        generateArticleBtn.onclick = handleGenerateArticle;
+        internalLinksSelect.onchange = (e) => { manualLinksContainer.classList.toggle('content-hidden', e.target.value !== 'manuel'); };
+        if(faqNormalCheckbox && faqSchemaCheckbox){
+            faqNormalCheckbox.onchange = () => { if (faqNormalCheckbox.checked) faqSchemaCheckbox.checked = false; };
+            faqSchemaCheckbox.onchange = () => { if (faqSchemaCheckbox.checked) faqNormalCheckbox.checked = false; };
+        }
+        
+        updatePublishWebsiteSelect(publishWebsiteSelect);
+        publishWebsiteSelect.onchange = () => updatePublishCategories(document.getElementById('publish-category'), document.getElementById('publish-tags'), publishWebsiteSelect.value);
+    }
+    
+    function initWpEditorPage() {
+        const rightSidebar = document.getElementById('right-sidebar');
+        if(!rightSidebar.innerHTML) rightSidebar.innerHTML = rightSidebarHTML;
+        
+        const mainEditor = document.getElementById('wp-main-editor');
+        const editorToolbar = document.getElementById('wp-editor-toolbar');
+        
+        if(editorToolbar) editorToolbar.onclick = e => { const btn = e.target.closest('button'); if (!btn) return; const { command, value } = btn.dataset; document.execCommand(command, false, value || null); mainEditor.focus(); };
+        if(mainEditor) mainEditor.oninput = updateArticleStats;
+        
+        const publishWebsiteSelect = document.getElementById('publish-website-wp');
+        if(publishWebsiteSelect) {
+            updatePublishWebsiteSelect(publishWebsiteSelect);
+            publishWebsiteSelect.onchange = () => updatePublishCategories(document.getElementById('publish-category-wp'), document.getElementById('publish-tags-wp'), publishWebsiteSelect.value);
+        }
+        
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.onclick = () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('i');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    if(icon) icon.style.transform = 'rotate(0deg)';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    if(icon) icon.style.transform = 'rotate(180deg)';
+                } 
+            };
+        });
+        
+        populateWpEditor({ title: "Yeni Makale", keywords: "", content: "<p>Başlamak için içeriğinizi buraya yazın veya \"İçeriklerim\" sayfasından bir makale seçin.</p>"});
+    }
+    
+    function initBulkEditorPage() {
+        const fileDropZone = document.getElementById('file-drop-zone');
+        const excelFileInput = document.getElementById('excel-file-input');
+        const downloadExampleLink = document.getElementById('download-example');
+        const generateAllBtn = document.getElementById('generate-all-articles-button');
+        
+        const handleFile = (file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    excelData = XLSX.utils.sheet_to_json(worksheet, {defval:""});
+                    renderExcelPreview();
+                    showToast(`${excelData.length} makale başarıyla yüklendi.`, 'success');
+                } catch (error) { showToast('Excel dosyası okunurken bir hata oluştu.', 'error'); console.error(error); }
+            };
+            reader.readAsArrayBuffer(file);
+        };
+
+        const renderExcelPreview = () => {
+            const excelPreview = document.getElementById('excel-preview');
+            const excelPreviewHead = document.getElementById('excel-preview-head');
+            const excelPreviewBody = document.getElementById('excel-preview-body');
+            if (!excelPreview || excelData.length === 0) return;
+            excelPreviewHead.innerHTML = '';
+            excelPreviewBody.innerHTML = '';
+            const headers = Object.keys(excelData[0]);
+            const trHead = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.className = 'px-4 py-2';
+                th.textContent = header;
+                trHead.appendChild(th);
+            });
+            excelPreviewHead.appendChild(trHead);
+            excelData.slice(0, 10).forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.className = 'px-4 py-2 text-xs';
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                excelPreviewBody.appendChild(tr);
+            });
+            excelPreview.classList.remove('content-hidden');
+        };
+
+        const downloadExampleExcel = () => {
+            const sampleData = [{"Makale Başlığı": "Yapay Zeka Destekli SEO", "Odak Anahtar Kelime": "yapay zeka seo", "Diğer Anahtar Kelimeler": "ai seo, seo otomasyonu", "Makale Konusu": "AI ile SEO'yu optimize etme rehberi."}];
+            const worksheet = XLSX.utils.json_to_sheet(sampleData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Makaleler");
+            XLSX.writeFile(workbook, "Ornek_Toplu_Makale_V2.xlsx");
+        };
+        
+        const handleBulkGenerate = async () => {
+            if (excelData.length === 0) { showToast('Lütfen önce bir Excel dosyası yükleyin.', 'error'); return; }
+            showLoading(true);
+            let generatedCount = 0;
+            for (let i = 0; i < excelData.length; i++) {
+                const row = excelData[i];
+                const prompt = buildArticlePrompt(row['Makale Başlığı'], row['Odak Anahtar Kelime'], 'bulk-editor-content');
+                if (!prompt) continue;
+                
+                const result = await callGeminiAPI(prompt);
+                 if (result) {
+                    let cleanResult = result.replace(/```html/g, '').replace(/```/g, '').trim();
+                    savedArticles.push({ id: Date.now() + i, title: row['Makale Başlığı'], keywords: row['Odak Anahtar Kelime'], content: cleanResult, date: new Date().toLocaleDateString('tr-TR') });
+                    generatedCount++;
+                }
+            }
+            showLoading(false);
+            showToast(`${generatedCount} adet makale başarıyla oluşturuldu ve kaydedildi.`, 'success');
+        };
+
+        if(fileDropZone) fileDropZone.onclick = () => excelFileInput.click();
+        if(generateAllBtn) generateAllBtn.onclick = handleBulkGenerate;
+        if(downloadExampleLink) downloadExampleLink.onclick = (e) => { e.preventDefault(); downloadExampleExcel(); };
+        if (excelFileInput) excelFileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFile(e.target.files[0]); });
+    }
+
+    function initArticlesPage() {
+        const articlesTableBody = document.getElementById('articles-table-body');
+        if (!articlesTableBody) return;
+        articlesTableBody.innerHTML = '';
+        if (savedArticles.length === 0) {
+            savedArticles.push({id: 1, title: "Örnek Makale: Yapay Zeka", keywords: "AI, teknoloji", content: "<h2>Yapay Zeka Nedir?</h2><p>Yapay zeka, makinelerin öğrenme ve problem çözme gibi insana özgü yetenekleri sergilemesini sağlayan bir teknolojidir.</p>", date: new Date().toLocaleDateString('tr-TR')});
+        }
+        savedArticles.forEach(article => {
+            const tr = document.createElement('tr');
+            tr.className = 'bg-white border-b';
+            tr.innerHTML = `<td class="px-6 py-4 font-medium text-gray-900">${article.title}</td><td class="px-6 py-4">${article.keywords}</td><td class="px-6 py-4">${article.date}</td><td class="px-6 py-4 text-right"><button data-id="${article.id}" class="edit-article-btn font-medium text-indigo-600 hover:underline">Göster/Düzenle</button></td>`;
+            articlesTableBody.appendChild(tr);
+        });
+        articlesTableBody.onclick = (e) => {
+            if (e.target.classList.contains('edit-article-btn')) {
+                const articleId = parseInt(e.target.dataset.id, 10);
+                const article = savedArticles.find(a => a.id === articleId);
+                if (article) {
+                    document.querySelector('.nav-link[href="#wp-editor"]').click();
+                    setTimeout(() => populateWpEditor(article), 50); 
+                }
+            }
+        };
+    }
+    
+    function initSettingsPage() {
+        const wpSitesContainer = document.getElementById('wp-sites-container');
+        const addWpSiteBtn = document.getElementById('add-wp-site');
+        const newWpUrlInput = document.getElementById('new-wp-url');
+        const newWpUserInput = document.getElementById('new-wp-user');
+        const newWpPassInput = document.getElementById('new-wp-pass');
+
+        const renderWpSites = () => {
+            if (!wpSitesContainer) return;
+            wpSitesContainer.innerHTML = '';
+            savedWpSites.forEach(site => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-slate-100 rounded-lg';
+                div.innerHTML = `<p class="font-medium text-gray-700">${site.url}</p><div><button data-id="${site.id}" class="update-categories-btn text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-md mr-2">Kategorileri Güncelle</button><button data-id="${site.id}" class="remove-wp-site text-red-500 hover:text-red-700 p-1">&times;</button></div>`;
+                wpSitesContainer.appendChild(div);
+            });
+            updatePublishWebsiteSelect(document.getElementById('publish-website'));
+            updatePublishWebsiteSelect(document.getElementById('publish-website-wp'));
+        };
+
+        if(addWpSiteBtn) {
+            addWpSiteBtn.onclick = () => {
+                const url = newWpUrlInput.value.trim();
+                const user = newWpUserInput.value.trim();
+                const pass = newWpPassInput.value.trim();
+                if (url && user && pass) {
+                    let domain;
+                    try {
+                        if (!url.startsWith('http')) { domain = new URL('https://' + url).hostname.replace('www.',''); }
+                        else { domain = new URL(url).hostname.replace('www.',''); }
+                    } catch(e) { showToast('Lütfen geçerli bir URL girin.', 'error'); return; }
+                    savedWpSites.push({ id: Date.now(), url: domain, user, pass, categories: mockCategories[domain] || [] });
+                    newWpUrlInput.value = '';
+                    newWpUserInput.value = '';
+                    newWpPassInput.value = '';
+                    renderWpSites();
+                    showToast('Site başarıyla eklendi!', 'success');
+                } else {
+                    showToast('Lütfen tüm alanları doldurun.', 'error');
+                }
+            };
+        }
+        
+        if(wpSitesContainer) {
+             wpSitesContainer.onclick = (e) => {
+                if (e.target.closest('.remove-wp-site')) {
+                    const siteId = parseInt(e.target.closest('.remove-wp-site').dataset.id, 10);
+                    savedWpSites = savedWpSites.filter(site => site.id !== siteId);
+                    renderWpSites();
+                } else if (e.target.closest('.update-categories-btn')) {
+                    const button = e.target.closest('.update-categories-btn');
+                    const siteId = parseInt(button.dataset.id, 10);
+                    const site = savedWpSites.find(s => s.id === siteId);
+                    if (site) {
+                        button.innerHTML = '<div class="btn-sm-loader"></div>';
+                        setTimeout(() => {
+                            site.categories = updatedMockCategories[site.url] || ['Yeni Güncel Kategori 1', 'Yeni Güncel Kategori 2'];
+                            showToast(`'${site.url}' için kategoriler güncellendi!`, 'success');
+                            button.innerHTML = 'Kategorileri Güncelle';
+                            updatePublishWebsiteSelect(document.getElementById('publish-website'));
+                             updatePublishWebsiteSelect(document.getElementById('publish-website-wp'));
+                        }, 1500);
+                    }
+                }
+            };
+        }
+        renderWpSites();
+    }
+    
+    function populateWpEditor(article) {
+        const titleInput = document.getElementById('wp-article-title');
+        const editorDiv = document.getElementById('wp-main-editor');
+        const focusKeywordInput = document.getElementById('focus-keyword');
+        const tagsInput = document.getElementById('publish-tags-wp');
+        
+        if (titleInput) titleInput.value = article.title;
+        if (editorDiv) editorDiv.innerHTML = article.content;
+        if (focusKeywordInput) focusKeywordInput.value = article.keywords;
+        if (tagsInput) tagsInput.value = article.keywords;
+        updateArticleStats();
+    }
+
+    function updateArticleStats() {
+        const mainEditor = document.getElementById('wp-main-editor');
+        const statWords = document.getElementById('stat-words');
+        const statChars = document.getElementById('stat-chars');
+        const statReadingTime = document.getElementById('stat-reading-time');
+        if (!mainEditor || !statWords || !statChars || !statReadingTime) return;
+
+        const content = mainEditor.innerText || '';
+        const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+        statWords.textContent = wordCount;
+        statChars.textContent = content.length;
+        statReadingTime.textContent = `~${Math.ceil(wordCount / 200)} dk`;
+    };
+
+    function updatePublishWebsiteSelect(selectElement) {
+        if (!selectElement) return;
+        const currentVal = selectElement.value;
+        selectElement.innerHTML = '<option value="">Lütfen bir web sitesi seçiniz</option>';
+        savedWpSites.forEach(site => {
+            const option = document.createElement('option');
+            option.value = site.url;
+            option.textContent = site.url;
+            selectElement.appendChild(option);
+        });
+        selectElement.value = currentVal;
+        selectElement.dispatchEvent(new Event('change'));
+    }
+
+    function updatePublishCategories(categorySelect, tagsInput, selectedUrl) {
+        if(!categorySelect) return;
+        
+        let domain = '';
+         try {
+            if (selectedUrl) domain = new URL('https://' + selectedUrl.replace(/^(https?:\/\/)?/,'')).hostname.replace('www.','');
+        } catch (err) {
+             domain = selectedUrl;
+        }
+
+        categorySelect.innerHTML = '';
+        const site = savedWpSites.find(s => s.url === domain);
+        const categories = site ? site.categories : [];
+        
+        if (site && categories.length > 0) {
+            categorySelect.disabled = false;
+            if(tagsInput) tagsInput.disabled = false;
+            if(tagsInput) tagsInput.placeholder = 'Etiketleri virgülle ayırın';
+            
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.toLowerCase();
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        } else {
+            categorySelect.disabled = true;
+            if(tagsInput) tagsInput.disabled = true;
+            if(tagsInput) tagsInput.placeholder = 'Lütfen önce bir site seçin';
+            const defaultOption = document.createElement('option');
+            defaultOption.textContent = site ? 'Kategori Yok' : 'Lütfen önce bir site seçin';
+            categorySelect.appendChild(defaultOption);
+        }
+    }
+    
+    // --- INITIALIZATION ---
+    document.querySelector('.nav-link[href="#editor"]').click();
+});
+</script>
+</body>
+</html>
