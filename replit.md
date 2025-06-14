@@ -156,6 +156,9 @@ Changelog:
 - June 14, 2025. Added backend API endpoints for dream interpretation article generation and article customization listing with Gemini AI integration and WordPress content management
 - June 14, 2025. Created "Web Sitelerim" comprehensive website management interface with search functionality, platform badges (WordPress, Blogger, XenForo), SEO plugin indicators, and Google Search Console status tracking
 - June 14, 2025. Added backend API endpoints for website management including listing, synchronization, and deletion operations with complete dropdown menu functionality and table-based display
+- June 14, 2025. Removed 9 example websites from default listing and implemented "Yeni Web Sitesi Ekle" form with complete WordPress and XenForo configuration options
+- June 14, 2025. Added comprehensive website addition interface matching provided HTML template with SEO plugin codes, user authentication fields, and multi-platform support
+- June 14, 2025. Integrated WordPress website addition workflow with navigation between Web Sitelerim list and add website form, plus backend API for website creation
 ```
 
 ## User Preferences

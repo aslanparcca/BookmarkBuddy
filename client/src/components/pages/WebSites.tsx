@@ -180,7 +180,7 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
                     </td>
                   </tr>
                 ) : (
-                  filteredWebsites.map((website, index) => (
+                  filteredWebsites.map((website: Website, index: number) => (
                     <tr key={website.id} className="border-b hover:bg-muted/30">
                       <td className="font-semibold py-3 pl-4 pr-0 w-12">{index + 1}</td>
                       <td className="py-3 px-3">
