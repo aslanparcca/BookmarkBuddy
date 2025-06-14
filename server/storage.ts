@@ -172,22 +172,40 @@ export class DatabaseStorage implements IStorage {
   async incrementApiUsage(userId: string, apiType: string, requestCount: number, tokenCount: number): Promise<void> {
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
-    await db
-      .insert(apiUsage)
-      .values({
-        userId,
-        apiType,
-        requestCount,
-        tokenCount,
-        month: currentMonth,
-      })
-      .onConflictDoUpdate({
-        target: [apiUsage.userId, apiUsage.apiType, apiUsage.month],
-        set: {
-          requestCount: sql`${apiUsage.requestCount} + ${requestCount}`,
-          tokenCount: sql`${apiUsage.tokenCount} + ${tokenCount}`,
-        },
-      });
+    // Check if record exists
+    const existingUsage = await db
+      .select()
+      .from(apiUsage)
+      .where(
+        and(
+          eq(apiUsage.userId, userId),
+          eq(apiUsage.apiType, apiType),
+          eq(apiUsage.month, currentMonth)
+        )
+      )
+      .limit(1);
+
+    if (existingUsage.length > 0) {
+      // Update existing record
+      await db
+        .update(apiUsage)
+        .set({
+          requestCount: (existingUsage[0].requestCount || 0) + requestCount,
+          tokenCount: (existingUsage[0].tokenCount || 0) + tokenCount,
+        })
+        .where(eq(apiUsage.id, existingUsage[0].id));
+    } else {
+      // Insert new record
+      await db
+        .insert(apiUsage)
+        .values({
+          userId,
+          apiType,
+          requestCount,
+          tokenCount,
+          month: currentMonth,
+        });
+    }
   }
 
   // Statistics
