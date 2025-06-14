@@ -496,20 +496,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         return {
-          title: row['Makale Başlığı'] || row['Başlık'] || row['Title'] || '',
-          focusKeyword: row['Odak Anahtar Kelime'] || row['Focus Keyword'] || '',
-          otherKeywords: row['Diğer Anahtar Kelimeler'] || row['Other Keywords'] || '',
-          description: row['Makale Konusu'] || row['Açıklama'] || row['Description'] || '',
-          category: row['Kategori'] || row['Category'] || '',
-          tags: row['Görel Kaynak'] || row['Etiketler'] || row['Tags'] || '',
-          imageKeyword: row['Resim Anahtar Kelimesi'] || row['Image Keyword'] || '',
+          title: row['Makale Başlığı'] || '',
+          focusKeyword: row['Odak Anahtar Kelime'] || '',
+          otherKeywords: row['Diğer Anahtar Kelimeler'] || '',
+          description: row['Makale Konusu'] || '',
+          category: row['Kategori'] || 'Genel',
+          tags: row['Görel Kaynak'] || '',
+          imageKeyword: row['Resim Anahtar Kelimesi'] || '',
           subheadings: subheadings,
-          writingStyle: row['Yazım Stili'] || row['Writing Style'] || 'Profesyonel',
-          language: row['Dil'] || row['Language'] || 'Türkçe',
-          metaDescription: row['Meta Açıklama'] || row['Meta Description'] || '',
-          targetAudience: row['Hedef Kitle'] || row['Target Audience'] || '',
-          contentType: row['İçerik Tipi'] || row['Content Type'] || 'Bilgilendirici',
-          contentLength: row['İçerik Uzunluğu'] || row['Content Length'] || '800-1200 kelime'
+          contentLength: row['Bölüm Uzunluğu'] || '800-1200 kelime',
+          writingStyle: 'Profesyonel',
+          language: 'Türkçe',
+          metaDescription: '',
+          targetAudience: 'Genel okuyucu kitlesi',
+          contentType: 'Bilgilendirici'
         };
       });
 
