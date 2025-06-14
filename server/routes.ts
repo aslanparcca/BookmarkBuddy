@@ -1310,57 +1310,77 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       for (const titleData of titles) {
         try {
-          const prompt = `
-SEO FOCUSED ARTICLE CREATION INSTRUCTIONS
+          // Build content features section
+          const contentFeatures = [];
+          if (settings.faqNormal) contentFeatures.push('- Add FAQ section with 5-7 common questions and detailed answers');
+          if (settings.faqSchema) contentFeatures.push('- Include FAQ schema markup');
+          if (settings.articleSummary) contentFeatures.push('- Create article summary at the beginning');
+          if (settings.h3Subheadings) contentFeatures.push('- Use H3 subheadings within each main section');
+          if (settings.table) contentFeatures.push('- Include informative tables where relevant');
+          if (settings.list) contentFeatures.push('- Use bullet points and numbered lists');
+          if (settings.boldText) contentFeatures.push('- Use <strong> tags for important text');
+          if (settings.italicText) contentFeatures.push('- Use <em> tags for emphasis');
+          if (settings.quote) contentFeatures.push('- Include relevant quotes in <blockquote> tags');
 
-BASIC INFORMATION:
-- Title: ${titleData.title}
-- Focus Keyword: ${titleData.focusKeyword}
-${titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : ''}
-
-ARTICLE STRUCTURE AND LENGTH:
-- Target Length: ${settings.sectionLength === 's' ? '1,000-1,500 words' : '1,500-2,000 words'}
-- Paragraph structure: Each paragraph 100-150 words
-- Main sections: ${settings.sectionLength === 's' ? '5-7 sections' : '7-10 sections'}
-
-SEO REQUIREMENTS:
-- Use focus keyword naturally with 1-2% density
-- Add LSI keywords and synonyms
-- Create H1 (main title), H2 (section headers), H3 (subheaders) hierarchy
-- Include focus keyword in first paragraph within first 100 words
-- Use focus keyword again in conclusion paragraph
-
-CONTENT QUALITY:
-- Readability: Short and clear sentences
-- Value-focused: Useful information for readers
-- Original: Unique, non-copied content
-- Reliable: Accurate and current information
-- Tone: ${settings.writingStyle || 'Professional and trustworthy'}
-
-STRUCTURAL REQUIREMENTS:
-- Introduction paragraph: Topic introduction and focus keyword (150-200 words)
-- Main sections: Each 200-300 words
-- Conclusion paragraph: Summary and call-to-action (100-150 words)
-- Transitions: Smooth transitions between sections
-
-TECHNICAL FORMAT:
-- Return ONLY clean HTML (do not use markdown code blocks)
-- Use h1 for main title
-- Use h2 for section headers
-- Use h3 for subheaders
-- Use p for paragraphs
-- Use strong for emphasis
-- Use ul/li for lists (where appropriate)
-
-${settings.metaDescription ? 'ADDITION: Create meta description (150-160 characters)' : ''}
-${settings.excerpt ? 'ADDITION: Create article summary (100-150 words)' : ''}
-
-IMPORTANT: Create the article in Turkish language with high quality, SEO-optimized and reader-friendly content. Return only HTML content, no other explanations.
-          `;
+          const promptParts = [
+            'Create a Turkish SEO-focused article. Never use markdown code blocks. Return only clean HTML.',
+            '',
+            'BASIC INFORMATION:',
+            `- Title: ${titleData.title}`,
+            `- Focus Keyword: ${titleData.focusKeyword}`,
+            titleData.imageKeyword ? `- Image Keyword: ${titleData.imageKeyword}` : '',
+            '',
+            'ARTICLE STRUCTURE:',
+            `- Target Length: ${settings.sectionLength === 's' ? '1,000-1,500 words' : '1,500-2,000 words'}`,
+            `- Main sections: ${settings.sectionLength === 's' ? '5-7 sections' : '7-10 sections'}`,
+            `- Writing Style: ${settings.writingStyle || 'Professional and trustworthy'}`,
+            '',
+            'CONTENT FEATURES:',
+            contentFeatures.length > 0 ? contentFeatures.join('\n') : '- Use standard article format',
+            '',
+            'HTML FORMAT RULES (VERY IMPORTANT):',
+            '- Never use markdown code blocks',
+            '- Return only clean HTML tags',
+            '- Use h1 for main title',
+            '- Use h2 for section headers',
+            '- Use h3 for subheaders (if requested)',
+            '- Use p for paragraphs',
+            '- Use strong for bold text',
+            '- Use em for italic text',
+            '- Use ul/li for lists',
+            '- Use blockquote for quotes',
+            '- Use table for tables',
+            '',
+            'SEO REQUIREMENTS:',
+            '- Use focus keyword naturally with 1-2% density',
+            '- Include focus keyword in first paragraph within first 100 words',
+            '- Create H1, H2, H3 hierarchy',
+            '- Add LSI keywords',
+            '',
+            'IMPORTANT: Return only clean HTML content in Turkish language. No explanations or code blocks. Start directly with HTML.'
+          ];
+          const prompt = promptParts.filter(part => part !== '').join('\n');
 
           const result = await model.generateContent(prompt);
-          const content = result.response.text();
-          const wordCount = content.split(/\s+/).length;
+          let content = result.response.text();
+          
+          // Clean any remaining markdown code blocks and unwanted text
+          content = content.replace(/```html\s*/gi, '');
+          content = content.replace(/```\s*/gi, '');
+          content = content.replace(/`{3,}/gi, '');
+          content = content.replace(/^[^<]*(?=<)/gi, ''); // Remove any text before first HTML tag
+          content = content.trim();
+          
+          // Ensure content starts with HTML tag
+          if (!content.startsWith('<')) {
+            const firstTagIndex = content.indexOf('<');
+            if (firstTagIndex > 0) {
+              content = content.substring(firstTagIndex);
+            }
+          }
+          
+          // Calculate word count from clean HTML content (excluding tags)
+          const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
           const readingTime = Math.ceil(wordCount / 200);
 
           // Save article to database
