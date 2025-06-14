@@ -75,9 +75,27 @@ interface GeneratedTitle {
   imageKeyword: string;
 }
 
+interface Website {
+  id: number;
+  url: string;
+  name: string;
+  platform: string;
+  categories?: string[];
+}
+
 export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const { toast } = useToast();
   const [showStep2, setShowStep2] = useState(false);
+
+  // Fetch websites
+  const { data: websites = [] } = useQuery<Website[]>({
+    queryKey: ['/api/websites'],
+    retry: false,
+  });
+
+  // Fetch categories for selected website
+  const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
+  const categories = selectedWebsite?.categories || [];
   const [generatedTitles, setGeneratedTitles] = useState<GeneratedTitle[]>([]);
   const [selectedGenerateType, setSelectedGenerateType] = useState("1");
   const [currentInfoEnabled, setCurrentInfoEnabled] = useState(false);
@@ -906,7 +924,15 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Henüz web siteniz bulunmuyor</SelectItem>
+                    {websites.length === 0 ? (
+                      <SelectItem value="none">Henüz web siteniz bulunmuyor</SelectItem>
+                    ) : (
+                      websites.map((website) => (
+                        <SelectItem key={website.id} value={website.id.toString()}>
+                          {website.url}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -918,7 +944,17 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir kategori seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
+                    {!settings.website || settings.website === "none" ? (
+                      <SelectItem value="none">Kategori seçmek için önce web sitesi seçiniz</SelectItem>
+                    ) : categories.length === 0 ? (
+                      <SelectItem value="none">Bu web sitesinde kategori bulunamadı</SelectItem>
+                    ) : (
+                      categories.map((category, index) => (
+                        <SelectItem key={index} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>

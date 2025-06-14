@@ -9,7 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown, Link2, Settings, Image, FileText, Upload, Link } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -53,7 +53,21 @@ interface URLRewriteSettings {
   externalLinks: string;
 }
 
+interface Website {
+  id: number;
+  url: string;
+  name: string;
+  platform: string;
+  categories?: string[];
+}
+
 export default function URLRewrite() {
+  // Fetch websites
+  const { data: websites = [] } = useQuery<Website[]>({
+    queryKey: ['/api/websites'],
+    retry: false,
+  });
+
   const [settings, setSettings] = useState<URLRewriteSettings>({
     url: "",
     language: "Türkçe",
