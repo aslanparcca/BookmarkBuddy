@@ -238,53 +238,20 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       console.log("Excel processing response:", data);
       
       if (data.success && data.articles) {
-        // Excel'den gelen verilerle direkt makale oluştur
-        const articlesData = data.articles;
+        // Excel'den gelen verileri başlık listesi olarak kaydet
+        const articlesData = data.articles.map((article: any) => ({
+          title: article.title,
+          focusKeyword: article.focusKeyword,
+          imageKeyword: article.otherKeywords ? article.otherKeywords.split(',')[0].trim() : article.focusKeyword
+        }));
+        
+        setGeneratedTitles(articlesData);
+        setShowStep2(true);
         
         toast({
-          title: "İşleniyor",
-          description: `${articlesData.length} adet makale oluşturuluyor...`,
+          title: "Başarılı",
+          description: `${articlesData.length} makale başlığı Excel'den yüklendi`,
         });
-        
-        setLoading(true);
-        
-        // Direkt makale oluşturma API'sini çağır
-        try {
-          const generateResponse = await fetch('/api/generate-from-excel-template', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              articles: articlesData,
-              settings: settings
-            }),
-          });
-          
-          if (!generateResponse.ok) {
-            throw new Error(`HTTP error! status: ${generateResponse.status}`);
-          }
-          
-          const generateData = await generateResponse.json();
-          
-          if (generateData.success) {
-            toast({
-              title: "Başarılı",
-              description: `${generateData.successCount} makale Excel'den oluşturuldu!`,
-            });
-          } else {
-            throw new Error(generateData.message || "Makale oluşturma başarısız");
-          }
-        } catch (generateError) {
-          console.error("Article generation error:", generateError);
-          toast({
-            title: "Hata",
-            description: "Makale oluşturma işlemi başarısız oldu",
-            variant: "destructive",
-          });
-        } finally {
-          setLoading(false);
-        }
       }
     } catch (error) {
       console.error("Excel processing error:", error);
