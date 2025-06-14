@@ -1661,22 +1661,29 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       if (userWebsites[userId]) {
         const websiteIndex = userWebsites[userId].findIndex(w => w.id === websiteId);
         if (websiteIndex !== -1) {
-          // Simulate fetching categories from WordPress/XenForo API
-          const mockCategories = [
-            "Genel",
-            "Teknoloji", 
-            "Nakliyat",
-            "Ev Taşıma",
-            "Ofis Taşıma",
-            "Şehirlerarası Taşımacılık",
-            "Ambalaj Hizmetleri",
-            "Depolama",
-            "Fiyat Listesi",
-            "İletişim"
-          ];
+          const website = userWebsites[userId][websiteIndex];
+          let categories = [];
+
+          try {
+            // Fetch real categories from WordPress REST API
+            const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?per_page=100`;
+            const response = await fetch(categoriesUrl);
+            
+            if (response.ok) {
+              const wpCategories = await response.json();
+              categories = wpCategories.map((cat: any) => cat.name);
+            } else {
+              // If WordPress API fails, use default categories
+              categories = ["Genel", "Haberler", "Teknoloji", "Yazılım", "Web Tasarım"];
+            }
+          } catch (error) {
+            console.error("WordPress API error:", error);
+            // Fallback to default categories if API fails
+            categories = ["Genel", "Haberler", "Teknoloji", "Yazılım", "Web Tasarım"];
+          }
 
           // Update website with categories
-          userWebsites[userId][websiteIndex].categories = mockCategories;
+          userWebsites[userId][websiteIndex].categories = categories;
         }
       }
 
