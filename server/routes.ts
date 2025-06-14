@@ -1629,8 +1629,12 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
         type: websiteData.type === "1" ? "WordPress" : "XenForo",
         seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "Yoast SEO" : 
                    websiteData.seo_plugin === "rank_math_seo" ? "Rank Math SEO" : "Yok",
-        gscConnected: Math.random() > 0.5, // Random GSC connection status
-        apiConnected: Math.random() > 0.6  // Random API connection status (40% chance of being connected)
+        gscConnected: Math.random() > 0.5,
+        apiConnected: Math.random() > 0.6,
+        // WordPress credentials
+        wpUsername: websiteData.wp_username || '',
+        wpAppPassword: websiteData.wp_app_password || '',
+        categories: []
       };
 
       // Initialize user's websites array if it doesn't exist
@@ -1789,16 +1793,57 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               }
             };
 
-            // This would normally use WordPress credentials for authentication
-            // For now, we'll simulate the sending process
-            console.log(`Sending article "${article.title}" to ${website.url} in category "${category}"`);
-            
-            results.push({
-              articleId: article.id,
-              title: article.title,
-              status: 'success',
-              message: 'Makale başarıyla gönderildi'
-            });
+            // Real WordPress API implementation
+            if (!website.wpUsername || !website.wpAppPassword) {
+              results.push({
+                articleId: article.id,
+                title: article.title,
+                status: 'error',
+                message: 'WordPress kimlik bilgileri eksik'
+              });
+              continue;
+            }
+
+            try {
+              const response = await fetch(wpApiUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64')
+                },
+                body: JSON.stringify(postData)
+              });
+
+              if (response.ok) {
+                const result = await response.json();
+                console.log(`Successfully sent article "${article.title}" to ${website.url} - Post ID: ${result.id}`);
+                
+                results.push({
+                  articleId: article.id,
+                  title: article.title,
+                  status: 'success',
+                  message: `Makale başarıyla gönderildi (WP ID: ${result.id})`
+                });
+              } else {
+                const error = await response.text();
+                console.error(`Failed to send article "${article.title}": ${response.status} - ${error}`);
+                
+                results.push({
+                  articleId: article.id,
+                  title: article.title,
+                  status: 'error',
+                  message: `Gönderim başarısız: ${response.status}`
+                });
+              }
+            } catch (wpError) {
+              console.error(`WordPress API error for article "${article.title}":`, wpError);
+              results.push({
+                articleId: article.id,
+                title: article.title,
+                status: 'error',
+                message: 'WordPress API bağlantı hatası'
+              });
+            }
 
           } else if (website.type === "XenForo") {
             // XenForo API implementation would go here

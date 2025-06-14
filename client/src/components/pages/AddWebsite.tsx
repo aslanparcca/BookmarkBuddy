@@ -12,6 +12,8 @@ const websiteSchema = z.object({
   url: z.string().url("Geçerli bir URL giriniz"),
   username: z.string().min(1, "Kullanıcı adı gereklidir"),
   application_key: z.string().min(1, "Uygulama parolası gereklidir"),
+  wp_username: z.string().min(1, "WordPress kullanıcı adı gereklidir"),
+  wp_app_password: z.string().min(1, "WordPress uygulama şifresi gereklidir"),
   seo_plugin: z.string(),
   woocommerce: z.string(),
   xenforo_api_key: z.string().optional(),
@@ -40,6 +42,8 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
       url: "",
       username: "",
       application_key: "",
+      wp_username: "",
+      wp_app_password: "",
       seo_plugin: "yok",
       woocommerce: "0",
       xenforo_api_key: "",
@@ -207,6 +211,45 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                         {form.formState.errors.application_key && (
                           <p className="text-red-500 text-sm mt-1">{form.formState.errors.application_key.message}</p>
                         )}
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="wp_username">
+                          <span className="mr-1">WordPress Kullanıcı Adı</span>
+                          <i className="fas fa-question-circle cursor-pointer text-gray-400 text-sm ml-1"></i>
+                          <span className="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                          {...form.register("wp_username")}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          type="text"
+                          placeholder="WordPress kullanıcı adınızı giriniz"
+                          maxLength={255}
+                        />
+                        {form.formState.errors.wp_username && (
+                          <p className="text-red-500 text-sm mt-1">{form.formState.errors.wp_username.message}</p>
+                        )}
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="wp_app_password">
+                          <span className="mr-1">WordPress Uygulama Şifresi</span>
+                          <i className="fas fa-question-circle cursor-pointer text-gray-400 text-sm ml-1"></i>
+                          <span className="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                          {...form.register("wp_app_password")}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          type="password"
+                          placeholder="WordPress uygulama şifrenizi giriniz"
+                          maxLength={255}
+                        />
+                        {form.formState.errors.wp_app_password && (
+                          <p className="text-red-500 text-sm mt-1">{form.formState.errors.wp_app_password.message}</p>
+                        )}
+                        <div className="text-sm text-gray-600 mt-1">
+                          <span className="text-blue-600 font-bold">Not:</span> WordPress Admin → Kullanıcılar → Profil → Uygulama Şifreleri bölümünden oluşturabilirsini
+                        </div>
                       </div>
 
                       <div className="mb-4">
