@@ -189,6 +189,7 @@ Changelog:
 - June 14, 2025. Fixed keyword density optimization: resolved Yoast SEO over-optimization warnings by implementing strict keyword density controls (8-12 uses max), enhanced AI prompt with specific keyword placement strategy, added natural language writing rules to avoid keyword stuffing, improved SEO compliance with focus on quality content over keyword repetition
 - June 14, 2025. Enhanced manual link distribution system: replaced first-N-links limitation with intelligent distribution algorithm supporting unlimited manual links, implemented SEO-optimized link placement across article sections (introduction, middle, conclusion), created automatic link synchronization distributing 504+ manual links throughout article content, improved link density control with contextual placement for better user experience
 - June 14, 2025. Fixed mandatory FAQ section implementation: added "Sıkça Sorulan Sorular" as required final section for every article, implemented comprehensive FAQ structure with H2/H3 tags, included 5-7 relevant questions with detailed answers, ensured consistent placement at article end, enhanced content value with topic-related FAQ content
+- June 14, 2025. Fixed bulk article request size limit error: increased Express body parser limits from default to 50MB for both JSON and URL-encoded payloads, resolved "request entity too large" 413 errors during bulk article generation, enhanced system capacity for processing large article datasets with extensive content and metadata
 ```
 
 ## User Preferences
