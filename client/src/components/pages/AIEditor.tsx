@@ -323,22 +323,49 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
           </div>
           
           {bulkArticles.length > 0 && (
-            <div className="mt-4">
-              <p className="text-sm text-green-600 mb-2">
-                <i className="fas fa-check mr-2"></i>
-                {bulkArticles.length} makale başlığı yüklendi
-              </p>
-              <div className="max-h-32 overflow-y-auto space-y-1">
-                {bulkArticles.slice(0, 5).map((article, index) => (
-                  <div key={index} className="text-xs text-slate-500 truncate">
-                    • {article.title}
-                  </div>
-                ))}
-                {bulkArticles.length > 5 && (
-                  <div className="text-xs text-slate-400">ve {bulkArticles.length - 5} makale daha...</div>
-                )}
+            <>
+              <div className="mt-4">
+                <p className="text-sm text-green-600 mb-2">
+                  <i className="fas fa-check mr-2"></i>
+                  {bulkArticles.length} makale başlığı yüklendi
+                </p>
+                <div className="max-h-32 overflow-y-auto space-y-1">
+                  {bulkArticles.slice(0, 5).map((article, index) => (
+                    <div key={index} className="text-xs text-slate-500 truncate">
+                      • {article.title}
+                    </div>
+                  ))}
+                  {bulkArticles.length > 5 && (
+                    <div className="text-xs text-slate-400">ve {bulkArticles.length - 5} makale daha...</div>
+                  )}
+                </div>
               </div>
-            </div>
+              <Button
+                onClick={() => {
+                  if (bulkArticles.length > 0) {
+                    const formData = new FormData();
+                    formData.append('articles', JSON.stringify(bulkArticles));
+                    formData.append('settings', JSON.stringify(settings));
+                    
+                    fetch('/api/bulk-generate', {
+                      method: 'POST',
+                      body: formData,
+                    }).then(response => response.json())
+                      .then(data => {
+                        toast({
+                          title: "Toplu Makale Üretimi Başlatıldı!",
+                          description: data.totalArticles + " makale oluşturuluyor.",
+                        });
+                      });
+                  }
+                }}
+                disabled={bulkArticles.length === 0 || bulkUploadMutation.isPending}
+                className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                <i className="fas fa-magic mr-2"></i>
+                Toplu Makale Oluştur ({bulkArticles.length})
+              </Button>
+            </>
           )}
         </div>
 
