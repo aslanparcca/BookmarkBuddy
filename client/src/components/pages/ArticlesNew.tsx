@@ -423,7 +423,15 @@ export default function ArticlesNew() {
               <i className="fas fa-file-alt text-4xl"></i>
             </div>
             <h3 className="text-lg font-medium text-slate-600 mb-2">Henüz makale yok</h3>
-            <p className="text-slate-500">İlk makalenizi oluşturmak için AI Editor'ü kullanın.</p>
+            <p className="text-slate-500 mb-4">İlk makalenizi oluşturmak için AI Editor'ü kullanın.</p>
+            <Button 
+              onClick={() => refetch()} 
+              variant="outline" 
+              className="flex items-center gap-2"
+            >
+              <i className="fas fa-sync-alt"></i>
+              Yenile
+            </Button>
           </div>
         ) : (
           <>
