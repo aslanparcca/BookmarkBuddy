@@ -2786,48 +2786,78 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
 
             let featuredMediaId = null;
             
-            // Step 1: Extract and upload featured image if exists in content
+            // Step 1: Upload ALL images from content to WordPress media library first
             if (cleanContent && cleanContent.includes('<img')) {
               try {
-                console.log('Extracting first image from content for featured image...');
+                console.log('Processing images for WordPress upload...');
                 
-                // Find first image in content
-                const imgMatch = cleanContent.match(/<img[^>]+src="([^"]+)"[^>]*>/);
-                if (imgMatch && imgMatch[1]) {
-                  const imageUrl = imgMatch[1];
+                // Find all images in content
+                const imgMatches = cleanContent.match(/<img[^>]+src="([^"]+)"[^>]*>/g);
+                if (imgMatches && imgMatches.length > 0) {
+                  console.log(`Found ${imgMatches.length} images to process`);
                   
-                  // Only process data URLs (user uploaded images)
-                  if (imageUrl.startsWith('data:image/')) {
-                    const matches = imageUrl.match(/^data:image\/([^;]+);base64,(.+)$/);
-                    if (matches) {
-                      const mimeType = `image/${matches[1]}`;
-                      const imageBuffer = Buffer.from(matches[2], 'base64');
-                      const filename = `featured-${article.id}-${Date.now()}.${matches[1]}`;
+                  let processedImages = 0;
+                  
+                  for (const imgTag of imgMatches) {
+                    const srcMatch = imgTag.match(/src="([^"]+)"/);
+                    if (srcMatch && srcMatch[1]) {
+                      const imageUrl = srcMatch[1];
                       
-                      const mediaUrl = `${website.url}/wp-json/wp/v2/media`;
-                      
-                      const mediaResponse = await fetch(mediaUrl, {
-                        method: 'POST',
-                        headers: {
-                          'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64'),
-                          'Content-Disposition': `attachment; filename="${filename}"`,
-                          'Content-Type': mimeType,
-                        },
-                        body: imageBuffer,
-                      });
-                      
-                      if (mediaResponse.ok) {
-                        const mediaResult = await mediaResponse.json();
-                        featuredMediaId = mediaResult.id;
-                        console.log(`Featured image uploaded: Media ID ${featuredMediaId}, URL: ${mediaResult.source_url}`);
-                      } else {
-                        console.log('Featured image upload failed:', await mediaResponse.text());
+                      // Only process data URLs (user uploaded images)
+                      if (imageUrl.startsWith('data:image/')) {
+                        const matches = imageUrl.match(/^data:image\/([^;]+);base64,(.+)$/);
+                        if (matches) {
+                          const mimeType = `image/${matches[1]}`;
+                          const imageBuffer = Buffer.from(matches[2], 'base64');
+                          const filename = `article-${article.id}-img-${processedImages + 1}-${Date.now()}.${matches[1]}`;
+                          
+                          const mediaUrl = `${website.url}/wp-json/wp/v2/media`;
+                          
+                          console.log(`Uploading image ${processedImages + 1}: ${filename}`);
+                          
+                          const mediaResponse = await fetch(mediaUrl, {
+                            method: 'POST',
+                            headers: {
+                              'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64'),
+                              'Content-Disposition': `attachment; filename="${filename}"`,
+                              'Content-Type': mimeType,
+                            },
+                            body: imageBuffer,
+                          });
+                          
+                          if (mediaResponse.ok) {
+                            const mediaResult = await mediaResponse.json();
+                            const wordpressImageUrl = mediaResult.source_url;
+                            
+                            console.log(`Image uploaded successfully: Media ID ${mediaResult.id}, URL: ${wordpressImageUrl}`);
+                            
+                            // Set first uploaded image as featured image
+                            if (processedImages === 0) {
+                              featuredMediaId = mediaResult.id;
+                              console.log(`Set as featured image: Media ID ${featuredMediaId}`);
+                            }
+                            
+                            // Replace data URL with WordPress URL in content
+                            cleanContent = cleanContent.replace(imageUrl, wordpressImageUrl);
+                            console.log(`Replaced data URL with WordPress URL in content`);
+                            
+                            processedImages++;
+                            
+                            // Add delay to prevent rate limiting
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                          } else {
+                            const errorText = await mediaResponse.text();
+                            console.log(`Image upload failed for ${filename}:`, errorText);
+                          }
+                        }
                       }
                     }
                   }
+                  
+                  console.log(`Processed ${processedImages} images successfully`);
                 }
               } catch (imageError) {
-                console.error('Error uploading featured image:', imageError);
+                console.error('Error processing images:', imageError);
               }
             }
 

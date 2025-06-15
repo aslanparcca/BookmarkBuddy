@@ -1,0 +1,81 @@
+Aşağıda WordPress REST API ile lokal görsel yükleyip, öne çıkan görsel olarak ayarlayan tam PHP kodunu paylaşıyorum. Bu kod:
+
+✅ Lokal bir görsel dosyasını WordPress’e medya olarak yükler
+
+✅ Medya ID’sini alır
+
+✅ Bu ID’yi kullanarak makaleyi öne çıkan görsel ile birlikte gönderir
+
+✅ PHP ile WordPress’e Makale + Öne Çıkan Görsel Gönderme (REST API)
+php
+Kopyala
+Düzenle
+<?php
+
+// WordPress REST API giriş bilgileri
+$site_url = "https://seninsiten.com";  // Site adresin
+$username = "admin";
+$app_password = "uygulama-şifresi-burada"; // WordPress'te oluşturulan "Application Password"
+
+// 1. GÖRSELİ YÜKLE (lokal görsel dosyası)
+$image_path = __DIR__ . "/resimler/ornek.jpg";
+$image_data = file_get_contents($image_path);
+$image_name = basename($image_path);
+
+// medya API endpoint
+$media_url = $site_url . "/wp-json/wp/v2/media";
+
+// cURL ile görseli gönder
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $media_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Disposition: attachment; filename=\"$image_name\"",
+    "Content-Type: image/jpeg"
+]);
+curl_setopt($ch, CURLOPT_USERPWD, "$username:$app_password");
+curl_setopt($ch, CURLOPT_POSTFIELDS, $image_data);
+
+$response = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+// Başarılı mı?
+if ($http_code != 201) {
+    echo "Görsel yüklenemedi. Yanıt:\n$response\n";
+    exit;
+}
+
+$media = json_decode($response, true);
+$media_id = $media['id'];
+echo "Görsel başarıyla yüklendi. Medya ID: $media_id\n";
+
+// 2. MAKALEYİ GÖNDER + featured_media ata
+$post_url = $site_url . "/wp-json/wp/v2/posts";
+$post_data = [
+    "title" => "PHP ile API Makalesi",
+    "content" => "Bu makale öne çıkan görselle birlikte eklendi.",
+    "status" => "publish",
+    "featured_media" => $media_id
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $post_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_USERPWD, "$username:$app_password");
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+
+$response = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+// Makale yanıtı
+if ($http_code == 201) {
+    $post = json_decode($response, true);
+    echo "Makale başarıyla yayınlandı: " . $post['link'] . "\n";
+} else {
+    echo "Makale oluşturulamadı. Yanıt:\n$response\n";
+}
