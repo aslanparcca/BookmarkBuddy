@@ -27,10 +27,20 @@ export default function ProductDescriptionGenerator({ setLoading }: ProductDescr
 
   const generateDescriptionMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-product-description', {
+      const response = await fetch('/api/generate-product-description', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedDescription(data.productDescription || '');

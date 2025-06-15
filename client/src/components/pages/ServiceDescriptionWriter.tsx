@@ -26,10 +26,20 @@ export default function ServiceDescriptionWriter({ setLoading }: ServiceDescript
 
   const generateDescriptionMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-service-description', {
+      const response = await fetch('/api/generate-service-description', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedDescription(data.serviceDescription || '');

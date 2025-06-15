@@ -26,10 +26,20 @@ export default function KeywordGenerator({ setLoading }: KeywordGeneratorProps) 
 
   const generateKeywordsMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-keywords', {
+      const response = await fetch('/api/generate-keywords', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedKeywords(data.keywords || []);

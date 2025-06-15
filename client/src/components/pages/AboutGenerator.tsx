@@ -28,10 +28,20 @@ export default function AboutGenerator({ setLoading }: AboutGeneratorProps) {
 
   const generateAboutMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-about', {
+      const response = await fetch('/api/generate-about', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedAbout(data.aboutText || '');

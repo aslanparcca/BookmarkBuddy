@@ -25,10 +25,20 @@ export default function FAQGenerator({ setLoading }: FAQGeneratorProps) {
 
   const generateFAQMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-faq', {
+      const response = await fetch('/api/generate-faq', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedFAQs(data.faqs || []);

@@ -25,10 +25,20 @@ export default function WPCommentGenerator({ setLoading }: WPCommentGeneratorPro
 
   const generateCommentsMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/generate-wp-comments', {
+      const response = await fetch('/api/generate-wp-comments', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'An error occurred');
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setGeneratedComments(data.comments || []);
