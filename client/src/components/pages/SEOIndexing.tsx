@@ -66,10 +66,10 @@ export default function SEOIndexing() {
     mutationFn: async (data: { websiteId: string, urls: string[], searchEngines: string[] }) => {
       return await apiRequest("POST", "/api/seo-indexing/submit", data);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       toast({
         title: "İndeksleme İşi Başlatıldı",
-        description: `${data.urlCount} URL ${data.searchEngines.length} arama motorunda indexlenmeye başladı`,
+        description: `${data.urlCount || 0} URL ${data.searchEngines?.length || 0} arama motorunda indexlenmeye başladı`,
       });
       setUrlsToIndex("");
       setSelectedWebsite("");
@@ -100,11 +100,19 @@ export default function SEOIndexing() {
       return await apiRequest("POST", `/api/seo-indexing/generate-sitemap-urls/${websiteId}`, {});
     },
     onSuccess: (data: any) => {
-      setUrlsToIndex(data.urls.join('\n'));
-      toast({
-        title: "Sitemap URL'leri Yüklendi",
-        description: `${data.urls.length} URL sitemap'ten alındı`,
-      });
+      if (data.urls && Array.isArray(data.urls)) {
+        setUrlsToIndex(data.urls.join('\n'));
+        toast({
+          title: "Sitemap URL'leri Yüklendi",
+          description: `${data.urls.length} URL sitemap'ten alındı`,
+        });
+      } else {
+        toast({
+          title: "Hata",
+          description: "URL'ler alınamadı",
+          variant: "destructive",
+        });
+      }
     },
     onError: (error: Error) => {
       toast({
