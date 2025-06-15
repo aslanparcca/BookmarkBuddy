@@ -136,6 +136,94 @@ const modules: Module[] = [
     ),
     route: 'google-review',
     category: 'Google'
+  },
+  {
+    id: 'google-ads-title',
+    title: 'Google Ads Başlığı',
+    description: 'Dönüşüm odaklı Google Ads başlıkları üretin',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.93 13.5h4.14L12 7.98 9.93 13.5zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+      </svg>
+    ),
+    route: 'google-ads-title',
+    category: 'Google'
+  },
+  {
+    id: 'google-ads-description',
+    title: 'Google Ads Açıklaması',
+    description: 'Etkileyici Google Ads açıklamaları oluşturun',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V9h2v2zm0-4h-2V5h2v2z"></path>
+      </svg>
+    ),
+    route: 'google-ads-description',
+    category: 'Google'
+  },
+  {
+    id: 'facebook-ads-title',
+    title: 'Facebook Ads Başlığı',
+    description: 'Dikkat çekici Facebook reklam başlıkları',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+      </svg>
+    ),
+    route: 'facebook-ads-title',
+    category: 'Facebook'
+  },
+  {
+    id: 'facebook-ads-text',
+    title: 'Facebook Ads Ana Metin',
+    description: 'Etkili Facebook reklam metinleri yazın',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"></path>
+        <polyline points="14,2 14,8 20,8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10,9 9,9 8,9"></polyline>
+      </svg>
+    ),
+    route: 'facebook-ads-text',
+    category: 'Facebook'
+  },
+  {
+    id: 'homepage-content',
+    title: 'Ana Sayfa Yazısı',
+    description: 'Profesyonel ana sayfa içerikleri oluşturun',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+      </svg>
+    ),
+    route: 'homepage-content',
+    category: 'Genel'
+  },
+  {
+    id: 'contact-page',
+    title: 'İletişim Sayfası Yazısı',
+    description: 'Güven veren iletişim sayfası metinleri',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path>
+      </svg>
+    ),
+    route: 'contact-page',
+    category: 'Genel'
+  },
+  {
+    id: 'customer-review',
+    title: 'Müşteri Yorumu',
+    description: 'Gerçekçi müşteri yorum ve değerlendirmeleri',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 13.5l-1.41-1.41L9.5 16.17 7.91 14.59 6.5 16l3 3 5-5-1.5-1.5z"></path>
+      </svg>
+    ),
+    route: 'customer-review',
+    category: 'Genel'
   }
 ];
 
