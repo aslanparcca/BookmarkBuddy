@@ -334,10 +334,51 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       return;
     }
 
+    // Alt başlık resimlerini backend'e gönderebilmek için data URL'lere dönüştür
+    const processSubheadingImages = async () => {
+      const processedImages: { [key: string]: string } = {};
+      
+      for (const [subheading, imageUrl] of Object.entries(settings.subheadingImages)) {
+        if (imageUrl.startsWith('blob:')) {
+          // Blob URL'yi data URL'ye dönüştür
+          try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const reader = new FileReader();
+            
+            await new Promise((resolve) => {
+              reader.onloadend = () => {
+                processedImages[subheading] = reader.result as string;
+                resolve(null);
+              };
+              reader.readAsDataURL(blob);
+            });
+          } catch (error) {
+            console.error(`Failed to process image for ${subheading}:`, error);
+            processedImages[subheading] = imageUrl; // Fallback to original URL
+          }
+        } else {
+          processedImages[subheading] = imageUrl;
+        }
+      }
+      
+      return processedImages;
+    };
+
     setLoading(true);
-    generateArticlesMutation.mutate({
-      titles: generatedTitles,
-      settings
+    
+    processSubheadingImages().then((processedImages) => {
+      const settingsWithImages = {
+        ...settings,
+        subheadingImages: processedImages
+      };
+      
+      console.log('Sending subheading images to backend:', processedImages);
+      
+      generateArticlesMutation.mutate({
+        titles: generatedTitles,
+        settings: settingsWithImages
+      });
     });
   };
 

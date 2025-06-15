@@ -1813,37 +1813,42 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       let successCount = 0;
       let failedCount = 0;
 
-      // Fetch user's uploaded images for automatic placement
-      console.log(`Fetching images for user: ${userId}`);
-      const userImages = await storage.getImagesByUserId(userId);
-      console.log(`Total user images found: ${userImages.length}`);
+      // Process manual subheading images from frontend
+      let subheadingImages: any[] = [];
       
-      // Filter for subheading images with multiple criteria - most recent first
-      const subheadingImages = userImages
-        .filter(img => {
-          const isSubheadingCategory = img.category === 'subheading';
-          const hasSubheadingTag = img.tags && (
-            img.tags.includes('subheading') || 
-            img.tags.includes('bulk-upload') || 
-            img.tags.includes('excel-mapping') ||
-            img.tags.includes('auto-placement')
-          );
-          return isSubheadingCategory || hasSubheadingTag;
-        })
-        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
-      
-      console.log(`Filtered subheading images: ${subheadingImages.length}`);
-      if (subheadingImages.length > 0) {
-        console.log('Available subheading images:', subheadingImages.map(img => ({
-          id: img.id,
-          name: img.originalName,
-          category: img.category,
-          tags: img.tags,
-          urlLength: img.url ? img.url.length : 0
-        })));
+      if (settings.subheadingImages && Object.keys(settings.subheadingImages).length > 0) {
+        console.log('Processing manual subheading images from frontend:', Object.keys(settings.subheadingImages));
+        
+        subheadingImages = Object.entries(settings.subheadingImages).map(([subheading, imageUrl], index) => ({
+          id: `manual-${index}`,
+          url: imageUrl,
+          altText: `${subheading} görseli`,
+          originalName: `manual-${subheading}.jpg`,
+          subheading: subheading
+        }));
+        
+        console.log(`Manual subheading images prepared: ${subheadingImages.length}`);
       } else {
-        console.log('No subheading images found - checking all user images');
-        userImages.forEach(img => console.log(`Image ${img.id}: category=${img.category}, tags=${JSON.stringify(img.tags)}`));
+        console.log('No manual subheading images provided, checking database');
+        
+        // Fallback to database images if no manual images provided
+        const userImages = await storage.getImagesByUserId(userId);
+        console.log(`Total user images found: ${userImages.length}`);
+        
+        subheadingImages = userImages
+          .filter(img => {
+            const isSubheadingCategory = img.category === 'subheading';
+            const hasSubheadingTag = img.tags && (
+              img.tags.includes('subheading') || 
+              img.tags.includes('bulk-upload') || 
+              img.tags.includes('excel-mapping') ||
+              img.tags.includes('auto-placement')
+            );
+            return isSubheadingCategory || hasSubheadingTag;
+          })
+          .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+        
+        console.log(`Database subheading images found: ${subheadingImages.length}`);
       }
 
       for (const titleData of titles) {
@@ -1872,35 +1877,62 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imageSource: settings.imageSource
           });
           
-          // Fixed image placement system with proper mapping
+          // Enhanced image placement system with manual image mapping
           if (subheadingImages.length > 0 && hasExcelSubheadings && titleData.subheadings) {
-            console.log(`Setting up Excel image mapping: ${subheadingImages.length} images for ${titleData.subheadings.length} subheadings`);
+            console.log(`Setting up manual image mapping for "${titleData.title}"`);
             
             imagePlacementInstructions.push('RESIM YERLEŞTİRME KURALLARI (KESİN):');
             imagePlacementInstructions.push('1. Sadece aşağıda belirtilen resimleri kullan');
             imagePlacementInstructions.push('2. Her resmi tam olarak belirtilen H2 başlığından HEMEN SONRA yerleştir');
-            imagePlacementInstructions.push('3. Resim olmayan H2 başlıklarına HİÇBİR resim ekleme');
-            imagePlacementInstructions.push('4. Öne çıkan görseli makale başında kullanma, alt başlıklarda kullan');
+            imagePlacementInstructions.push('3. Resim belirtilmeyen H2 başlıklarına HİÇBİR resim ekleme');
             imagePlacementInstructions.push('');
             
-            // Create precise 1:1 mapping for available images only
-            titleData.subheadings.forEach((subheading: string, index: number) => {
-              if (index < subheadingImages.length) {
-                const image = subheadingImages[index];
-                console.log(`Mapping image ${index + 1} (${image.originalName}) to subheading ${index + 1}: ${subheading}`);
-                
-                imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
-                imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
-                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
-                imagePlacementInstructions.push(`</div>`);
-                imagePlacementInstructions.push('');
+            // Process manual subheading images with exact mapping
+            if (settings.subheadingImages && Object.keys(settings.subheadingImages).length > 0) {
+              console.log('Manual image mapping detected');
+              
+              titleData.subheadings.forEach((subheading: string) => {
+                if (settings.subheadingImages[subheading]) {
+                  const imageUrl = settings.subheadingImages[subheading];
+                  console.log(`Manual mapping: "${subheading}" -> ${imageUrl.substring(0, 50)}...`);
+                  
+                  imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
+                  imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
+                  imagePlacementInstructions.push(`<img src="${imageUrl}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+                  imagePlacementInstructions.push(`</div>`);
+                  imagePlacementInstructions.push('');
+                }
+              });
+              
+              const mappedSubheadings = titleData.subheadings.filter(sh => settings.subheadingImages[sh]);
+              const unmappedSubheadings = titleData.subheadings.filter(sh => !settings.subheadingImages[sh]);
+              
+              console.log(`Manual image mapping: ${mappedSubheadings.length} mapped, ${unmappedSubheadings.length} unmapped`);
+              
+              if (unmappedSubheadings.length > 0) {
+                imagePlacementInstructions.push(`DİKKAT: Bu H2 başlıklarına resim ekleme: ${unmappedSubheadings.join(', ')}`);
               }
-            });
-            
-            // Add warning for remaining subheadings without images
-            if (titleData.subheadings.length > subheadingImages.length) {
-              const remainingSubheadings = titleData.subheadings.slice(subheadingImages.length);
-              imagePlacementInstructions.push(`DİKKAT: Bu H2 başlıklarına resim ekleme: ${remainingSubheadings.join(', ')}`);
+            } else {
+              // Fallback to sequential mapping for database images
+              console.log('Sequential image mapping for database images');
+              
+              titleData.subheadings.forEach((subheading: string, index: number) => {
+                if (index < subheadingImages.length) {
+                  const image = subheadingImages[index];
+                  console.log(`Sequential mapping ${index + 1}: "${subheading}" -> ${image.originalName}`);
+                  
+                  imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
+                  imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
+                  imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+                  imagePlacementInstructions.push(`</div>`);
+                  imagePlacementInstructions.push('');
+                }
+              });
+              
+              if (titleData.subheadings.length > subheadingImages.length) {
+                const remainingSubheadings = titleData.subheadings.slice(subheadingImages.length);
+                imagePlacementInstructions.push(`DİKKAT: Bu H2 başlıklarına resim ekleme: ${remainingSubheadings.join(', ')}`);
+              }
             }
             
             imagePlacementInstructions.push('MUTLAK KURAL: Yukarıda belirtilmeyen başka hiçbir yere resim ekleme!');
@@ -1916,34 +1948,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
               imagePlacementInstructions.push(`</div>`);
             });
           } else {
-            // No user images - generate automatic images for subheadings
-            console.log('No user images - enabling automatic image generation for subheadings');
-            
-            if (hasExcelSubheadings && titleData.subheadings && titleData.subheadings.length > 0) {
-              imagePlacementInstructions.push('OTOMATİK RESİM EKLEME:');
-              imagePlacementInstructions.push('Her H2 alt başlık için konuyla ilgili uygun resim ekle');
-              imagePlacementInstructions.push('');
-              
-              titleData.subheadings.forEach((subheading: string, index: number) => {
-                if (index < 6) { // Maksimum 6 resim
-                  // Generate relevant image keyword from subheading
-                  const imageKeyword = subheading.toLowerCase()
-                    .replace(/[^\w\s]/g, ' ')
-                    .split(/\s+/)
-                    .filter((word: any) => word.length > 3)
-                    .slice(0, 3)
-                    .join(' ') || subheading.split(' ')[0];
-                  
-                  imagePlacementInstructions.push(`H2 "${subheading}" başlığından sonra konu ile ilgili resim ekle:`);
-                  imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
-                  imagePlacementInstructions.push(`<img src="https://source.unsplash.com/600x400/?${encodeURIComponent(imageKeyword + ' ' + titleData.focusKeyword)}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
-                  imagePlacementInstructions.push(`</div>`);
-                  imagePlacementInstructions.push('');
-                }
-              });
-            } else {
-              imagePlacementInstructions.push('RESIM EKLEME: Makale için uygun görseller ekle, maksimum 3-4 resim');
-            }
+            // No user images available
+            console.log('No user images available - no automatic image placement');
+            imagePlacementInstructions.push('RESIM EKLEME: Bu makale için kullanıcı tarafından resim yüklenmemiş, hiçbir resim ekleme');
           }
           
           // Debug log to see what we're getting
