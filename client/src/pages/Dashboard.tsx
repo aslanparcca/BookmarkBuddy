@@ -32,7 +32,9 @@ import { Toaster } from "@/components/ui/toaster";
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
   'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
-  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing';
+  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing' |
+  'keyword-generator' | 'wp-comment-generator' | 'title-generator' | 'about-generator' |
+  'cv-writer' | 'service-description' | 'product-description' | 'faq-generator' | 'google-review';
 
 export default function Dashboard() {
   const [location] = useLocation();
@@ -54,7 +56,7 @@ export default function Dashboard() {
   const pageTitles: Record<PageType, string> = {
     'editor': 'Ana Sayfa',
     'wp-editor': 'WP Makalesi V1',
-    'bulk-editor': 'Tüm Şablonlar',
+    'bulk-editor': 'Modüller',
     'articles': 'İçeriklerim',
 
     'settings': 'WP Makalesi V2',
@@ -76,7 +78,16 @@ export default function Dashboard() {
     'add-website': 'Yeni Web Sitesi Ekle',
     'edit-website': 'Web Sitesi Düzenle',
     'api-keys': 'Api Keylerim',
-    'seo-indexing': 'SEO İndeksleme'
+    'seo-indexing': 'SEO İndeksleme',
+    'keyword-generator': 'Anahtar Kelime Üretici',
+    'wp-comment-generator': 'WordPress Yorum Üretici',
+    'title-generator': 'Makale Başlığı Üretici',
+    'about-generator': 'Hakkımda Yazısı Üretici',
+    'cv-writer': 'CV Yazarı',
+    'service-description': 'Hizmet Açıklaması Yazarı',
+    'product-description': 'Ürün Açıklaması Üretici',
+    'faq-generator': 'Sıkça Sorulan Sorular',
+    'google-review': 'Google Yorum Üretici'
   };
 
   const renderPage = () => {
@@ -130,6 +141,27 @@ export default function Dashboard() {
         return <ApiKeys />;
       case 'seo-indexing':
         return <SEOIndexing />;
+      
+      // Module Pages
+      case 'keyword-generator':
+        return <PlaceholderPage title="Anahtar Kelime Üretici" description="İşiniz için anahtar kelimeler üretin" icon="fas fa-search" iconColor="text-blue-600" />;
+      case 'wp-comment-generator':
+        return <PlaceholderPage title="WordPress Yorum Üretici" description="Web siteniz için gerçek yorumlar üretin" icon="fab fa-wordpress" iconColor="text-blue-600" />;
+      case 'title-generator':
+        return <PlaceholderPage title="Makale Başlığı Üretici" description="Özgün makale başlıkları üretin" icon="fas fa-heading" iconColor="text-purple-600" />;
+      case 'about-generator':
+        return <PlaceholderPage title="Hakkımda Yazısı Üretici" description="Dilediğiniz dilde hakkımda yazısı üretin" icon="fas fa-user" iconColor="text-green-600" />;
+      case 'cv-writer':
+        return <PlaceholderPage title="CV Yazarı" description="Kişisel bilgilerinizle CV metni üretin" icon="fas fa-file-alt" iconColor="text-indigo-600" />;
+      case 'service-description':
+        return <PlaceholderPage title="Hizmet Açıklaması Yazarı" description="Verdiğiniz hizmetler için açıklamalar üretin" icon="fas fa-tools" iconColor="text-orange-600" />;
+      case 'product-description':
+        return <PlaceholderPage title="Ürün Açıklaması Üretici" description="E-ticaret için SEO uyumlu ürün açıklamaları" icon="fas fa-tag" iconColor="text-red-600" />;
+      case 'faq-generator':
+        return <PlaceholderPage title="Sıkça Sorulan Sorular" description="İstediğin konuda SSS ve cevapları üret" icon="fas fa-question-circle" iconColor="text-blue-600" />;
+      case 'google-review':
+        return <PlaceholderPage title="Google Yorum Üretici" description="Google Maps için gerçek yorumlar üretin" icon="fab fa-google" iconColor="text-red-600" />;
+      
       default:
         return <AIEditor setLoading={setLoading} />;
     }
