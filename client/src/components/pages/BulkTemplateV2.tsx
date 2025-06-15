@@ -260,9 +260,11 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         setIsGenerating(false);
         // Clear articles cache to show new articles
         queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+        queryClient.refetchQueries({ queryKey: ['/api/articles'] });
+        console.log("Cache invalidated and refetched for articles");
         toast({
           title: "Başarılı",
-          description: `${data.successCount} makale oluşturuldu!`,
+          description: `${data.successCount} makale oluşturuldu! İçeriklerim sayfasında görüntüleyebilirsiniz.`,
         });
         setLoading(false);
       }, 1500);
