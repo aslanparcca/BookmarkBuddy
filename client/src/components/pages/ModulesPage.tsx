@@ -224,6 +224,66 @@ const modules: Module[] = [
     ),
     route: 'customer-review',
     category: 'Genel'
+  },
+  {
+    id: 'ai-content-preview',
+    title: 'Etkileşimli İçerik Önizlemesi',
+    description: 'Gerçek zamanlı AI önerileri ile canlı içerik önizlemesi',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+      </svg>
+    ),
+    route: 'ai-content-preview',
+    category: 'AI'
+  },
+  {
+    id: 'voice-to-text',
+    title: 'Sesli İçerik Oluşturucu',
+    description: 'Çok dilli sesten metne dönüştürme ile içerik üretin',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path>
+      </svg>
+    ),
+    route: 'voice-to-text',
+    category: 'AI'
+  },
+  {
+    id: 'collaborative-editor',
+    title: 'İşbirliği Editörü',
+    description: 'Sürüm geçmişi ve ekip yorumları ile işbirlikçi düzenleme',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h2v2h2v2H4zm0-4V6h2v2h2v2H6v2H4zm4 4v-4h2v4H8zm0-6V6h2v6H8zm4 6v-4h2v4h-2zm0-6V6h2v6h-2zm4 6v-4h2v4h-2z"></path>
+      </svg>
+    ),
+    route: 'collaborative-editor',
+    category: 'AI'
+  },
+  {
+    id: 'ai-quality-scorer',
+    title: 'AI Kalite Puanlama',
+    description: 'Özelleştirilebilir yapay zeka içerik kalitesi değerlendirme sistemi',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path>
+      </svg>
+    ),
+    route: 'ai-quality-scorer',
+    category: 'AI'
+  },
+  {
+    id: 'content-localization',
+    title: 'İçerik Yerelleştirme',
+    description: 'Tek tıkla içerik yerelleştirme ve kültürel adaptasyon',
+    icon: (
+      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="48" width="48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"></path>
+      </svg>
+    ),
+    route: 'content-localization',
+    category: 'AI'
   }
 ];
 
@@ -235,7 +295,7 @@ export default function ModulesPage({ setLoading }: ModulesPageProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tümü');
 
-  const categories = ['Tümü', 'SEO', 'Google', 'Instagram', 'Facebook', 'Youtube', 'Genel', 'Coder', 'Twitter', 'Resim'];
+  const categories = ['Tümü', 'SEO', 'Google', 'Instagram', 'Facebook', 'Youtube', 'Genel', 'Coder', 'Twitter', 'Resim', 'AI'];
 
   const filteredModules = modules.filter(module => {
     const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
