@@ -9,6 +9,7 @@ import * as XLSX from "xlsx";
 import { z } from "zod";
 import { upload, generateImageFilename, bufferToDataUrl } from "./imageUpload";
 import { nanoid } from "nanoid";
+import { ContentAggregator } from "./webScraper";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
