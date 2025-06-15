@@ -222,7 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { titles, settings, focusKeywords } = req.body;
       
       // Use backup API key if primary is quota limited
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY || 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
       const userSettings = await storage.getUserSettings(userId);
       if (userSettings?.geminiApiKey) {
         apiKey = userSettings.geminiApiKey;
@@ -520,10 +520,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       setImmediate(async () => {
         try {
           const userSettings = await storage.getUserSettings(userId);
-          if (!userSettings?.geminiApiKey) return;
+          const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
 
-          const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-flash" });
+          const genAI = new GoogleGenerativeAI(apiKey);
+          const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
 
           let completed = 0;
           let failed = 0;
@@ -718,11 +718,8 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
 
       const userSettings = await storage.getUserSettings(userId);
       
-      // Environment variable'dan veya kullanıcı ayarlarından API anahtarını al
-      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY;
-      if (!apiKey) {
-        return res.status(400).json({ message: "Gemini API anahtarı bulunamadı. Lütfen ayarlarınızı kontrol edin." });
-      }
+      // Use backup API key if primary is quota limited  
+      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
 
       const genAI = new GoogleGenerativeAI(apiKey);
       // Map frontend AI model selection to actual model names
@@ -1581,7 +1578,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
       // Use backup API key if primary is quota limited
-      const apiKey = process.env.GOOGLE_GEMINI_API_KEY || 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
+      const apiKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
       const genAI = new GoogleGenerativeAI(apiKey);
       
       // Map frontend AI model selection to actual model names
