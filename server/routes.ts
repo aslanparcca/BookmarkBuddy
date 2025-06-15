@@ -2803,8 +2803,9 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                     if (srcMatch && srcMatch[1]) {
                       const imageUrl = srcMatch[1];
                       
-                      // Only process data URLs (user uploaded images)
+                      // Process both data URLs and external URLs
                       if (imageUrl.startsWith('data:image/')) {
+                        // Handle data URLs (base64 encoded images)
                         const matches = imageUrl.match(/^data:image\/([^;]+);base64,(.+)$/);
                         if (matches) {
                           const mimeType = `image/${matches[1]}`;
@@ -2813,7 +2814,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                           
                           const mediaUrl = `${website.url}/wp-json/wp/v2/media`;
                           
-                          console.log(`Uploading image ${processedImages + 1}: ${filename}`);
+                          console.log(`Uploading data URL image ${processedImages + 1}: ${filename}`);
                           
                           const mediaResponse = await fetch(mediaUrl, {
                             method: 'POST',
@@ -2829,7 +2830,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                             const mediaResult = await mediaResponse.json();
                             const wordpressImageUrl = mediaResult.source_url;
                             
-                            console.log(`Image uploaded successfully: Media ID ${mediaResult.id}, URL: ${wordpressImageUrl}`);
+                            console.log(`Data URL image uploaded successfully: Media ID ${mediaResult.id}, URL: ${wordpressImageUrl}`);
                             
                             // Set first uploaded image as featured image
                             if (processedImages === 0) {
@@ -2851,8 +2852,68 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                             await new Promise(resolve => setTimeout(resolve, 500));
                           } else {
                             const errorText = await mediaResponse.text();
-                            console.log(`Image upload failed for ${filename}:`, errorText);
+                            console.log(`Data URL image upload failed for ${filename}:`, errorText);
                           }
+                        }
+                      } else if (imageUrl.startsWith('http')) {
+                        // Handle external URLs
+                        try {
+                          console.log(`Downloading external image: ${imageUrl}`);
+                          
+                          const imageResponse = await fetch(imageUrl);
+                          if (imageResponse.ok) {
+                            const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+                            const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
+                            const extension = contentType.includes('png') ? 'png' : 'jpg';
+                            const filename = `article-${article.id}-img-${processedImages + 1}-${Date.now()}.${extension}`;
+                            
+                            const mediaUrl = `${website.url}/wp-json/wp/v2/media`;
+                            
+                            console.log(`Uploading external image ${processedImages + 1}: ${filename}`);
+                            
+                            const mediaResponse = await fetch(mediaUrl, {
+                              method: 'POST',
+                              headers: {
+                                'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64'),
+                                'Content-Disposition': `attachment; filename="${filename}"`,
+                                'Content-Type': contentType,
+                              },
+                              body: imageBuffer,
+                            });
+                            
+                            if (mediaResponse.ok) {
+                              const mediaResult = await mediaResponse.json();
+                              const wordpressImageUrl = mediaResult.source_url;
+                              
+                              console.log(`External image uploaded successfully: Media ID ${mediaResult.id}, URL: ${wordpressImageUrl}`);
+                              
+                              // Set first uploaded image as featured image
+                              if (processedImages === 0) {
+                                featuredMediaId = mediaResult.id;
+                                console.log(`Set as featured image: Media ID ${featuredMediaId}`);
+                                
+                                // Remove the first image from content since it will be featured image
+                                cleanContent = cleanContent.replace(imgTag, '');
+                                console.log(`Removed first image from content (now featured image)`);
+                              } else {
+                                // Replace external URL with WordPress URL for other images
+                                cleanContent = cleanContent.replace(imageUrl, wordpressImageUrl);
+                                console.log(`Replaced external URL with WordPress URL in content`);
+                              }
+                              
+                              processedImages++;
+                              
+                              // Add delay to prevent rate limiting
+                              await new Promise(resolve => setTimeout(resolve, 500));
+                            } else {
+                              const errorText = await mediaResponse.text();
+                              console.log(`External image upload failed for ${filename}:`, errorText);
+                            }
+                          } else {
+                            console.log(`Failed to download external image: ${imageUrl}`);
+                          }
+                        } catch (downloadError) {
+                          console.error(`Error downloading external image ${imageUrl}:`, downloadError);
                         }
                       }
                     }
