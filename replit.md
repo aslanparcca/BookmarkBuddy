@@ -194,6 +194,7 @@ Changelog:
 - June 14, 2025. Increased article display limit from 20 to 100 in İçeriklerim section and added comprehensive bulk delete functionality: updated storage interface and database operations to support bulk deletion, added API endpoint for deleting all user articles (/api/articles DELETE), implemented frontend confirmation dialog and red-themed button for safe bulk deletion with loading states
 - June 14, 2025. Implemented proper pagination system with per-page options (25, 50, 100, 200) and search functionality in Articles section: redesigned articles interface with advanced search, filter controls, and pagination matching reference design, added backend support for search queries across article titles and content
 - June 14, 2025. Enhanced Actions dropdown menu in Articles section to match reference design: added options for web publishing, folder management, HTML/TXT downloads, and deletion with proper icons and hover states, implemented user-friendly warnings for unselected articles
+- June 15, 2025. Created comprehensive API key management system: added new database table for multiple API keys per user, implemented backend storage methods and REST endpoints, completely redesigned Settings interface to match provided template with OpenAI/Gemini support, added secure key storage with masked display, default key selection, and comprehensive FAQ about API requirements, sidebar menu updated with "API Key Ayarları" section for easy access to quota management functionality
 ```
 
 ## User Preferences

@@ -39,7 +39,7 @@ export default function Dashboard() {
     'bulk-editor': 'Tüm Şablonlar',
     'articles': 'İçeriklerim',
 
-    'settings': 'WP Makalesi V2',
+    'settings': 'API Key Ayarları',
     'url-rewrite': 'URL Rewrite',
     'bulk-articles': 'Toplu Oluşturulan Makaleler',
     'bulk-template-v1': 'Toplu Makale V1',
