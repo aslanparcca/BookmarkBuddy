@@ -132,6 +132,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const files = req.files as Express.Multer.File[];
       
+      console.log(`Bulk upload request from user ${userId}, files:`, files?.length || 0);
+      
       if (!files || files.length === 0) {
         return res.status(400).json({ message: "No images uploaded" });
       }
@@ -140,13 +142,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       for (const file of files) {
         try {
+          console.log(`Processing image: ${file.originalname}, size: ${file.size}, type: ${file.mimetype}`);
+          
           // Generate unique filename
           const filename = generateImageFilename(file.originalname);
           
           // Convert to data URL for storage
           const dataUrl = bufferToDataUrl(file.buffer, file.mimetype);
           
-          // Store in database
+          // Store in database with enhanced metadata
           const imageData = {
             userId,
             filename,
@@ -156,21 +160,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
             url: dataUrl,
             altText: file.originalname.replace(/\.[^/.]+$/, ""), // Remove extension for alt text
             category: "subheading",
-            tags: ["bulk-upload", "subheading"]
+            tags: ["bulk-upload", "subheading", "excel-mapping"]
           };
           
           const savedImage = await storage.createImage(imageData);
           uploadedImages.push(savedImage);
+          console.log(`Successfully saved image: ${savedImage.id} - ${savedImage.originalName}`);
           
         } catch (error) {
           console.error(`Error uploading image ${file.originalname}:`, error);
         }
       }
 
+      console.log(`Bulk upload complete: ${uploadedImages.length} images saved to database`);
+
       res.json({
         success: true,
         message: `${uploadedImages.length} images uploaded successfully`,
-        images: uploadedImages
+        images: uploadedImages,
+        debug: {
+          uploadedCount: uploadedImages.length,
+          imageIds: uploadedImages.map(img => img.id)
+        }
       });
 
     } catch (error) {
@@ -1792,9 +1803,17 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       // Fetch user's uploaded images for automatic placement
       const userImages = await storage.getImagesByUserId(userId);
-      const subheadingImages = userImages.filter(img => img.category === 'subheading');
+      const subheadingImages = userImages.filter(img => img.category === 'subheading' || img.tags?.includes('subheading'));
       
-      console.log(`Found ${subheadingImages.length} uploaded images for automatic placement`);
+      console.log(`Image Debug - Total user images: ${userImages.length}, Subheading images: ${subheadingImages.length}`);
+      if (subheadingImages.length > 0) {
+        console.log('Available subheading images:', subheadingImages.map(img => ({
+          id: img.id,
+          name: img.originalName,
+          category: img.category,
+          tags: img.tags
+        })));
+      }
 
       for (const titleData of titles) {
         try {
@@ -1812,43 +1831,70 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           // Check if Excel subheadings are provided
           const hasExcelSubheadings = titleData.subheadings && Array.isArray(titleData.subheadings) && titleData.subheadings.length > 0;
           
-          // Automatic image placement logic
+          // Enhanced automatic image placement logic
           const imagePlacementInstructions = [];
-          if (subheadingImages.length > 0) {
-            imagePlacementInstructions.push('IMAGE PLACEMENT (AUTOMATIC):');
+          
+          console.log(`Image placement debug for "${titleData.title}":`, {
+            hasExcelSubheadings,
+            subheadingsCount: titleData.subheadings?.length || 0,
+            availableImages: subheadingImages.length,
+            imageSource: settings.imageSource
+          });
+          
+          // Priority 1: Excel subheadings with uploaded images
+          if (subheadingImages.length > 0 && hasExcelSubheadings && titleData.subheadings) {
+            imagePlacementInstructions.push('IMAGE PLACEMENT (EXCEL SUBHEADING MAPPING):');
+            imagePlacementInstructions.push('');
+            imagePlacementInstructions.push('CRITICAL PLACEMENT RULES:');
+            imagePlacementInstructions.push('1. Each image must be placed IMMEDIATELY after its corresponding H2 heading');
+            imagePlacementInstructions.push('2. Do NOT place images anywhere else in the article');
+            imagePlacementInstructions.push('3. Follow the exact order: Image 1 after H2-1, Image 2 after H2-2, etc.');
+            imagePlacementInstructions.push('4. Use ONLY the provided images below');
+            imagePlacementInstructions.push('');
             
-            if (hasExcelSubheadings && titleData.subheadings) {
-              // Match uploaded images to Excel subheadings
-              const imageAssignments: string[] = [];
-              titleData.subheadings.forEach((subheading: string, index: number) => {
-                if (index < subheadingImages.length) {
-                  const assignedImage = subheadingImages[index];
-                  imageAssignments.push(`- After H2 "${subheading}": <img src="${assignedImage.url}" alt="${assignedImage.altText || subheading}" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />`);
-                }
-              });
-              
-              if (imageAssignments.length > 0) {
-                imagePlacementInstructions.push('- Place these specific images after their corresponding H2 headings:');
-                imagePlacementInstructions.push(...imageAssignments);
-                imagePlacementInstructions.push('- Images are automatically optimized and responsive');
-                imagePlacementInstructions.push('- Do not add any other images, use only the provided ones');
+            // Create 1:1 mapping between Excel subheadings and uploaded images
+            titleData.subheadings.forEach((subheading: string, index: number) => {
+              if (index < subheadingImages.length) {
+                const assignedImage = subheadingImages[index];
+                imagePlacementInstructions.push(`AFTER H2 "${subheading}" (${index + 1}/${titleData.subheadings.length}):`);
+                imagePlacementInstructions.push(`<div class="article-image-container" style="text-align: center; margin: 30px 0; padding: 20px 0;">`);
+                imagePlacementInstructions.push(`  <img src="${assignedImage.url}" alt="${assignedImage.altText || subheading}" style="width: 100%; max-width: 700px; height: auto; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: block; margin: 0 auto; border: 1px solid #e5e7eb;" />`);
+                imagePlacementInstructions.push(`</div>`);
+                imagePlacementInstructions.push('');
               }
-            } else {
-              // Distribute images evenly across article sections
-              imagePlacementInstructions.push(`- You have ${subheadingImages.length} uploaded images to distribute throughout the article`);
-              imagePlacementInstructions.push('- Place images after H2 headings in this order:');
-              subheadingImages.slice(0, 6).forEach((image, index) => {
-                imagePlacementInstructions.push(`  ${index + 1}. <img src="${image.url}" alt="${image.altText || 'Article image'}" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />`);
-              });
-              imagePlacementInstructions.push('- Distribute these images evenly after different H2 sections');
-              imagePlacementInstructions.push('- Use descriptive alt text related to the section content');
-            }
-          } else if (settings.imageSource && settings.imageSource !== "0") {
-            // Fallback to automatic image search if no uploaded images
-            imagePlacementInstructions.push('IMAGE PLACEMENT (SEARCH-BASED):');
-            imagePlacementInstructions.push('- Add relevant images after H2 headings using Unsplash/Pexels search');
-            imagePlacementInstructions.push('- Use focus keyword and related terms for image search');
-            imagePlacementInstructions.push('- Include 3-5 images throughout the article');
+            });
+            
+            imagePlacementInstructions.push('STRICT ENFORCEMENT:');
+            imagePlacementInstructions.push('- Place images ONLY after H2 headings, never in the middle of paragraphs');
+            imagePlacementInstructions.push('- Do NOT create additional images or use external image sources');
+            imagePlacementInstructions.push('- Each H2 section should have relevant content before the next H2 + image');
+            
+          } 
+          // Priority 2: General image distribution without Excel mapping
+          else if (subheadingImages.length > 0) {
+            imagePlacementInstructions.push('IMAGE PLACEMENT (DISTRIBUTED):');
+            imagePlacementInstructions.push('');
+            imagePlacementInstructions.push(`You have ${subheadingImages.length} uploaded images to distribute strategically:`);
+            imagePlacementInstructions.push('');
+            
+            // Distribute images evenly across sections
+            const imagesPerSection = Math.max(1, Math.floor(7 / subheadingImages.length));
+            subheadingImages.slice(0, 6).forEach((image, index) => {
+              const sectionNumber = (index * imagesPerSection) + 2; // Start from section 2
+              imagePlacementInstructions.push(`Image ${index + 1} - Place after H2 section ${sectionNumber}:`);
+              imagePlacementInstructions.push(`<div class="article-image-container" style="text-align: center; margin: 30px 0; padding: 20px 0;">`);
+              imagePlacementInstructions.push(`  <img src="${image.url}" alt="${image.altText || 'Relevant section image'}" style="width: 100%; max-width: 700px; height: auto; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: block; margin: 0 auto; border: 1px solid #e5e7eb;" />`);
+              imagePlacementInstructions.push(`</div>`);
+              imagePlacementInstructions.push('');
+            });
+          }
+          // Priority 3: Automatic image search fallback
+          else if (settings.imageSource && settings.imageSource !== "0") {
+            imagePlacementInstructions.push('IMAGE PLACEMENT (AUTO-SEARCH):');
+            imagePlacementInstructions.push('- Add 3-4 relevant images from Unsplash/Pexels after different H2 headings');
+            imagePlacementInstructions.push('- Use focus keyword and section content for image search queries');
+            imagePlacementInstructions.push('- Ensure images are contextually relevant to their sections');
+            imagePlacementInstructions.push('- Place images after H2 headings, not in the middle of content');
           }
           
           // Debug log to see what we're getting
