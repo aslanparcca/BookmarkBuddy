@@ -50,7 +50,7 @@ export default function ArticlesNew() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery<ArticlesResponse>({
-    queryKey: ["/api/articles", { page: currentPage, limit, search: searchTerm }],
+    queryKey: ["/api/articles", currentPage, limit, searchTerm],
     retry: false,
   });
 
@@ -158,6 +158,9 @@ export default function ArticlesNew() {
   const articles = data?.articles || [];
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / limit);
+
+  // Debug logging
+  console.log('Articles data:', { data, articles, total, isLoading, error });
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
