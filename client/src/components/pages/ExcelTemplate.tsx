@@ -119,9 +119,12 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
       setGenerationResults(data.results || []);
       setStep(3);
       setGenerationProgress(100);
+      // Clear articles cache to show new articles
+      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+      queryClient.refetchQueries({ queryKey: ['/api/articles'] });
       toast({
         title: "Makaleler Oluşturuldu!",
-        description: `${data.count || 0}/${data.total || 0} makale başarıyla oluşturuldu.`,
+        description: `${data.count || 0}/${data.total || 0} makale başarıyla oluşturuldu. İçeriklerim sayfasında görüntüleyebilirsiniz.`,
       });
     },
     onError: (error: Error) => {
