@@ -149,7 +149,7 @@ export default function WordPressEditorV2({ setLoading }: WordPressV2EditorProps
   const generateMutation = useMutation({
     mutationFn: async () => {
       setLoading(true);
-      const response = await apiRequest('POST', '/api/wordpress/generate-v2', settings);
+      const response = await apiRequest('/api/wordpress/generate-v2', 'POST', settings);
       return await response.json();
     },
     onSuccess: (data: any) => {

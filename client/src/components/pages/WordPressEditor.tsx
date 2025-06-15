@@ -52,7 +52,7 @@ export default function WordPressEditor({ setLoading }: WordPressEditorProps) {
   const generateMutation = useMutation({
     mutationFn: async () => {
       setLoading(true);
-      const response = await apiRequest('POST', '/api/wordpress/generate', settings);
+      const response = await apiRequest('/api/wordpress/generate', 'POST', settings);
       return await response.json();
     },
     onSuccess: (data: any) => {

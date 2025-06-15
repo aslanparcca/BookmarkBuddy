@@ -43,7 +43,7 @@ export default function ApiKeys() {
   // Add API key mutation
   const addApiKeyMutation = useMutation({
     mutationFn: async (data: any) => {
-      return await apiRequest("POST", "/api/api-keys", data);
+      return await apiRequest("/api/api-keys", "POST", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/api-keys'] });

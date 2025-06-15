@@ -56,7 +56,7 @@ export default function Articles() {
 
   const deleteMutation = useMutation({
     mutationFn: async (articleId: number) => {
-      await apiRequest('DELETE', `/api/articles/${articleId}`);
+      await apiRequest(`/api/articles/${articleId}`, 'DELETE');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
@@ -76,7 +76,7 @@ export default function Articles() {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest('DELETE', '/api/articles');
+      return await apiRequest('/api/articles', 'DELETE');
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
@@ -107,7 +107,7 @@ export default function Articles() {
 
   const sendToWebsiteMutation = useMutation({
     mutationFn: async (data: { articleIds: number[], websiteId: string, category: string, publishStatus: string }) => {
-      return await apiRequest("POST", "/api/articles/send-to-website", data);
+      return await apiRequest("/api/articles/send-to-website", "POST", data);
     },
     onSuccess: (data) => {
       toast({

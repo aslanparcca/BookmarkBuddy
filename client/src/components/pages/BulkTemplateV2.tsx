@@ -179,7 +179,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   const generateTitlesMutation = useMutation({
     mutationFn: async (settings: BulkV2Settings) => {
-      return await apiRequest("POST", "/api/bulk-titles-v2", settings);
+      return await apiRequest("/api/bulk-titles-v2", "POST", settings);
     },
     onSuccess: (data: any) => {
       setGeneratedTitles(data.titles || []);
@@ -211,7 +211,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   const generateArticlesMutation = useMutation({
     mutationFn: async (data: { titles: GeneratedTitle[], settings: BulkV2Settings }) => {
-      return await apiRequest("POST", "/api/generate-bulk-articles-v2", data);
+      return await apiRequest("/api/generate-bulk-articles-v2", "POST", data);
     },
     onSuccess: (data: any) => {
       if (data.successCount !== undefined && data.successCount !== null) {
@@ -263,7 +263,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   // Website sync mutation for category loading
   const syncWebsiteMutation = useMutation({
     mutationFn: async (websiteId: number) => {
-      return await apiRequest("POST", `/api/websites/${websiteId}/sync`, {});
+      return await apiRequest(`/api/websites/${websiteId}/sync`, "POST", {});
     },
     onSuccess: () => {
       // Refetch websites to get updated categories
