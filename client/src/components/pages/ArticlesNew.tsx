@@ -263,7 +263,27 @@ export default function ArticlesNew() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+    <div className="space-y-4">
+      {/* Refresh Alert Banner */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-100 rounded-full p-2">
+            <i className="fas fa-info-circle text-blue-600"></i>
+          </div>
+          <div>
+            <h3 className="font-medium text-blue-900">Yeni makaleler oluşturuldu</h3>
+            <p className="text-sm text-blue-700">Yeni oluşturulan makaleleri görmek için listeyi yenileyin.</p>
+          </div>
+        </div>
+        <button 
+          onClick={() => refetch()}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Listeyi Yenile
+        </button>
+      </div>
+      
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200">
       {/* Header */}
       <div className="border-b border-slate-200 p-4">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -414,8 +434,24 @@ export default function ArticlesNew() {
             <div className="text-slate-400 mb-4">
               <i className="fas fa-file-alt text-4xl"></i>
             </div>
-            <h3 className="text-lg font-medium text-slate-600 mb-2">Henüz makale yok</h3>
-            <p className="text-slate-500">İlk makalenizi oluşturmak için AI Editor'ü kullanın.</p>
+            <h3 className="text-lg font-medium text-slate-600 mb-2">
+              Henüz makale yok - 
+              <span 
+                onClick={() => refetch()}
+                className="text-blue-600 hover:text-blue-800 cursor-pointer underline text-base"
+              >
+                Yenile
+              </span>
+            </h3>
+            <p className="text-slate-500 mb-4">İlk makalenizi oluşturmak için AI Editor'ü kullanın.</p>
+            <div className="mt-4">
+              <button 
+                onClick={() => refetch()}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Listeyi Yenile
+              </button>
+            </div>
           </div>
         ) : (
           <>
@@ -674,6 +710,7 @@ export default function ArticlesNew() {
           setSelectedArticle(null);
         }}
       />
+      </div>
     </div>
   );
 }
