@@ -1624,8 +1624,21 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       let successCount = 0;
       let failedCount = 0;
 
-      for (const titleData of titles) {
+      // Process articles sequentially with delays to avoid quota limits
+      for (let i = 0; i < titles.length; i++) {
+        const titleData = titles[i];
+        
+        // Add delay between requests to prevent rate limiting
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 second delay
+        }
+        
         try {
+          console.log(`Processing article ${i + 1}/${titles.length}: ${titleData.title}`);
+          
+          // Try with different API keys on failure
+          let currentGenAI = genAI;
+          let currentModel = model;
           // Build content features section
           const contentFeatures = [];
           if (settings.faqNormal) contentFeatures.push('- Add FAQ section with 5-7 common questions and detailed answers');
@@ -1744,8 +1757,46 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
 
-          const result = await model.generateContent(prompt);
-          let content = result.response.text();
+          // Retry mechanism for API quota issues
+          let content: string = '';
+          let retryCount = 0;
+          const maxRetries = 3;
+          
+          while (retryCount < maxRetries) {
+            try {
+              const result = await currentModel.generateContent(prompt);
+              content = result.response.text();
+              break; // Success, exit retry loop
+            } catch (error: any) {
+              console.log(`Article generation attempt ${retryCount + 1} failed for "${titleData.title}":`, error.message);
+              
+              if (error.status === 429 && retryCount < maxRetries - 1) {
+                // Quota exceeded, try with different API key
+                console.log(`Quota exceeded, trying with backup key. Attempt: ${retryCount + 1}`);
+                const backupKeyIndex = (retryCount + 1) % BACKUP_GEMINI_KEYS.length;
+                const backupKey = BACKUP_GEMINI_KEYS[backupKeyIndex];
+                if (backupKey) {
+                  currentGenAI = new GoogleGenerativeAI(backupKey);
+                  currentModel = currentGenAI.getGenerativeModel({ model: selectedModel });
+                  console.log(`Switching to backup API key ${backupKeyIndex + 1}`);
+                }
+              }
+              
+              retryCount++;
+              if (retryCount >= maxRetries) {
+                console.log(`All retry attempts failed for "${titleData.title}"`);
+                throw error; // Re-throw if all retries failed
+              }
+              
+              // Wait before retry
+              await new Promise(resolve => setTimeout(resolve, 2000 * retryCount));
+            }
+          }
+          
+          // Ensure content is defined before processing
+          if (!content) {
+            throw new Error('Article content generation failed');
+          }
           
           // Clean any remaining markdown code blocks and unwanted text
           content = content.replace(/```html\s*/gi, '');
