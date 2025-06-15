@@ -1,0 +1,71 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Özpolat Nakliyat - Evden Eve Nakliyat Uzmanınız</title>
+    <meta name="description" content="Özpolat Nakliyat ile güvenli ve sorunsuz bir taşımacılık deneyimi yaşayın. 30 yıllık deneyimimizle evden eve, şehir içi ve şehirler arası nakliyat hizmetlerimizle yanınızdayız. Ücretsiz ekspertiz ve 7/24 destek sunuyoruz.">
+    <!-- SEO meta verileri ve stil dosyası ekleme alanı -->
+</head>
+<body>
+
+    <!-- Hero Bölümü -->
+    <section id="hero">
+        <h1>Özpolat Nakliyat: Güvenli ve Sorunsuz Taşımacılık</h1>
+        <p>30 Yıllık Deneyim, 7/24 Destek, Ücretsiz Ekspertiz</p>
+        <a href="#iletisim" class="btn">Hemen Teklif Alın</a>
+    </section>
+
+    <!-- Hakkımızda Bölümü -->
+    <section id="hakkimizda">
+        <h2>Hakkımızda</h2>
+        <p>Özpolat Nakliyat olarak 30 yılı aşkın süredir sektörde edindiğimiz deneyim ve uzmanlığımızla, müşterilerimize güvenilir ve kaliteli nakliyat hizmetleri sunuyoruz.  Müşteri memnuniyetini önceliğimiz olarak benimseyen ekibimiz, her taşımacılık sürecinde titizlik ve özen gösterir.</p>
+        <p>7/24 kesintisiz destek hizmetimizle, taşımacılık süreci boyunca her an yanınızdayız.  Ücretsiz ekspertiz hizmetimizle taşınma sürecinizi planlamanıza yardımcı olur, size en uygun çözümleri sunarız.</p>
+    </section>
+
+
+    <!-- Hizmetler Bölümü -->
+    <section id="hizmetler">
+        <h2>Hizmetlerimiz</h2>
+        <div class="hizmet-kartlari">
+            <h3>Evden Eve Nakliyat</h3>
+            <h3>Şehir İçi Nakliyat</h3>
+            <h3>Şehirler Arası Nakliyat</h3>
+            <h3>Ofis Taşımacılığı</h3>
+            <h3>İşyeri Taşımacılığı</h3>
+            <h3>Parça Eşya Taşımacılığı</h3>
+            <h3>Sigortalı Nakliyat</h3>
+            <h3>Eşya Depolama</h3>
+            <h3>Parsiyel Taşımacılık</h3>
+            <h3>Müze Taşımacılığı</h3>
+            <h3>Arşiv Taşımacılığı</h3>
+            <h3>Banka Taşımacılığı</h3>
+            <h3>Üniversite Taşımacılığı</h3>
+            <h3>Hastane Taşımacılığı</h3>
+            <h3>Villa Taşımacılığı</h3>
+            <h3>Para Kasası Taşımacılığı</h3>
+            <h3>Piyano Taşımacılığı</h3>
+            <h3>Paketleme ve Ambalajlama</h3>
+            <h3>Asansör Kiralama</h3>
+        </div>
+    </section>
+
+
+    <!-- İletişim Bölümü -->
+    <section id="iletisim">
+        <h2>İletişim</h2>
+        <p>Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz:</p>
+        <p>Telefon:  (Telefon numarası)</p>
+        <p>E-posta: (E-posta adresi)</p>
+        <p>Adres: (Adres bilgisi)</p>
+        <a href="#" class="btn">İletişim Formu</a>
+    </section>
+
+    <!-- Footer (altbilgi) ekleme alanı -->
+
+</body>
+</html>
+```
+
+**Not:**  Bu kod, temel bir ana sayfa yapısı oluşturmaktadır.  Görsel öğeler (resimler, logolar vb.), stil (CSS) ve  fonksiyonellik (JavaScript - iletişim formu gibi)  eklemek için daha fazla kodlamaya ihtiyaç duyulacaktır.  Telefon numarası, e-posta adresi ve adres bilgilerini ilgili alanlara eklemeyi unutmayın.  Ayrıca,  `btn` sınıfına uygun bir stil vermeniz gerekmektedir.

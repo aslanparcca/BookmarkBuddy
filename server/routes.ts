@@ -1927,9 +1927,31 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                 }
                 
                 if (imageUrl) {
-                  // Generate SEO-friendly alt text without overusing focus keyword
+                  // Generate descriptive alt text based on user preference
                   let altText = `${subheading} görseli`;
-                  if (index >= 2) {
+                  
+                  if (settings.descriptiveAltText) {
+                    // Generate contextual, descriptive alt text for accessibility
+                    const focusKeyword = titleData.focusKeyword || '';
+                    const cleanSubheading = subheading.replace(/^\d+\.\s*/, '').trim();
+                    
+                    // Create meaningful alt text based on content context
+                    if (cleanSubheading.toLowerCase().includes('fiyat') || cleanSubheading.toLowerCase().includes('ücret')) {
+                      altText = `${focusKeyword} hizmet fiyatları ve paket seçenekleri tablosu`;
+                    } else if (cleanSubheading.toLowerCase().includes('özellik') || cleanSubheading.toLowerCase().includes('avantaj')) {
+                      altText = `${focusKeyword} hizmetinin öne çıkan özellikleri ve avantajları`;
+                    } else if (cleanSubheading.toLowerCase().includes('süreç') || cleanSubheading.toLowerCase().includes('adım')) {
+                      altText = `${focusKeyword} hizmeti süreç adımları ve iş akışı görseli`;
+                    } else if (cleanSubheading.toLowerCase().includes('örnek') || cleanSubheading.toLowerCase().includes('sample')) {
+                      altText = `${focusKeyword} hizmeti örnek uygulama ve sonuç görseli`;
+                    } else if (cleanSubheading.toLowerCase().includes('ekip') || cleanSubheading.toLowerCase().includes('team')) {
+                      altText = `${focusKeyword} konusunda uzman ekip ve çalışma ortamı`;
+                    } else if (cleanSubheading.toLowerCase().includes('teknoloji') || cleanSubheading.toLowerCase().includes('araç')) {
+                      altText = `${focusKeyword} için kullanılan modern teknoloji ve araçlar`;
+                    } else {
+                      altText = `${cleanSubheading} konusunda ${focusKeyword} hizmeti detay görseli`;
+                    }
+                  } else if (index >= 2) {
                     // For 3rd image and beyond, use generic alt text to avoid keyword stuffing
                     altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
                   }
@@ -1988,9 +2010,34 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             console.log(`Setting up general image distribution: ${subheadingImages.length} images`);
             imagePlacementInstructions.push('GENEL RESIM DAĞITIMI:');
             subheadingImages.slice(0, 4).forEach((image, index) => {
-              // Generate SEO-friendly alt text without overusing focus keyword
+              // Generate descriptive alt text based on user preference
               let altText = image.altText || 'Makale görseli';
-              if (index >= 2) {
+              
+              if (settings.descriptiveAltText) {
+                // Generate contextual, descriptive alt text for accessibility
+                const focusKeyword = titleData.focusKeyword || '';
+                const imageContext = image.originalName || image.subheading || '';
+                
+                // Create meaningful alt text based on image context and position
+                if (index === 0) {
+                  altText = `${focusKeyword} hizmeti genel görünüm ve uygulama alanları`;
+                } else if (index === 1) {
+                  altText = `${focusKeyword} süreç detayları ve çalışma metodolojisi`;
+                } else if (index === 2) {
+                  altText = `${focusKeyword} hizmet kalitesi ve profesyonel yaklaşım görseli`;
+                } else {
+                  altText = `${focusKeyword} konusunda uzman ekip ve modern çalışma ortamı`;
+                }
+                
+                // Add specific context if available
+                if (imageContext && imageContext.toLowerCase().includes('ekip')) {
+                  altText = `${focusKeyword} konusunda deneyimli uzman ekip ve çalışma ortamı`;
+                } else if (imageContext && imageContext.toLowerCase().includes('araç')) {
+                  altText = `${focusKeyword} için kullanılan profesyonel araç ve ekipmanlar`;
+                } else if (imageContext && imageContext.toLowerCase().includes('sonuç')) {
+                  altText = `${focusKeyword} hizmeti başarılı sonuç örnekleri ve referanslar`;
+                }
+              } else if (index >= 2) {
                 altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
               }
               

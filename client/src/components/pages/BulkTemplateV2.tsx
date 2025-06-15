@@ -50,6 +50,7 @@ interface BulkV2Settings {
   featuredImage: string;
   autoImageInsertion: boolean;
   subheadingImages: { [key: string]: string };
+  descriptiveAltText: boolean;
   
   // İçerik Özellikleri
   faqNormal: boolean;
@@ -138,6 +139,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     featuredImage: "",
     autoImageInsertion: true,
     subheadingImages: {},
+    descriptiveAltText: true,
     faqNormal: false,
     faqSchema: false,
     metaDescription: false,
@@ -1112,6 +1114,30 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                   Alt başlıklara otomatik görsel ekle
                 </Label>
               </div>
+
+              {/* Açıklayıcı Alt Metin */}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="descriptiveAltText"
+                  checked={settings.descriptiveAltText}
+                  onCheckedChange={(checked) => setSettings({...settings, descriptiveAltText: checked as boolean})}
+                />
+                <Label htmlFor="descriptiveAltText" className="font-medium">
+                  Tüm görsellere açıklayıcı alt metinler ekle (Erişilebilirlik)
+                </Label>
+              </div>
+              
+              {settings.descriptiveAltText && (
+                <div className="ml-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <h4 className="font-medium text-green-900 mb-2">Erişilebilirlik Geliştirmesi</h4>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• Tüm görsellere içerikle uyumlu alt metinler otomatik eklenecek</li>
+                    <li>• Görme engelli kullanıcılar için ekran okuyucu desteği sağlanacak</li>
+                    <li>• SEO performansı artacak (Google görsel alt metinlerini değerlendirir)</li>
+                    <li>• Web erişilebilirlik standartlarına (WCAG) uygun olacak</li>
+                  </ul>
+                </div>
+              )}
               
               {settings.autoImageInsertion && (
                 <>
