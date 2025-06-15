@@ -2096,50 +2096,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             }
           }
           
-          // Process automatic image insertion for subheadings
-          if (settings.autoImageInsertion && titleData.subheadings && titleData.subheadings.length > 0) {
-            // Insert images after relevant sections
-            let modifiedContent = content;
-            titleData.subheadings.forEach((subheading: string, index: number) => {
-              // Check if user provided custom image for this subheading
-              let imageUrl = '';
-              if (settings.subheadingImages && settings.subheadingImages[subheading]) {
-                // Use user-provided image
-                imageUrl = settings.subheadingImages[subheading];
-              } else {
-                // Extract key terms from subheading for automatic image search
-                const terms = subheading.toLowerCase()
-                  .replace(/[^\w\s]/g, '')
-                  .split(/\s+/)
-                  .filter((word: string) => word.length > 3);
-                
-                const imageKeyword = terms[0] || subheading.split(' ')[0];
-                // Use Unsplash with relevant search term
-                imageUrl = `https://source.unsplash.com/600x400/?${encodeURIComponent(imageKeyword)}`;
-              }
-              
-              const imageHtml = `<img src="${imageUrl}" alt="${subheading}" class="section-image" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; display: block;" />`;
-              
-              // Find the subheading in content and insert image after its section
-              const subheadingPattern = new RegExp(`<h[23][^>]*>${subheading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</h[23]>`, 'i');
-              const match = modifiedContent.match(subheadingPattern);
-              
-              if (match) {
-                const matchEnd = modifiedContent.indexOf('>', modifiedContent.indexOf(match[0])) + 1;
-                // Find the end of the section (next heading or end of content)
-                const nextHeadingPattern = /<h[23][^>]*>/gi;
-                nextHeadingPattern.lastIndex = matchEnd;
-                const nextMatch = nextHeadingPattern.exec(modifiedContent);
-                
-                const insertionPoint = nextMatch ? nextMatch.index : modifiedContent.length;
-                
-                // Insert image before the next heading or at the end
-                modifiedContent = modifiedContent.slice(0, insertionPoint) + '\n\n' + imageHtml + '\n\n' + modifiedContent.slice(insertionPoint);
-              }
-            });
-            
-            content = modifiedContent;
-          }
+          // Skip automatic image insertion - only use user uploaded images from database
+          console.log('Automatic Unsplash image insertion disabled - using only user uploaded images');
           
           // Generate article summary if requested
           let articleSummary = null;
@@ -2815,22 +2773,6 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               console.log('WordPress content processing complete');
             }
 
-            const postData = {
-              title: article.title,
-              content: cleanContent,
-              status: publishStatus, // Use the selected publish status
-              categories: [categoryId],
-              excerpt: article.summary || '',
-              meta: {
-                // Yoast SEO fields
-                _yoast_wpseo_metadesc: article.metaDescription || '',
-                _yoast_wpseo_focuskw: focusKeyword,
-                // Rank Math SEO fields
-                rank_math_focus_keyword: focusKeyword,
-                rank_math_description: article.metaDescription || ''
-              }
-            };
-
             // Real WordPress API implementation
             if (!website.wpUsername || !website.wpAppPassword) {
               results.push({
@@ -2841,6 +2783,69 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               });
               continue;
             }
+
+            let featuredMediaId = null;
+            
+            // Step 1: Extract and upload featured image if exists in content
+            if (cleanContent && cleanContent.includes('<img')) {
+              try {
+                console.log('Extracting first image from content for featured image...');
+                
+                // Find first image in content
+                const imgMatch = cleanContent.match(/<img[^>]+src="([^"]+)"[^>]*>/);
+                if (imgMatch && imgMatch[1]) {
+                  const imageUrl = imgMatch[1];
+                  
+                  // Only process data URLs (user uploaded images)
+                  if (imageUrl.startsWith('data:image/')) {
+                    const matches = imageUrl.match(/^data:image\/([^;]+);base64,(.+)$/);
+                    if (matches) {
+                      const mimeType = `image/${matches[1]}`;
+                      const imageBuffer = Buffer.from(matches[2], 'base64');
+                      const filename = `featured-${article.id}-${Date.now()}.${matches[1]}`;
+                      
+                      const mediaUrl = `${website.url}/wp-json/wp/v2/media`;
+                      
+                      const mediaResponse = await fetch(mediaUrl, {
+                        method: 'POST',
+                        headers: {
+                          'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64'),
+                          'Content-Disposition': `attachment; filename="${filename}"`,
+                          'Content-Type': mimeType,
+                        },
+                        body: imageBuffer,
+                      });
+                      
+                      if (mediaResponse.ok) {
+                        const mediaResult = await mediaResponse.json();
+                        featuredMediaId = mediaResult.id;
+                        console.log(`Featured image uploaded: Media ID ${featuredMediaId}, URL: ${mediaResult.source_url}`);
+                      } else {
+                        console.log('Featured image upload failed:', await mediaResponse.text());
+                      }
+                    }
+                  }
+                }
+              } catch (imageError) {
+                console.error('Error uploading featured image:', imageError);
+              }
+            }
+
+            // Step 2: Create post data with featured media
+            const postData = {
+              title: article.title,
+              content: cleanContent,
+              status: publishStatus,
+              categories: [categoryId],
+              excerpt: article.summary || '',
+              ...(featuredMediaId && { featured_media: featuredMediaId }),
+              meta: {
+                _yoast_wpseo_metadesc: article.metaDescription || '',
+                _yoast_wpseo_focuskw: focusKeyword,
+                rank_math_focus_keyword: focusKeyword,
+                rank_math_description: article.metaDescription || ''
+              }
+            };
 
             try {
               const response = await fetch(wpApiUrl, {
@@ -2854,13 +2859,13 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
 
               if (response.ok) {
                 const result = await response.json();
-                console.log(`Successfully sent article "${article.title}" to ${website.url} - Post ID: ${result.id}`);
+                console.log(`Successfully sent article "${article.title}" to ${website.url} - Post ID: ${result.id}${featuredMediaId ? ` with featured image ${featuredMediaId}` : ''}`);
                 
                 results.push({
                   articleId: article.id,
                   title: article.title,
                   status: 'success',
-                  message: `Makale başarıyla gönderildi (WP ID: ${result.id})`
+                  message: `Makale başarıyla gönderildi (WP ID: ${result.id}${featuredMediaId ? ', Öne çıkan görsel eklendi' : ''})`
                 });
               } else {
                 const error = await response.text();
