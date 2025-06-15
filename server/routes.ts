@@ -1883,8 +1883,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             
             imagePlacementInstructions.push('RESIM YERLEŞTİRME KURALLARI (KESİN):');
             imagePlacementInstructions.push('1. Sadece aşağıda belirtilen resimleri kullan');
-            imagePlacementInstructions.push('2. Her resmi tam olarak belirtilen H2 başlığından HEMEN SONRA yerleştir');
-            imagePlacementInstructions.push('3. Resim belirtilmeyen H2 başlıklarına HİÇBİR resim ekleme');
+            imagePlacementInstructions.push('2. MUTLAK KURAL: Görselleri H2 başlığından HEMEN SONRA DEĞİL, o bölümün paragraf metninin EN SONUNDA yerleştir');
+            imagePlacementInstructions.push('3. Görsel yerleştirme sırası: H2 Başlık → Paragraf metni yazılır → Paragraf biter → Görsel eklenir');
+            imagePlacementInstructions.push('4. Resim belirtilmeyen H2 başlıklarına HİÇBİR resim ekleme');
             imagePlacementInstructions.push('');
             
             // Enhanced image mapping system - map by alt başlık number instead of exact text
@@ -1933,11 +1934,11 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                     altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
                   }
                   
-                  imagePlacementInstructions.push(`H2 "${subheading}" bölümünün PARAGRAF SONUNDA bu resmi ekle:`);
+                  imagePlacementInstructions.push(`ÖNEMLİ: "${subheading}" H2 başlığı altındaki paragrafı yazdıktan sonra paragrafın EN SONUNA bu görseli ekle:`);
                   imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
                   imagePlacementInstructions.push(`<img src="${imageUrl}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                   imagePlacementInstructions.push(`</div>`);
-                  imagePlacementInstructions.push('');
+                  imagePlacementInstructions.push('DİKKAT: Görseli H2 başlığından hemen sonra DEĞİL, başlık altındaki metin paragrafının bitiminde ekle!');
                 } else {
                   console.log(`No image found for Alt Başlık ${altBaslikNumber}: "${subheading}"`);
                 }
@@ -1966,11 +1967,11 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                     altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
                   }
                   
-                  imagePlacementInstructions.push(`H2 "${subheading}" bölümünün PARAGRAF SONUNDA bu resmi ekle:`);
+                  imagePlacementInstructions.push(`ÖNEMLİ: "${subheading}" H2 başlığı altındaki paragrafı yazdıktan sonra paragrafın EN SONUNA bu görseli ekle:`);
                   imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
                   imagePlacementInstructions.push(`<img src="${image.url}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                   imagePlacementInstructions.push(`</div>`);
-                  imagePlacementInstructions.push('');
+                  imagePlacementInstructions.push('DİKKAT: Görseli H2 başlığından hemen sonra DEĞİL, başlık altındaki metin paragrafının bitiminde ekle!');
                 }
               });
               
@@ -1993,10 +1994,11 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                 altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
               }
               
-              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünün PARAGRAF SONUNDA yerleştir:`);
+              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünde paragrafı yazdıktan sonra EN SONUNA yerleştir:`);
               imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
               imagePlacementInstructions.push(`<img src="${image.url}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
               imagePlacementInstructions.push(`</div>`);
+              imagePlacementInstructions.push('MUTLAK KURAL: Görselleri H2 başlığından hemen sonra DEĞİL, metin paragrafının sonunda yerleştir!');
             });
           } else {
             // No user images available
