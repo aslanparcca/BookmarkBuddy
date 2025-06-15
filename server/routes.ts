@@ -1916,8 +1916,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
               imagePlacementInstructions.push(`</div>`);
             });
           } else {
-            console.log('No images available for placement');
-            imagePlacementInstructions.push('RESIM YOK: Bu makale için resim yüklenmemiş, resim ekleme');
+            console.log('No user images available - no automatic image placement');
+            imagePlacementInstructions.push('RESIM EKLEME: Bu makale için kullanıcı tarafından resim yüklenmemiş, hiçbir resim ekleme');
           }
           
           // Debug log to see what we're getting
@@ -2788,57 +2788,31 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               metaDescription: article.metaDescription
             });
 
-            // Enhanced content cleaning with proper image handling
+            // WordPress content processing - preserve existing images
             let cleanContent = article.htmlContent || article.content;
             
-            console.log('Processing article content for WordPress publish...');
+            console.log('WordPress publish: Processing article content...');
             console.log('Content has images:', cleanContent ? cleanContent.includes('<img') : false);
             
-            // Get user's uploaded images to match with content
-            const userImages = await storage.getImagesByUserId(userId);
-            console.log(`Found ${userImages.length} user images for replacement`);
-            
-            if (cleanContent && userImages.length > 0) {
-              // Replace any blob URLs or data URLs with fresh data URLs from database
-              if (cleanContent.includes('blob:') || cleanContent.includes('data:image')) {
-                console.log('Replacing blob/data URLs with stored images...');
-                
-                let imageIndex = 0;
-                // Replace blob URLs
-                cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, () => {
-                  if (imageIndex < userImages.length) {
-                    const image = userImages[imageIndex];
-                    imageIndex++;
-                    console.log(`Replaced blob URL ${imageIndex} with stored image: ${image.originalName}`);
-                    return `src="${image.url}"`;
-                  }
-                  return 'src=""';
-                });
-                
-                // Reset index for data URL replacement
-                imageIndex = 0;
-                cleanContent = cleanContent.replace(/src="data:image\/[^"]*"/g, () => {
-                  if (imageIndex < userImages.length) {
-                    const image = userImages[imageIndex];
-                    imageIndex++;
-                    console.log(`Replaced data URL ${imageIndex} with stored image: ${image.originalName}`);
-                    return `src="${image.url}"`;
-                  }
-                  return 'src=""';
-                });
+            if (cleanContent && cleanContent.includes('<img')) {
+              // Count existing images in content
+              const imageMatches = cleanContent.match(/<img[^>]*>/g);
+              console.log(`Found ${imageMatches ? imageMatches.length : 0} images in article content`);
+              
+              // Don't modify existing data URLs - they should work in WordPress
+              if (cleanContent.includes('data:image/')) {
+                console.log('Content contains data URLs - preserving for WordPress');
+                // Keep data URLs as they are - WordPress can handle them
               }
               
-              // Clean up any empty image tags
-              cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
-              cleanContent = cleanContent.replace(/<img[^>]*src="undefined"[^>]*>/g, '');
+              // Only clean up broken blob URLs if they exist
+              if (cleanContent.includes('blob:')) {
+                console.log('Cleaning blob URLs...');
+                cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, 'src=""');
+                cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
+              }
               
-              console.log('Image URL processing complete');
-            } else if (cleanContent && (cleanContent.includes('blob:') || cleanContent.includes('data:image'))) {
-              // Remove problematic URLs if no stored images available
-              console.log('No stored images found, cleaning problematic URLs...');
-              cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, 'src=""');
-              cleanContent = cleanContent.replace(/src="data:image\/[^"]*"/g, 'src=""');
-              cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
+              console.log('WordPress content processing complete');
             }
 
             const postData = {

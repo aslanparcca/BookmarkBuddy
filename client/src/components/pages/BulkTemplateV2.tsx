@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
-import BulkImageUpload from "@/components/BulkImageUpload";
+
 
 interface BulkTemplateV2Props {
   setLoading: (loading: boolean) => void;
@@ -978,26 +978,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 </div>
               </div>
 
-              {/* Bulk Image Upload for Subheadings */}
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-gray-700 font-medium text-lg">Alt Başlık Resimleri Toplu Yükleme</Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Yüklediğiniz resimler otomatik olarak alt başlıklara yerleştirilecek ve veritabanında kayıt edilecek
-                  </p>
-                </div>
-                
-                <BulkImageUpload
-                  onImagesUploaded={(uploadedImages) => {
-                    console.log('Bulk images uploaded successfully:', uploadedImages.length);
-                    toast({
-                      title: "Resimler Yüklendi!",
-                      description: `${uploadedImages.length} resim başarıyla yüklendi ve Excel alt başlıklarına sırayla yerleştirilecek`,
-                    });
-                  }}
-                  maxImages={20}
-                />
-              </div>
+
 
               {/* Öne Çıkan Görsel Seçin */}
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
