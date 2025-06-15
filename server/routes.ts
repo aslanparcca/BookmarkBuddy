@@ -128,11 +128,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/articles', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const limit = parseInt(req.query.limit as string) || 20;
-      const offset = parseInt(req.query.offset as string) || 0;
       
-      const articles = await storage.getArticlesByUserId(userId, limit, offset);
-      res.json(articles);
+      // Fetch all articles without limit
+      const articles = await storage.getArticlesByUserId(userId, 10000, 0);
+      
+      // Sort alphabetically by title
+      const sortedArticles = articles.sort((a, b) => a.title.localeCompare(b.title, 'tr', { sensitivity: 'base' }));
+      
+      res.json(sortedArticles);
     } catch (error) {
       console.error("Error fetching articles:", error);
       res.status(500).json({ message: "Failed to fetch articles" });

@@ -196,6 +196,7 @@ Changelog:
 - June 15, 2025. Enhanced İçeriklerim pagination system: replaced 20-article limit with flexible pagination supporting 25/50/100/200 articles per page, added comprehensive pagination controls with page navigation, article count display, and automatic page reset functionality
 - June 15, 2025. Fixed bulk article generation error handling: resolved "undefined makale oluşturuldu!" display issue when Gemini API quota limits reached, implemented proper quota error detection with informative user messages, added backend quota limit handling to prevent continued failed requests
 - June 15, 2025. Integrated API key management with content generation: updated all article generation endpoints (AI content, WordPress V1/V2, bulk articles V1/V2, URL rewrite, Excel template) to use saved API keys from "Api Keylerim" instead of hardcoded environment variables, system now prioritizes user's default Gemini API key then falls back to any available user key, provides backup API key support for quota limit management
+- June 15, 2025. Fixed article display pagination issues: removed 20-article limit from backend API endpoint, increased storage limit to 10,000 articles, implemented alphabetical sorting by title with Turkish locale support, users can now see all their articles sorted consistently instead of random 20-article subsets on each page refresh
 ```
 
 ## User Preferences
