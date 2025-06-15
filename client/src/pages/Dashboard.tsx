@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import HomePage from "@/components/pages/HomePage";
-import TemplateHub from "@/components/pages/TemplateHub";
+import ModulesPage from "@/components/pages/ModulesPage";
 import AIEditor from "@/components/pages/AIEditor";
 import WordPressEditor from "@/components/pages/WordPressEditor";
 import WordPressEditorV2 from "@/components/pages/WordPressEditorV2";
@@ -86,7 +86,7 @@ export default function Dashboard() {
       case 'wp-editor':
         return <WordPressEditor setLoading={setLoading} />;
       case 'bulk-editor':
-        return <TemplateHub setLoading={setLoading} />;
+        return <ModulesPage setLoading={setLoading} />;
       case 'articles':
         return <Articles />;
 
