@@ -80,7 +80,7 @@ export default function ApiKeys() {
   // Delete API key mutation
   const deleteApiKeyMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest("DELETE", `/api/api-keys/${id}`);
+      return await apiRequest(`/api/api-keys/${id}`, "DELETE");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/api-keys'] });

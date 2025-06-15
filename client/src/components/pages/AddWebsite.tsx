@@ -56,7 +56,7 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
 
   const addWebsiteMutation = useMutation({
     mutationFn: async (data: WebsiteFormData) => {
-      return await apiRequest("POST", "/api/websites", data);
+      return await apiRequest("/api/websites", "POST", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/websites"] });

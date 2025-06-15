@@ -33,7 +33,7 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
   const { data: website, isLoading } = useQuery({
     queryKey: [`/api/websites/${websiteId}`],
     queryFn: async () => {
-      const response = await apiRequest("GET", `/api/websites/${websiteId}`);
+      const response = await apiRequest(`/api/websites/${websiteId}`, "GET");
       const data = await response.json();
       console.log('API Response:', data);
       return data;
@@ -80,7 +80,7 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
 
   const updateWebsiteMutation = useMutation({
     mutationFn: async (data: WebsiteFormData) => {
-      return await apiRequest("PUT", `/api/websites/${websiteId}`, data);
+      return await apiRequest(`/api/websites/${websiteId}`, "PUT", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/websites"] });
