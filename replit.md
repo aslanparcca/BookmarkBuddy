@@ -195,6 +195,7 @@ Changelog:
 - June 15, 2025. Completed comprehensive API key management system: created database schema for API keys with service types (OpenAI, Gemini), implemented secure backend CRUD operations with masked key display, added full frontend interface under "Web Sitelerim" menu with add/delete/default selection functionality, integrated proper authentication and error handling
 - June 15, 2025. Enhanced İçeriklerim pagination system: replaced 20-article limit with flexible pagination supporting 25/50/100/200 articles per page, added comprehensive pagination controls with page navigation, article count display, and automatic page reset functionality
 - June 15, 2025. Fixed bulk article generation error handling: resolved "undefined makale oluşturuldu!" display issue when Gemini API quota limits reached, implemented proper quota error detection with informative user messages, added backend quota limit handling to prevent continued failed requests
+- June 15, 2025. Integrated API key management with content generation: updated all article generation endpoints (AI content, WordPress V1/V2, bulk articles V1/V2, URL rewrite, Excel template) to use saved API keys from "Api Keylerim" instead of hardcoded environment variables, system now prioritizes user's default Gemini API key then falls back to any available user key, provides backup API key support for quota limit management
 ```
 
 ## User Preferences

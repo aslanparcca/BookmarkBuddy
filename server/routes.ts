@@ -1082,7 +1082,23 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
         .replace(/\s+/g, ' ')
         .trim();
 
-      // Initialize Gemini model
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       // Create comprehensive prompt for URL rewriting
@@ -1173,7 +1189,23 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       const userId = req.user.claims.sub;
       const settings = req.body;
 
-      // Initialize Gemini model
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let prompt = "";
@@ -1280,7 +1312,23 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       const userId = req.user.claims.sub;
       const settings = req.body;
 
-      // Initialize Gemini model
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       let prompt = "";
