@@ -2113,7 +2113,11 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteId = parseInt(req.params.id);
 
+      console.log(`Fetching website ${websiteId} for user ${userId}`);
+      
       const website = await storage.getWebsiteById(websiteId, userId);
+      
+      console.log('Website from database:', website);
       
       if (!website) {
         return res.status(404).json({ message: "Web sitesi bulunamadı" });
@@ -2138,6 +2142,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
         lastGscSync: website.lastGscSync
       };
 
+      console.log('Formatted website response:', formattedWebsite);
       res.json(formattedWebsite);
     } catch (error) {
       console.error("Website fetch error:", error);
