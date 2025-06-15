@@ -1125,19 +1125,34 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     </ul>
                   </div>
 
-                  {/* Alt Başlık Görselleri */}
-                  {generatedTitles.length > 0 && generatedTitles[0]?.subheadings && (
-                    <div className="ml-6 mt-4 space-y-4">
-                      <h4 className="font-medium text-gray-900">Alt Başlık Görselleri</h4>
-                      <p className="text-sm text-gray-600 mb-4">
-                        Her alt başlık için özel görsel seçebilirsiniz. Görsel seçmediğiniz başlıklar için otomatik görsel aranacak.
+                  {/* Alt Başlık Görselleri - Numaralı Sistem */}
+                  <div className="ml-6 mt-4 space-y-4">
+                    <h4 className="font-medium text-gray-900">Alt Başlık Görselleri</h4>
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <p className="text-sm text-green-800 font-medium mb-1">
+                        📋 Yeni Sistem: Numaralı Alt Başlık Resmi
                       </p>
-                      
-                      {generatedTitles[0].subheadings.map((subheading: string, index: number) => (
+                      <p className="text-sm text-green-700">
+                        Alt Başlık 1'e yüklediğiniz resim tüm makalelerin 1. alt başlığında kullanılacak. 
+                        Alt Başlık 2'ye yüklediğiniz resim tüm makalelerin 2. alt başlığında kullanılacak.
+                      </p>
+                    </div>
+                    
+                    {/* Show up to 20 alt başlık slots */}
+                    {Array.from({ length: 20 }, (_, index) => {
+                      const altBaslikKey = `Alt Başlık ${index + 1}`;
+                      return (
                         <div key={index} className="border border-gray-200 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-3">
-                            <h5 className="font-medium text-gray-800">{subheading}</h5>
-                            {settings.subheadingImages[subheading] && (
+                            <h5 className="font-medium text-gray-800">
+                              {altBaslikKey}
+                              {generatedTitles.length > 0 && generatedTitles[0]?.subheadings?.[index] && (
+                                <span className="ml-2 text-sm text-gray-500">
+                                  (Örnek: {generatedTitles[0].subheadings[index]})
+                                </span>
+                              )}
+                            </h5>
+                            {settings.subheadingImages[altBaslikKey] && (
                               <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
                                 ✓ Görsel seçildi
                               </span>
@@ -1149,7 +1164,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                               type="file"
                               accept="image/*"
                               className="hidden"
-                              id={`subheading-image-${index}`}
+                              id={`alt-baslik-image-${index}`}
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
@@ -1158,7 +1173,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                                     ...settings,
                                     subheadingImages: {
                                       ...settings.subheadingImages,
-                                      [subheading]: imageUrl
+                                      [altBaslikKey]: imageUrl
                                     }
                                   });
                                 }
@@ -1168,7 +1183,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() => document.getElementById(`subheading-image-${index}`)?.click()}
+                              onClick={() => document.getElementById(`alt-baslik-image-${index}`)?.click()}
                               className="bg-blue-500 text-white hover:bg-blue-600 border-0"
                             >
                               Dosya Seç
@@ -1178,13 +1193,13 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                const url = prompt(`"${subheading}" için görsel URL'sini girin:`);
+                                const url = prompt(`${altBaslikKey} için görsel URL'sini girin:`);
                                 if (url) {
                                   setSettings({
                                     ...settings,
                                     subheadingImages: {
                                       ...settings.subheadingImages,
-                                      [subheading]: url
+                                      [altBaslikKey]: url
                                     }
                                   });
                                 }
@@ -1193,14 +1208,14 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                             >
                               URL'den Çek
                             </Button>
-                            {settings.subheadingImages[subheading] && (
+                            {settings.subheadingImages[altBaslikKey] && (
                               <Button
                                 type="button"
                                 variant="outline"
                                 size="sm"
                                 onClick={() => {
                                   const newImages = { ...settings.subheadingImages };
-                                  delete newImages[subheading];
+                                  delete newImages[altBaslikKey];
                                   setSettings({
                                     ...settings,
                                     subheadingImages: newImages
@@ -1213,18 +1228,18 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                             )}
                           </div>
                           
-                          {settings.subheadingImages[subheading] && (
+                          {settings.subheadingImages[altBaslikKey] && (
                             <div className="mt-3 p-2 bg-gray-50 rounded text-sm text-gray-600">
-                              <strong>Seçili görsel:</strong> {settings.subheadingImages[subheading].length > 60 ? 
-                                settings.subheadingImages[subheading].substring(0, 60) + '...' : 
-                                settings.subheadingImages[subheading]
+                              <strong>Seçili görsel:</strong> {settings.subheadingImages[altBaslikKey].length > 60 ? 
+                                settings.subheadingImages[altBaslikKey].substring(0, 60) + '...' : 
+                                settings.subheadingImages[altBaslikKey]
                               }
                             </div>
                           )}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      );
+                    })}
+                  </div>
                 </>
               )}</div>
 

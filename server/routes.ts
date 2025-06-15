@@ -1887,31 +1887,62 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imagePlacementInstructions.push('3. Resim belirtilmeyen H2 başlıklarına HİÇBİR resim ekleme');
             imagePlacementInstructions.push('');
             
-            // Process manual subheading images with exact mapping
+            // Enhanced image mapping system - map by alt başlık number instead of exact text
             if (settings.subheadingImages && Object.keys(settings.subheadingImages).length > 0) {
-              console.log('Manual image mapping detected');
+              console.log(`Manual image mapping detected for "${titleData.title}"`);
               
-              titleData.subheadings.forEach((subheading: string) => {
-                if (settings.subheadingImages[subheading]) {
-                  const imageUrl = settings.subheadingImages[subheading];
-                  console.log(`Manual mapping: "${subheading}" -> ${imageUrl.substring(0, 50)}...`);
-                  
+              // Create a mapping from "Alt Başlık X" pattern to images
+              const altBaslikImages: { [key: string]: string } = {};
+              
+              // Extract Alt Başlık numbers from uploaded images
+              Object.keys(settings.subheadingImages).forEach(subheadingKey => {
+                // Try to match patterns like "Alt Başlık 1", "Alt Başlık 2", etc.
+                const altBaslikMatch = subheadingKey.match(/Alt Başlık (\d+)/i);
+                if (altBaslikMatch) {
+                  const altBaslikNumber = altBaslikMatch[1];
+                  altBaslikImages[altBaslikNumber] = settings.subheadingImages[subheadingKey];
+                  console.log(`Extracted Alt Başlık ${altBaslikNumber} -> image`);
+                } else {
+                  // If not Alt Başlık pattern, map by exact subheading text for backwards compatibility
+                  altBaslikImages[subheadingKey] = settings.subheadingImages[subheadingKey];
+                }
+              });
+              
+              console.log(`Available Alt Başlık images:`, Object.keys(altBaslikImages));
+              
+              titleData.subheadings.forEach((subheading: string, index: number) => {
+                const altBaslikNumber = (index + 1).toString();
+                let imageUrl = null;
+                
+                // First try to find by Alt Başlık number
+                if (altBaslikImages[altBaslikNumber]) {
+                  imageUrl = altBaslikImages[altBaslikNumber];
+                  console.log(`Alt Başlık ${altBaslikNumber} mapping: "${subheading}" -> image`);
+                }
+                // Fallback to exact subheading match
+                else if (altBaslikImages[subheading]) {
+                  imageUrl = altBaslikImages[subheading];
+                  console.log(`Exact text mapping: "${subheading}" -> image`);
+                }
+                
+                if (imageUrl) {
                   imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
                   imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
                   imagePlacementInstructions.push(`<img src="${imageUrl}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                   imagePlacementInstructions.push(`</div>`);
                   imagePlacementInstructions.push('');
+                } else {
+                  console.log(`No image found for Alt Başlık ${altBaslikNumber}: "${subheading}"`);
                 }
               });
               
-              const mappedSubheadings = titleData.subheadings.filter(sh => settings.subheadingImages[sh]);
-              const unmappedSubheadings = titleData.subheadings.filter(sh => !settings.subheadingImages[sh]);
+              const mappedCount = titleData.subheadings.filter((_, index) => {
+                const altBaslikNumber = (index + 1).toString();
+                return altBaslikImages[altBaslikNumber] || altBaslikImages[titleData.subheadings[index]];
+              }).length;
               
-              console.log(`Manual image mapping: ${mappedSubheadings.length} mapped, ${unmappedSubheadings.length} unmapped`);
+              console.log(`Image mapping for "${titleData.title}": ${mappedCount}/${titleData.subheadings.length} subheadings mapped`);
               
-              if (unmappedSubheadings.length > 0) {
-                imagePlacementInstructions.push(`DİKKAT: Bu H2 başlıklarına resim ekleme: ${unmappedSubheadings.join(', ')}`);
-              }
             } else {
               // Fallback to sequential mapping for database images
               console.log('Sequential image mapping for database images');
