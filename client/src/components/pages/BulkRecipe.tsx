@@ -102,7 +102,7 @@ export default function BulkRecipe({ setLoading }: BulkRecipeProps) {
 
   const processRecipesMutation = useMutation({
     mutationFn: async (recipes: string[]) => {
-      return await apiRequest("POST", "/api/process-recipes", { recipes });
+      return await apiRequest("/api/process-recipes", "POST", { recipes });
     },
     onSuccess: (data: any) => {
       const recipeData = data.recipes || [];
@@ -138,7 +138,7 @@ export default function BulkRecipe({ setLoading }: BulkRecipeProps) {
 
   const generateRecipesMutation = useMutation({
     mutationFn: async (settings: RecipeSettings & { recipes: GeneratedRecipe[] }) => {
-      return await apiRequest("POST", "/api/bulk-recipes", settings);
+      return await apiRequest("/api/bulk-recipes", "POST", settings);
     },
     onSuccess: (data: any) => {
       toast({
