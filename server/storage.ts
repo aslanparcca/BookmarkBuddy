@@ -108,7 +108,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getArticlesByUserId(userId: string, limit = 100, offset = 0): Promise<Article[]> {
+  async getArticlesByUserId(userId: string, limit = 1000, offset = 0): Promise<Article[]> {
     return await db
       .select()
       .from(articles)

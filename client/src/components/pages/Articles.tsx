@@ -33,7 +33,7 @@ export default function Articles() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [publishStatus, setPublishStatus] = useState<string>("draft");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
