@@ -147,7 +147,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Convert to data URL for storage
           const dataUrl = bufferToDataUrl(file.buffer, file.mimetype);
           
-          // Store in database with enhanced metadata
+          // Store in database with enhanced metadata for Excel mapping
           const imageData = {
             userId,
             filename,
@@ -157,7 +157,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             url: dataUrl,
             altText: file.originalname.replace(/\.[^/.]+$/, ""), // Remove extension for alt text
             category: "subheading",
-            tags: ["bulk-upload", "subheading", "excel-mapping"]
+            tags: ["bulk-upload", "subheading", "excel-mapping", "auto-placement"]
           };
           
           const savedImage = await storage.createImage(imageData);
@@ -1818,16 +1818,19 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       const userImages = await storage.getImagesByUserId(userId);
       console.log(`Total user images found: ${userImages.length}`);
       
-      // Filter for subheading images with multiple criteria
-      const subheadingImages = userImages.filter(img => {
-        const isSubheadingCategory = img.category === 'subheading';
-        const hasSubheadingTag = img.tags && (
-          img.tags.includes('subheading') || 
-          img.tags.includes('bulk-upload') || 
-          img.tags.includes('excel-mapping')
-        );
-        return isSubheadingCategory || hasSubheadingTag;
-      });
+      // Filter for subheading images with multiple criteria - most recent first
+      const subheadingImages = userImages
+        .filter(img => {
+          const isSubheadingCategory = img.category === 'subheading';
+          const hasSubheadingTag = img.tags && (
+            img.tags.includes('subheading') || 
+            img.tags.includes('bulk-upload') || 
+            img.tags.includes('excel-mapping') ||
+            img.tags.includes('auto-placement')
+          );
+          return isSubheadingCategory || hasSubheadingTag;
+        })
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
       
       console.log(`Filtered subheading images: ${subheadingImages.length}`);
       if (subheadingImages.length > 0) {
@@ -1869,32 +1872,38 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imageSource: settings.imageSource
           });
           
-          // Enhanced image placement with strict Excel mapping
+          // Fixed image placement system with proper mapping
           if (subheadingImages.length > 0 && hasExcelSubheadings && titleData.subheadings) {
             console.log(`Setting up Excel image mapping: ${subheadingImages.length} images for ${titleData.subheadings.length} subheadings`);
             
-            imagePlacementInstructions.push('KRITIK RESIM YERLEŞTİRME KURALLARI:');
-            imagePlacementInstructions.push('1. SADECE verilen resimleri kullan, başka resim ekleme');
-            imagePlacementInstructions.push('2. Her resim tam olarak belirtilen H2 başlığından sonra yerleştirilecek');
-            imagePlacementInstructions.push('3. Resim sırası: 1.resim → 1.H2, 2.resim → 2.H2, 3.resim → 3.H2');
-            imagePlacementInstructions.push('4. Resim olmayan H2 başlıklarına resim ekleme');
+            imagePlacementInstructions.push('RESIM YERLEŞTİRME KURALLARI (KESİN):');
+            imagePlacementInstructions.push('1. Sadece aşağıda belirtilen resimleri kullan');
+            imagePlacementInstructions.push('2. Her resmi tam olarak belirtilen H2 başlığından HEMEN SONRA yerleştir');
+            imagePlacementInstructions.push('3. Resim olmayan H2 başlıklarına HİÇBİR resim ekleme');
+            imagePlacementInstructions.push('4. Öne çıkan görseli makale başında kullanma, alt başlıklarda kullan');
             imagePlacementInstructions.push('');
             
-            // Create precise 1:1 mapping
+            // Create precise 1:1 mapping for available images only
             titleData.subheadings.forEach((subheading: string, index: number) => {
               if (index < subheadingImages.length) {
                 const image = subheadingImages[index];
-                console.log(`Mapping image ${index + 1} (${image.originalName}) to subheading: ${subheading}`);
+                console.log(`Mapping image ${index + 1} (${image.originalName}) to subheading ${index + 1}: ${subheading}`);
                 
-                imagePlacementInstructions.push(`H2 "${subheading}" başlığından HEMEN SONRA bu resmi yerleştir:`);
-                imagePlacementInstructions.push(`<div style="text-align:center;margin:25px 0;">`);
-                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />`);
+                imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
+                imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
+                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                 imagePlacementInstructions.push(`</div>`);
                 imagePlacementInstructions.push('');
               }
             });
             
-            imagePlacementInstructions.push('UYARI: Yukarıda belirtilen resimler dışında hiçbir resim ekleme!');
+            // Add warning for remaining subheadings without images
+            if (titleData.subheadings.length > subheadingImages.length) {
+              const remainingSubheadings = titleData.subheadings.slice(subheadingImages.length);
+              imagePlacementInstructions.push(`DİKKAT: Bu H2 başlıklarına resim ekleme: ${remainingSubheadings.join(', ')}`);
+            }
+            
+            imagePlacementInstructions.push('MUTLAK KURAL: Yukarıda belirtilmeyen başka hiçbir yere resim ekleme!');
             
           } else if (subheadingImages.length > 0) {
             // Basic image distribution without Excel
@@ -1902,12 +1911,13 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imagePlacementInstructions.push('GENEL RESIM DAĞITIMI:');
             subheadingImages.slice(0, 4).forEach((image, index) => {
               imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünden sonra yerleştir:`);
-              imagePlacementInstructions.push(`<div style="text-align:center;margin:25px 0;">`);
-              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />`);
+              imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
+              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
               imagePlacementInstructions.push(`</div>`);
             });
           } else {
             console.log('No images available for placement');
+            imagePlacementInstructions.push('RESIM YOK: Bu makale için resim yüklenmemiş, resim ekleme');
           }
           
           // Debug log to see what we're getting
@@ -2778,39 +2788,57 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               metaDescription: article.metaDescription
             });
 
-            // Clean content by replacing blob URLs with stored data URLs
+            // Enhanced content cleaning with proper image handling
             let cleanContent = article.htmlContent || article.content;
             
-            // Find and replace blob URLs with proper data URLs from database
-            if (cleanContent && cleanContent.includes('blob:')) {
-              console.log('Processing blob URLs in article content...');
-              
-              // Get user's uploaded images to match with blob URLs
-              const userImages = await storage.getImagesByUserId(userId);
-              
-              if (userImages.length > 0) {
-                // Replace blob URLs with actual stored data URLs
+            console.log('Processing article content for WordPress publish...');
+            console.log('Content has images:', cleanContent ? cleanContent.includes('<img') : false);
+            
+            // Get user's uploaded images to match with content
+            const userImages = await storage.getImagesByUserId(userId);
+            console.log(`Found ${userImages.length} user images for replacement`);
+            
+            if (cleanContent && userImages.length > 0) {
+              // Replace any blob URLs or data URLs with fresh data URLs from database
+              if (cleanContent.includes('blob:') || cleanContent.includes('data:image')) {
+                console.log('Replacing blob/data URLs with stored images...');
+                
                 let imageIndex = 0;
+                // Replace blob URLs
                 cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, () => {
                   if (imageIndex < userImages.length) {
-                    const replacementUrl = userImages[imageIndex].url;
+                    const image = userImages[imageIndex];
                     imageIndex++;
-                    console.log(`Replaced blob URL with stored image ${imageIndex}`);
-                    return `src="${replacementUrl}"`;
+                    console.log(`Replaced blob URL ${imageIndex} with stored image: ${image.originalName}`);
+                    return `src="${image.url}"`;
                   }
-                  return 'src=""'; // Fallback for excess blob URLs
+                  return 'src=""';
                 });
                 
-                // Clean up any remaining empty img tags
-                cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
-              } else {
-                // No stored images available, remove blob URLs
-                cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, 'src=""');
-                cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
-                console.log('No stored images found, removed blob URLs');
+                // Reset index for data URL replacement
+                imageIndex = 0;
+                cleanContent = cleanContent.replace(/src="data:image\/[^"]*"/g, () => {
+                  if (imageIndex < userImages.length) {
+                    const image = userImages[imageIndex];
+                    imageIndex++;
+                    console.log(`Replaced data URL ${imageIndex} with stored image: ${image.originalName}`);
+                    return `src="${image.url}"`;
+                  }
+                  return 'src=""';
+                });
               }
               
-              console.log('Blob URL processing complete');
+              // Clean up any empty image tags
+              cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
+              cleanContent = cleanContent.replace(/<img[^>]*src="undefined"[^>]*>/g, '');
+              
+              console.log('Image URL processing complete');
+            } else if (cleanContent && (cleanContent.includes('blob:') || cleanContent.includes('data:image'))) {
+              // Remove problematic URLs if no stored images available
+              console.log('No stored images found, cleaning problematic URLs...');
+              cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, 'src=""');
+              cleanContent = cleanContent.replace(/src="data:image\/[^"]*"/g, 'src=""');
+              cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
             }
 
             const postData = {
