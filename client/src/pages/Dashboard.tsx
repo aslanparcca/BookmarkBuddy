@@ -28,6 +28,8 @@ import Settings from "@/components/pages/Settings";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import PlaceholderPage from "@/components/pages/PlaceholderPage";
 import KeywordGenerator from "@/components/pages/KeywordGenerator";
+import WPCommentGenerator from "@/components/pages/WPCommentGenerator";
+import TitleGenerator from "@/components/pages/TitleGenerator";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -145,11 +147,11 @@ export default function Dashboard() {
       
       // Module Pages
       case 'keyword-generator':
-        return <PlaceholderPage title="Anahtar Kelime Üretici" description="İşiniz için anahtar kelimeler üretin" icon="fas fa-search" iconColor="text-blue-600" />;
+        return <KeywordGenerator setLoading={setLoading} />;
       case 'wp-comment-generator':
-        return <PlaceholderPage title="WordPress Yorum Üretici" description="Web siteniz için gerçek yorumlar üretin" icon="fab fa-wordpress" iconColor="text-blue-600" />;
+        return <WPCommentGenerator setLoading={setLoading} />;
       case 'title-generator':
-        return <PlaceholderPage title="Makale Başlığı Üretici" description="Özgün makale başlıkları üretin" icon="fas fa-heading" iconColor="text-purple-600" />;
+        return <TitleGenerator setLoading={setLoading} />;
       case 'about-generator':
         return <PlaceholderPage title="Hakkımda Yazısı Üretici" description="Dilediğiniz dilde hakkımda yazısı üretin" icon="fas fa-user" iconColor="text-green-600" />;
       case 'cv-writer':

@@ -3624,6 +3624,194 @@ Anahtar Kelimeler:`;
     }
   });
 
+  // WordPress Comment Generator endpoint
+  app.post('/api/generate-wp-comments', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { postTitle, postContent, commentCount, commentTone, language } = req.body;
+      
+      if (!postTitle?.trim()) {
+        return res.status(400).json({ error: 'Makale başlığı gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      // Build tone instructions
+      let toneInstructions = '';
+      switch (commentTone) {
+        case 'positive':
+          toneInstructions = 'Sadece pozitif ve övgü dolu yorumlar oluştur.';
+          break;
+        case 'neutral':
+          toneInstructions = 'Nötr ve objektif yorumlar oluştur.';
+          break;
+        case 'appreciative':
+          toneInstructions = 'Takdir edici ve teşekkür içeren yorumlar oluştur.';
+          break;
+        case 'questioning':
+          toneInstructions = 'Soru soran ve daha fazla bilgi isteyen yorumlar oluştur.';
+          break;
+        default:
+          toneInstructions = 'Pozitif, nötr ve takdir edici yorumların karışımını oluştur.';
+      }
+
+      const contentContext = postContent ? `\n\nMakale İçeriği (Referans):\n${postContent}` : '';
+      
+      const prompt = `Makale Başlığı: "${postTitle}"${contentContext}
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Yorum Sayısı: ${commentCount}
+
+Görev: Bu makale için gerçekçi WordPress yorumları oluştur.
+
+Talimatlar:
+- ${toneInstructions}
+- Her yorum için farklı bir isim ve e-posta adresi oluştur
+- Gerçek insan yorumları gibi olsun (kısa-orta uzunlukta)
+- Makalenin konusuyla alakalı yorumlar yaz
+- Türkçe isimler ve gerçekçi e-posta adresleri kullan
+- Her yorumu JSON formatında ver
+
+JSON Format:
+[
+  {
+    "author": "Ahmet Kaya",
+    "email": "ahmet.kaya@email.com",
+    "content": "Çok faydalı bir makale olmuş. Teşekkürler."
+  }
+]
+
+Sadece JSON array'ini döndür, başka açıklama yapma:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Parse JSON response
+      let comments = [];
+      try {
+        const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
+        comments = JSON.parse(cleanedText);
+      } catch (parseError) {
+        // Fallback parsing if JSON is malformed
+        const lines = text.split('\n').filter(line => line.trim());
+        comments = lines.slice(0, commentCount).map((line, index) => ({
+          author: `Kullanıcı ${index + 1}`,
+          email: `kullanici${index + 1}@example.com`,
+          content: line.replace(/^\d+\.?\s*[-•]?\s*/, '').trim()
+        }));
+      }
+
+      // Ensure we have the requested number of comments
+      comments = comments.slice(0, commentCount);
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, text.length);
+
+      res.json({ comments });
+    } catch (error) {
+      console.error('WP Comment generation error:', error);
+      res.status(500).json({ error: 'Yorum oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Title Generator endpoint
+  app.post('/api/generate-titles', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { topic, keywords, titleCount, titleStyle, language } = req.body;
+      
+      if (!topic?.trim()) {
+        return res.status(400).json({ error: 'Konu veya ana fikir gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      // Build style instructions
+      let styleInstructions = '';
+      switch (titleStyle) {
+        case 'clickbait':
+          styleInstructions = 'Dikkat çekici ve merak uyandıran başlıklar oluştur.';
+          break;
+        case 'professional':
+          styleInstructions = 'Profesyonel ve ciddi ton kullanan başlıklar oluştur.';
+          break;
+        case 'question':
+          styleInstructions = 'Soru formatında başlıklar oluştur (Ne, Nasıl, Neden, Ne Zaman).';
+          break;
+        case 'howto':
+          styleInstructions = '"Nasıl Yapılır" formatında rehber başlıkları oluştur.';
+          break;
+        case 'listicle':
+          styleInstructions = 'Liste formatında başlıklar oluştur (sayılar kullanarak).';
+          break;
+        default:
+          styleInstructions = 'Çeşitli stil ve formatların karışımını oluştur.';
+      }
+
+      const keywordContext = keywords ? `\nAnahtar kelimeler: ${keywords}` : '';
+      
+      const prompt = `Konu: "${topic}"${keywordContext}
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Başlık Sayısı: ${titleCount}
+
+Görev: Bu konu için özgün makale başlıkları oluştur.
+
+Talimatlar:
+- ${styleInstructions}
+- SEO uyumlu başlıklar olsun
+- Her başlık 50-70 karakter arası olsun
+- Çekici ve tıklanabilir olsun
+- Tekrar eden başlıklar olmasın
+- Her satırda bir başlık olsun
+- Sadece başlıkları listele, başka açıklama yapma
+- Numaralandırma kullanma
+
+Başlıklar:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Parse titles from response
+      const titles = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line && !line.includes(':') && line.length > 10)
+        .map(line => line.replace(/^\d+\.?\s*[-•]?\s*/, '')) // Remove numbering
+        .slice(0, titleCount);
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, text.length);
+
+      res.json({ titles });
+    } catch (error) {
+      console.error('Title generation error:', error);
+      res.status(500).json({ error: 'Başlık oluşturma sırasında hata oluştu' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
