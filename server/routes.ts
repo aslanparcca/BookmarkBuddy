@@ -703,8 +703,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create separate multer instance for Excel files
+  const excelUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req: any, file: Express.Multer.File, cb: any) => {
+      // Accept Excel files
+      if (file.mimetype.includes('spreadsheet') || file.mimetype.includes('excel') || 
+          file.originalname.endsWith('.xlsx') || file.originalname.endsWith('.xls')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only Excel files are allowed!'), false);
+      }
+    }
+  });
+
   // Excel template processing endpoint
-  app.post('/api/process-excel-template', isAuthenticated, upload.single('file'), async (req: any, res) => {
+  app.post('/api/process-excel-template', isAuthenticated, excelUpload.single('file'), async (req: any, res) => {
     try {
       const userId = req.user?.claims?.sub;
       if (!userId) {
