@@ -2039,12 +2039,14 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               website.platform === 'xenforo' ? 'XenForo' : 'Blogger',
         seoPlugin: website.seoPlugin === 'yoast' ? 'Yoast SEO' : 
                    website.seoPlugin === 'rankmath' ? 'Rank Math SEO' : 'Yok',
-        gscConnected: website.status === 'active',
+        gscConnected: website.gscConnected || false,
         apiConnected: website.wpUsername && website.wpAppPassword ? true : false,
         wpUsername: website.wpUsername,
         wpAppPassword: website.wpAppPassword,
         categories: website.categories || [],
-        lastSync: website.lastSync
+        lastSync: website.lastSync,
+        gscPropertyUrl: website.gscPropertyUrl,
+        lastGscSync: website.lastGscSync
       }));
       
       res.json(formattedWebsites);
@@ -2070,6 +2072,10 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
         adminPassword: websiteData.admin_password || null,
         seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "yoast" : 
                    websiteData.seo_plugin === "rank_math_seo" ? "rankmath" : null,
+        // Google Search Console integration
+        gscConnected: !!(websiteData.gsc_service_account_key && websiteData.gsc_property_url),
+        gscServiceAccountKey: websiteData.gsc_service_account_key || null,
+        gscPropertyUrl: websiteData.gsc_property_url || null,
         status: "active"
       };
 

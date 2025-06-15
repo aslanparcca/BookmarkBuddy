@@ -14,6 +14,9 @@ const websiteSchema = z.object({
   wp_app_password: z.string().min(1, "WordPress uygulama şifresi gereklidir"),
   seo_plugin: z.string(),
   woocommerce: z.string(),
+  // Google Search Console fields
+  gsc_service_account_key: z.string().optional(),
+  gsc_property_url: z.string().optional(),
   xenforo_api_key: z.string().optional(),
   xenforo_api_key_type: z.string().optional(),
   xenforo_api_user_ids: z.array(z.string()).optional(),
@@ -42,6 +45,8 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
       wp_app_password: "poZg 5PfB gcEe rwuS 5OY6 lPba",
       seo_plugin: "yoast_seo",
       woocommerce: "0",
+      gsc_service_account_key: "",
+      gsc_property_url: "",
       xenforo_api_key: "",
       xenforo_api_key_type: "1",
       xenforo_api_user_ids: ["", ""],
@@ -237,6 +242,53 @@ export default function AddWebsite({ setCurrentPage }: AddWebsiteProps) {
                           <option value="1">Kullanıyorum</option>
                           <option value="0">Kullanmıyorum</option>
                         </select>
+                      </div>
+
+                      {/* Google Search Console Integration */}
+                      <div className="mt-6 border-t pt-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                          <i className="fab fa-google text-blue-600 mr-2"></i>
+                          Google Search Console Entegrasyonu
+                        </h3>
+                        
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="gsc_property_url">
+                            Property URL (Doğrulanmış Site URL'si)
+                          </label>
+                          <input 
+                            {...form.register("gsc_property_url")}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            type="url"
+                            placeholder="https://example.com/"
+                          />
+                          <div className="text-sm text-gray-600 mt-1">
+                            Google Search Console'da doğruladığınız site URL'sini giriniz
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="gsc_service_account_key">
+                            Service Account Key (JSON)
+                          </label>
+                          <textarea 
+                            {...form.register("gsc_service_account_key")}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32"
+                            placeholder='{"type": "service_account", "project_id": "...", "private_key_id": "...", ...}'
+                          />
+                          <div className="text-sm text-gray-600 mt-1">
+                            <span className="text-blue-600 font-bold">Not:</span> Google Cloud Console'dan oluşturduğunuz Service Account JSON key'ini buraya yapıştırın
+                          </div>
+                        </div>
+
+                        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
+                          <h4 className="font-medium text-blue-800 mb-2">Google Search Console API Kurulumu:</h4>
+                          <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+                            <li>Google Cloud Console'a gidin ve yeni proje oluşturun</li>
+                            <li>Search Console API'yi etkinleştirin</li>
+                            <li>Service Account oluşturun ve JSON key indirin</li>
+                            <li>Search Console'da bu Service Account'u Property'ye ekleyin</li>
+                          </ol>
+                        </div>
                       </div>
                     </div>
                   )}

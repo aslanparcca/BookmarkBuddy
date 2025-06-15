@@ -130,6 +130,11 @@ export const websites = pgTable("websites", {
   seoPlugin: varchar("seo_plugin", { length: 20 }), // yoast, rankmath
   status: varchar("status", { length: 20 }).default("active"), // active, inactive
   categories: jsonb("categories"), // WordPress categories
+  // Google Search Console integration
+  gscConnected: boolean("gsc_connected").default(false),
+  gscServiceAccountKey: text("gsc_service_account_key"), // JSON service account key
+  gscPropertyUrl: text("gsc_property_url"), // Verified property URL in GSC
+  lastGscSync: timestamp("last_gsc_sync"),
   lastSync: timestamp("last_sync"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
