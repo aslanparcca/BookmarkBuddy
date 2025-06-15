@@ -34,8 +34,9 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
     queryKey: [`/api/websites/${websiteId}`],
     queryFn: async () => {
       const response = await apiRequest("GET", `/api/websites/${websiteId}`);
-      console.log('API Response:', response);
-      return response as any;
+      const data = await response.json();
+      console.log('API Response:', data);
+      return data;
     },
     retry: false,
     enabled: !!websiteId,
