@@ -192,6 +192,33 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
               ))}
             </div>
           </div>
+
+          {/* API Keys Section */}
+          <div className="px-4 py-2">
+            <div className="px-3 py-2">
+              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                AYARLAR
+              </h3>
+            </div>
+            <div className="space-y-1">
+              <button
+                onClick={() => {
+                  setCurrentPage('api-keys');
+                  setSidebarOpen(false);
+                }}
+                className={`
+                  w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors text-sm
+                  ${currentPage === 'api-keys' 
+                    ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500' 
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }
+                `}
+              >
+                <i className="fas fa-key w-4 text-blue-500"></i>
+                <span>API Key Ayarları</span>
+              </button>
+            </div>
+          </div>
         </nav>
 
         <div className="p-4 border-t border-slate-200">
