@@ -19,7 +19,7 @@ interface Website {
   id: number;
   url: string;
   type: string;
-  categories?: string[];
+  categories?: (string | { id?: string | number; name?: string })[];
 }
 
 export default function Articles() {
@@ -52,7 +52,7 @@ export default function Articles() {
   const categories = useMemo(() => {
     const selectedWebsiteData = websites.find(w => w.id.toString() === selectedWebsite);
     return selectedWebsiteData?.categories || [];
-  }, [websites, selectedWebsite]);
+  }, [websites, selectedWebsite]) as (string | { id?: string | number; name?: string })[];
 
   const deleteMutation = useMutation({
     mutationFn: async (articleId: number) => {

@@ -58,7 +58,7 @@ interface Website {
   url: string;
   name: string;
   platform: string;
-  categories?: string[];
+  categories?: (string | { id?: string | number; name?: string })[];
 }
 
 export default function URLRewrite() {
@@ -100,7 +100,7 @@ export default function URLRewrite() {
   const categories = useMemo(() => {
     const selectedWebsite = websites.find(w => w.id.toString() === settings.website);
     return selectedWebsite?.categories || [];
-  }, [websites, settings.website]);
+  }, [websites, settings.website]) as (string | { id?: string | number; name?: string })[];
 
   const [openSections, setOpenSections] = useState({
     general: true,
