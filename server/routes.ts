@@ -4774,7 +4774,7 @@ Müşteri yorumu kuralları:
 - Güvenilir detaylar
 - Farklı yorum uzunlukları
 
-      Sonuç olarak ${tone[settings.tone] || settings.tone} ton kullanarak ${length[settings.length] || settings.length} uzunlukta ${settings.count} adet müşteri yorumu üret.`;
+Her yorum için "--- YORUM ${count} ---" başlığı ve yıldız puanı ekle:`;
 
       const result = await model.generateContent(prompt);
       const content = result.response.text();
