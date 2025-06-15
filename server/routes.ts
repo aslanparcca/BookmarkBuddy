@@ -3545,6 +3545,85 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // Keyword Generator endpoint
+  app.post('/api/generate-keywords', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { mainKeyword, industry, language, keywordCount, keywordType } = req.body;
+      
+      if (!mainKeyword?.trim()) {
+        return res.status(400).json({ error: 'Ana anahtar kelime gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      // Build prompt based on keyword type
+      let promptInstructions = '';
+      switch (keywordType) {
+        case 'short':
+          promptInstructions = 'Kısa (1-2 kelime) anahtar kelimeler oluştur.';
+          break;
+        case 'long':
+          promptInstructions = 'Uzun kuyruk (3-5+ kelime) anahtar kelimeler oluştur.';
+          break;
+        case 'questions':
+          promptInstructions = 'Soru formatında anahtar kelimeler oluştur (ne, nasıl, neden, ne zaman gibi).';
+          break;
+        default:
+          promptInstructions = 'Kısa ve uzun kuyruk anahtar kelimelerin karışımını oluştur.';
+      }
+
+      const industryContext = industry ? `Sektör/Konu: ${industry}` : '';
+      
+      const prompt = `Ana anahtar kelime: "${mainKeyword}"
+${industryContext}
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+
+Görev: Bu ana anahtar kelime için ${keywordCount} adet ilgili anahtar kelime üret.
+
+Talimatlar:
+- ${promptInstructions}
+- SEO uyumlu ve gerçek arama sorguları olsun
+- Ana anahtar kelimeyle alakalı olsun
+- Tekrar eden kelimeler olmasın
+- Her satırda bir anahtar kelime olsun
+- Sadece anahtar kelimeleri listele, başka açıklama yapma
+
+Anahtar Kelimeler:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Parse keywords from response
+      const keywords = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line && !line.includes(':') && line.length > 2)
+        .map(line => line.replace(/^\d+\.?\s*[-•]?\s*/, '')) // Remove numbering
+        .slice(0, keywordCount);
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, text.length);
+
+      res.json({ keywords });
+    } catch (error) {
+      console.error('Keyword generation error:', error);
+      res.status(500).json({ error: 'Anahtar kelime oluşturma sırasında hata oluştu' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

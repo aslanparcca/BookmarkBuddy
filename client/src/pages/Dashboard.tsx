@@ -27,6 +27,7 @@ import Analytics from "@/components/pages/Analytics";
 import Settings from "@/components/pages/Settings";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import PlaceholderPage from "@/components/pages/PlaceholderPage";
+import KeywordGenerator from "@/components/pages/KeywordGenerator";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
