@@ -989,8 +989,13 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 
                 <BulkImageUpload
                   onImagesUploaded={(uploadedImages) => {
-                    console.log('Images uploaded:', uploadedImages);
-                    // Images are automatically stored in database and will be used in article generation
+                    console.log('Bulk images uploaded successfully:', uploadedImages.length);
+                    toast({
+                      title: "Resimler Yüklendi!",
+                      description: `${uploadedImages.length} resim başarıyla yüklendi ve alt başlıklara otomatik yerleştirilecek`,
+                    });
+                    // Force refresh to ensure latest images are available for article generation
+                    window.location.reload();
                   }}
                   maxImages={20}
                 />

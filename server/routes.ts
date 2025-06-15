@@ -1799,17 +1799,33 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       let failedCount = 0;
 
       // Fetch user's uploaded images for automatic placement
+      console.log(`Fetching images for user: ${userId}`);
       const userImages = await storage.getImagesByUserId(userId);
-      const subheadingImages = userImages.filter(img => img.category === 'subheading' || img.tags?.includes('subheading'));
+      console.log(`Total user images found: ${userImages.length}`);
       
-      console.log(`Image Debug - Total user images: ${userImages.length}, Subheading images: ${subheadingImages.length}`);
+      // Filter for subheading images with multiple criteria
+      const subheadingImages = userImages.filter(img => {
+        const isSubheadingCategory = img.category === 'subheading';
+        const hasSubheadingTag = img.tags && (
+          img.tags.includes('subheading') || 
+          img.tags.includes('bulk-upload') || 
+          img.tags.includes('excel-mapping')
+        );
+        return isSubheadingCategory || hasSubheadingTag;
+      });
+      
+      console.log(`Filtered subheading images: ${subheadingImages.length}`);
       if (subheadingImages.length > 0) {
         console.log('Available subheading images:', subheadingImages.map(img => ({
           id: img.id,
           name: img.originalName,
           category: img.category,
-          tags: img.tags
+          tags: img.tags,
+          urlLength: img.url ? img.url.length : 0
         })));
+      } else {
+        console.log('No subheading images found - checking all user images');
+        userImages.forEach(img => console.log(`Image ${img.id}: category=${img.category}, tags=${JSON.stringify(img.tags)}`));
       }
 
       for (const titleData of titles) {
@@ -1838,30 +1854,45 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imageSource: settings.imageSource
           });
           
-          // Simple and effective image placement system
+          // Enhanced image placement with strict Excel mapping
           if (subheadingImages.length > 0 && hasExcelSubheadings && titleData.subheadings) {
-            // Excel mapping: One image per subheading in exact order
-            imagePlacementInstructions.push('RESIM YERLEŞTİRME KURALLARI:');
-            imagePlacementInstructions.push('1. Her resim sadece ilgili H2 başlığından HEMEN SONRA yerleştirilecek');
-            imagePlacementInstructions.push('2. Hiçbir yerde başka resim kullanma');
-            imagePlacementInstructions.push('3. Sıralama: 1. resim → 1. H2 sonrası, 2. resim → 2. H2 sonrası');
+            console.log(`Setting up Excel image mapping: ${subheadingImages.length} images for ${titleData.subheadings.length} subheadings`);
+            
+            imagePlacementInstructions.push('KRITIK RESIM YERLEŞTİRME KURALLARI:');
+            imagePlacementInstructions.push('1. SADECE verilen resimleri kullan, başka resim ekleme');
+            imagePlacementInstructions.push('2. Her resim tam olarak belirtilen H2 başlığından sonra yerleştirilecek');
+            imagePlacementInstructions.push('3. Resim sırası: 1.resim → 1.H2, 2.resim → 2.H2, 3.resim → 3.H2');
+            imagePlacementInstructions.push('4. Resim olmayan H2 başlıklarına resim ekleme');
             imagePlacementInstructions.push('');
             
+            // Create precise 1:1 mapping
             titleData.subheadings.forEach((subheading: string, index: number) => {
               if (index < subheadingImages.length) {
                 const image = subheadingImages[index];
-                imagePlacementInstructions.push(`H2 "${subheading}" başlığından sonra bu resmi yerleştir:`);
-                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading}" style="width:100%;max-width:650px;height:auto;display:block;margin:20px auto;border-radius:8px;" />`);
+                console.log(`Mapping image ${index + 1} (${image.originalName}) to subheading: ${subheading}`);
+                
+                imagePlacementInstructions.push(`H2 "${subheading}" başlığından HEMEN SONRA bu resmi yerleştir:`);
+                imagePlacementInstructions.push(`<div style="text-align:center;margin:25px 0;">`);
+                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />`);
+                imagePlacementInstructions.push(`</div>`);
                 imagePlacementInstructions.push('');
               }
             });
+            
+            imagePlacementInstructions.push('UYARI: Yukarıda belirtilen resimler dışında hiçbir resim ekleme!');
+            
           } else if (subheadingImages.length > 0) {
-            // General distribution for non-Excel articles
-            imagePlacementInstructions.push('RESIM DAĞITIMI:');
-            subheadingImages.slice(0, 3).forEach((image, index) => {
-              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünden sonra:`);
-              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:20px auto;border-radius:8px;" />`);
+            // Basic image distribution without Excel
+            console.log(`Setting up general image distribution: ${subheadingImages.length} images`);
+            imagePlacementInstructions.push('GENEL RESIM DAĞITIMI:');
+            subheadingImages.slice(0, 4).forEach((image, index) => {
+              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünden sonra yerleştir:`);
+              imagePlacementInstructions.push(`<div style="text-align:center;margin:25px 0;">`);
+              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />`);
+              imagePlacementInstructions.push(`</div>`);
             });
+          } else {
+            console.log('No images available for placement');
           }
           
           // Debug log to see what we're getting
