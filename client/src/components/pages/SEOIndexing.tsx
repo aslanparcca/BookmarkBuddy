@@ -231,7 +231,8 @@ export default function SEOIndexing() {
 
   const submitIndexingMutation = useMutation({
     mutationFn: async (data: { websiteId: string, urls: string[], searchEngines: string[] }) => {
-      return await apiRequest("POST", "/api/seo-indexing/submit", data);
+      const response = await apiRequest("POST", "/api/seo-indexing/submit", data);
+      return await response.json();
     },
     onSuccess: (data: any) => {
       toast({
@@ -388,6 +389,157 @@ export default function SEOIndexing() {
 
         {/* Submit URLs Tab */}
         <TabsContent value="submit" className="space-y-6">
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">TOPLAM SITE</p>
+                    <p className="text-2xl font-bold text-gray-900">{websites.length}</p>
+                    <p className="text-xs text-green-600">+{websites.length} eklendi</p>
+                  </div>
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Globe className="w-4 h-4 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">TOPLAM SITEMAP</p>
+                    <p className="text-2xl font-bold text-gray-900">1</p>
+                    <p className="text-xs text-green-600">+1 eklendi</p>
+                  </div>
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-green-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">IPV4 PROXY</p>
+                    <p className="text-2xl font-bold text-gray-900">0</p>
+                    <p className="text-xs text-yellow-600">Yapılandırılmadı</p>
+                  </div>
+                  <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <Globe className="w-4 h-4 text-yellow-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">IPV6 PROXY</p>
+                    <p className="text-2xl font-bold text-gray-900">0</p>
+                    <p className="text-xs text-green-600">+0 eklendi</p>
+                  </div>
+                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                    <Globe className="w-4 h-4 text-red-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Site Management Table */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Globe className="w-5 h-5" />
+                  Site Listesi
+                </CardTitle>
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => {/* Add site functionality */}}
+                >
+                  + Siteye Ekle
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">ID</TableHead>
+                      <TableHead>Site Adı</TableHead>
+                      <TableHead>Site URL</TableHead>
+                      <TableHead>Sitemap URL</TableHead>
+                      <TableHead>Sitemap İçeriği</TableHead>
+                      <TableHead>Son Ping</TableHead>
+                      <TableHead>Proxy</TableHead>
+                      <TableHead>Durum</TableHead>
+                      <TableHead>İşlemler</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {websites.map((website) => (
+                      <TableRow key={website.id}>
+                        <TableCell className="font-medium">{website.id}</TableCell>
+                        <TableCell>{website.name}</TableCell>
+                        <TableCell>
+                          <a href={website.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                            {website.url}
+                          </a>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-green-600">sitemap.xml</span>
+                          <br />
+                          <span className="text-xs text-gray-500">Sitemap güncelleme: {new Date().toLocaleDateString('tr-TR')}</span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-bold text-blue-600">76</span> URL
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR')} 17:30</span>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">Aktif</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-blue-500 hover:bg-blue-600 border-blue-500">
+                              <i className="fab fa-twitter text-white text-xs"></i>
+                            </Button>
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-green-500 hover:bg-green-600 border-green-500">
+                              <i className="fab fa-whatsapp text-white text-xs"></i>
+                            </Button>
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-blue-600 hover:bg-blue-700 border-blue-600">
+                              <i className="fab fa-telegram text-white text-xs"></i>
+                            </Button>
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-gray-500 hover:bg-gray-600 border-gray-500">
+                              <i className="fas fa-cog text-white text-xs"></i>
+                            </Button>
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-red-500 hover:bg-red-600 border-red-500">
+                              <i className="fas fa-trash text-white text-xs"></i>
+                            </Button>
+                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-orange-500 hover:bg-orange-600 border-orange-500">
+                              <i className="fas fa-bell text-white text-xs"></i>
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -433,6 +585,46 @@ export default function SEOIndexing() {
                   <span className="text-sm text-gray-500">Otomatik olarak tüm sayfaları bulur</span>
                 </div>
               )}
+
+              {/* Quick URL Templates */}
+              <div className="space-y-2">
+                <Label>Hızlı URL Şablonları</Label>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const website = websites.find(w => w.id.toString() === selectedWebsite);
+                      if (website) {
+                        const commonUrls = [
+                          website.url,
+                          `${website.url}/hakkimizda`,
+                          `${website.url}/iletisim`,
+                          `${website.url}/blog`,
+                          `${website.url}/hizmetler`
+                        ].join('\n');
+                        setUrlsToIndex(urlsToIndex + (urlsToIndex ? '\n' : '') + commonUrls);
+                      }
+                    }}
+                    disabled={!selectedWebsite}
+                  >
+                    Temel Sayfalar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const website = websites.find(w => w.id.toString() === selectedWebsite);
+                      if (website) {
+                        setUrlsToIndex(`${website.url}/sitemap.xml`);
+                      }
+                    }}
+                    disabled={!selectedWebsite}
+                  >
+                    Sitemap URL
+                  </Button>
+                </div>
+              </div>
 
               {/* URLs Input */}
               <div className="space-y-2">
