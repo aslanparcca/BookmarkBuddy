@@ -1691,7 +1691,15 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       };
       
       const selectedModel = settings.aiModel && modelMapping[settings.aiModel] ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
-      const model = genAI.getGenerativeModel({ model: selectedModel });
+      const model = genAI.getGenerativeModel({ 
+        model: selectedModel,
+        generationConfig: {
+          temperature: 0.9,
+          topK: 1,
+          topP: 1,
+          maxOutputTokens: 8192,
+        },
+      });
 
       let successCount = 0;
       let failedCount = 0;
@@ -1816,8 +1824,30 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
 
-          const result = await model.generateContent(prompt);
+          console.log(`Generating content for ${titleData.title} with model ${selectedModel}`);
+          console.log('Prompt length:', prompt.length);
+          
+          // Add timeout protection for API call
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Gemini API timeout after 60 seconds')), 60000);
+          });
+          
+          const result = await Promise.race([
+            model.generateContent(prompt),
+            timeoutPromise
+          ]);
+          
+          if (!result || !result.response) {
+            throw new Error('Invalid response from Gemini API');
+          }
+          
           let content = result.response.text();
+          
+          if (!content || content.trim().length === 0) {
+            throw new Error('Empty content received from Gemini API');
+          }
+          
+          console.log(`Generated content length: ${content.length} characters`);
           
           // Clean any remaining markdown code blocks and unwanted text
           content = content.replace(/```html\s*/gi, '');
@@ -1970,6 +2000,12 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
 
         } catch (error: any) {
           console.error(`Bulk V2 article generation error for ${titleData.title}:`, error);
+          console.error('Error details:', {
+            message: error?.message,
+            status: error?.status,
+            code: error?.code,
+            stack: error?.stack
+          });
           failedCount++;
           
           // Check if it's a quota error and break the loop to prevent further failures
