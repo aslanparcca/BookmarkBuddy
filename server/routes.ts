@@ -1926,9 +1926,16 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                 }
                 
                 if (imageUrl) {
-                  imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
+                  // Generate SEO-friendly alt text without overusing focus keyword
+                  let altText = `${subheading} görseli`;
+                  if (index >= 2) {
+                    // For 3rd image and beyond, use generic alt text to avoid keyword stuffing
+                    altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
+                  }
+                  
+                  imagePlacementInstructions.push(`H2 "${subheading}" bölümünün PARAGRAF SONUNDA bu resmi ekle:`);
                   imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
-                  imagePlacementInstructions.push(`<img src="${imageUrl}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+                  imagePlacementInstructions.push(`<img src="${imageUrl}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                   imagePlacementInstructions.push(`</div>`);
                   imagePlacementInstructions.push('');
                 } else {
@@ -1952,9 +1959,16 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                   const image = subheadingImages[index];
                   console.log(`Sequential mapping ${index + 1}: "${subheading}" -> ${image.originalName}`);
                   
-                  imagePlacementInstructions.push(`SADECE H2 "${subheading}" başlığından sonra bu resmi ekle:`);
+                  // Generate SEO-friendly alt text without overusing focus keyword
+                  let altText = `${subheading} görseli`;
+                  if (index >= 2) {
+                    // For 3rd image and beyond, use generic alt text to avoid keyword stuffing
+                    altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
+                  }
+                  
+                  imagePlacementInstructions.push(`H2 "${subheading}" bölümünün PARAGRAF SONUNDA bu resmi ekle:`);
                   imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
-                  imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+                  imagePlacementInstructions.push(`<img src="${image.url}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
                   imagePlacementInstructions.push(`</div>`);
                   imagePlacementInstructions.push('');
                 }
@@ -1973,9 +1987,15 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             console.log(`Setting up general image distribution: ${subheadingImages.length} images`);
             imagePlacementInstructions.push('GENEL RESIM DAĞITIMI:');
             subheadingImages.slice(0, 4).forEach((image, index) => {
-              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünden sonra yerleştir:`);
+              // Generate SEO-friendly alt text without overusing focus keyword
+              let altText = image.altText || 'Makale görseli';
+              if (index >= 2) {
+                altText = index % 2 === 0 ? "Hizmet görseli" : "Çalışma görseli";
+              }
+              
+              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünün PARAGRAF SONUNDA yerleştir:`);
               imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
-              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+              imagePlacementInstructions.push(`<img src="${image.url}" alt="${altText}" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
               imagePlacementInstructions.push(`</div>`);
             });
           } else {
