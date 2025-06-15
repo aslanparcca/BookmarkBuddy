@@ -114,7 +114,7 @@ function SiteEditForm({ site, onClose, onSave }: SiteEditFormProps) {
 
   const updateSiteMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("PUT", `/api/websites/${site.id}`, data);
+      const response = await apiRequest(`/api/websites/${site.id}`, "PUT", data);
       return await response.json();
     },
     onSuccess: () => {
@@ -316,7 +316,7 @@ export default function SEOIndexing() {
   const { data: seoApiSettings } = useQuery({
     queryKey: ["/api/seo-api-settings"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/seo-api-settings");
+      const response = await apiRequest("/api/seo-api-settings", "GET");
       return await response.json();
     },
   });
@@ -336,7 +336,7 @@ export default function SEOIndexing() {
   // Save SEO API settings mutation
   const saveSeoApiSettingsMutation = useMutation({
     mutationFn: async (settingsData: any) => {
-      const response = await apiRequest("POST", "/api/seo-api-settings", settingsData);
+      const response = await apiRequest("/api/seo-api-settings", "POST", settingsData);
       return await response.json();
     },
     onSuccess: () => {
@@ -358,7 +358,7 @@ export default function SEOIndexing() {
   // Generate IndexNow key mutation
   const generateIndexNowKeyMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/seo-api-settings/generate-indexnow-key");
+      const response = await apiRequest("/api/seo-api-settings/generate-indexnow-key", "POST");
       return await response.json();
     },
     onSuccess: (data) => {
@@ -380,7 +380,7 @@ export default function SEOIndexing() {
   // Test Google API mutation
   const testGoogleApiMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/seo-api-settings/test-google-api", {
+      const response = await apiRequest("/api/seo-api-settings/test-google-api", "POST", {
         serviceAccountKey: googleServiceAccount,
         siteDomain: googleSiteDomain,
       });
@@ -404,7 +404,7 @@ export default function SEOIndexing() {
   // Test IndexNow key mutation
   const testIndexNowKeyMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/seo-api-settings/test-indexnow-key", {
+      const response = await apiRequest("/api/seo-api-settings/test-indexnow-key", "POST", {
         apiKey: indexNowApiKey,
         domain: indexNowDomain,
       });
