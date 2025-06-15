@@ -18,7 +18,7 @@ export default function BulkImageUpload({ onImagesUploaded, maxImages = 20 }: Bu
   const queryClient = useQueryClient();
 
   // Fetch existing images
-  const { data: existingImages = [] } = useQuery({
+  const { data: existingImages = [] } = useQuery<any[]>({
     queryKey: ['/api/images'],
     retry: false,
   });

@@ -1812,13 +1812,54 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           // Check if Excel subheadings are provided
           const hasExcelSubheadings = titleData.subheadings && Array.isArray(titleData.subheadings) && titleData.subheadings.length > 0;
           
+          // Automatic image placement logic
+          const imagePlacementInstructions = [];
+          if (subheadingImages.length > 0) {
+            imagePlacementInstructions.push('IMAGE PLACEMENT (AUTOMATIC):');
+            
+            if (hasExcelSubheadings && titleData.subheadings) {
+              // Match uploaded images to Excel subheadings
+              const imageAssignments: string[] = [];
+              titleData.subheadings.forEach((subheading: string, index: number) => {
+                if (index < subheadingImages.length) {
+                  const assignedImage = subheadingImages[index];
+                  imageAssignments.push(`- After H2 "${subheading}": <img src="${assignedImage.url}" alt="${assignedImage.altText || subheading}" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />`);
+                }
+              });
+              
+              if (imageAssignments.length > 0) {
+                imagePlacementInstructions.push('- Place these specific images after their corresponding H2 headings:');
+                imagePlacementInstructions.push(...imageAssignments);
+                imagePlacementInstructions.push('- Images are automatically optimized and responsive');
+                imagePlacementInstructions.push('- Do not add any other images, use only the provided ones');
+              }
+            } else {
+              // Distribute images evenly across article sections
+              imagePlacementInstructions.push(`- You have ${subheadingImages.length} uploaded images to distribute throughout the article`);
+              imagePlacementInstructions.push('- Place images after H2 headings in this order:');
+              subheadingImages.slice(0, 6).forEach((image, index) => {
+                imagePlacementInstructions.push(`  ${index + 1}. <img src="${image.url}" alt="${image.altText || 'Article image'}" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />`);
+              });
+              imagePlacementInstructions.push('- Distribute these images evenly after different H2 sections');
+              imagePlacementInstructions.push('- Use descriptive alt text related to the section content');
+            }
+          } else if (settings.imageSource && settings.imageSource !== "0") {
+            // Fallback to automatic image search if no uploaded images
+            imagePlacementInstructions.push('IMAGE PLACEMENT (SEARCH-BASED):');
+            imagePlacementInstructions.push('- Add relevant images after H2 headings using Unsplash/Pexels search');
+            imagePlacementInstructions.push('- Use focus keyword and related terms for image search');
+            imagePlacementInstructions.push('- Include 3-5 images throughout the article');
+          }
+          
           // Debug log to see what we're getting
           console.log(`Excel Data Debug for "${titleData.title}":`, {
             hasSubheadings: hasExcelSubheadings,
             subheadings: titleData.subheadings,
             subheadingsLength: titleData.subheadings ? titleData.subheadings.length : 0,
             companyName: titleData.companyName,
-            contentLength: titleData.contentLength
+            contentLength: titleData.contentLength,
+            availableImages: subheadingImages.length,
+            imageAssignments: hasExcelSubheadings && subheadingImages.length > 0
           });
           
           const promptParts = [
@@ -1886,6 +1927,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '',
             ...buildLinkInstructions(settings),
             '',
+            ...imagePlacementInstructions,
+            imagePlacementInstructions.length > 0 ? '' : '',
             'WRITING QUALITY RULES:',
             '- Write naturally and conversationally - avoid robotic repetition',
             '- Use pronouns (bu, şu, o, bunlar) to refer back to topics instead of repeating keywords',
