@@ -7,13 +7,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import multer from "multer";
 import * as XLSX from "xlsx";
 import { z } from "zod";
-import { generateImageFilename, bufferToDataUrl } from "./imageUpload";
+import { upload, generateImageFilename, bufferToDataUrl } from "./imageUpload";
 import { nanoid } from "nanoid";
-
-const upload = multer({ 
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
@@ -125,6 +120,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+
+
 
   // Bulk image upload endpoint for subheadings
   app.post("/api/images/bulk-upload", isAuthenticated, upload.array('images', 20), async (req: any, res) => {
@@ -1841,60 +1838,30 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imageSource: settings.imageSource
           });
           
-          // Priority 1: Excel subheadings with uploaded images
+          // Simple and effective image placement system
           if (subheadingImages.length > 0 && hasExcelSubheadings && titleData.subheadings) {
-            imagePlacementInstructions.push('IMAGE PLACEMENT (EXCEL SUBHEADING MAPPING):');
-            imagePlacementInstructions.push('');
-            imagePlacementInstructions.push('CRITICAL PLACEMENT RULES:');
-            imagePlacementInstructions.push('1. Each image must be placed IMMEDIATELY after its corresponding H2 heading');
-            imagePlacementInstructions.push('2. Do NOT place images anywhere else in the article');
-            imagePlacementInstructions.push('3. Follow the exact order: Image 1 after H2-1, Image 2 after H2-2, etc.');
-            imagePlacementInstructions.push('4. Use ONLY the provided images below');
+            // Excel mapping: One image per subheading in exact order
+            imagePlacementInstructions.push('RESIM YERLEŞTİRME KURALLARI:');
+            imagePlacementInstructions.push('1. Her resim sadece ilgili H2 başlığından HEMEN SONRA yerleştirilecek');
+            imagePlacementInstructions.push('2. Hiçbir yerde başka resim kullanma');
+            imagePlacementInstructions.push('3. Sıralama: 1. resim → 1. H2 sonrası, 2. resim → 2. H2 sonrası');
             imagePlacementInstructions.push('');
             
-            // Create 1:1 mapping between Excel subheadings and uploaded images
             titleData.subheadings.forEach((subheading: string, index: number) => {
               if (index < subheadingImages.length) {
-                const assignedImage = subheadingImages[index];
-                imagePlacementInstructions.push(`AFTER H2 "${subheading}" (${index + 1}/${titleData.subheadings.length}):`);
-                imagePlacementInstructions.push(`<div class="article-image-container" style="text-align: center; margin: 30px 0; padding: 20px 0;">`);
-                imagePlacementInstructions.push(`  <img src="${assignedImage.url}" alt="${assignedImage.altText || subheading}" style="width: 100%; max-width: 700px; height: auto; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: block; margin: 0 auto; border: 1px solid #e5e7eb;" />`);
-                imagePlacementInstructions.push(`</div>`);
+                const image = subheadingImages[index];
+                imagePlacementInstructions.push(`H2 "${subheading}" başlığından sonra bu resmi yerleştir:`);
+                imagePlacementInstructions.push(`<img src="${image.url}" alt="${subheading}" style="width:100%;max-width:650px;height:auto;display:block;margin:20px auto;border-radius:8px;" />`);
                 imagePlacementInstructions.push('');
               }
             });
-            
-            imagePlacementInstructions.push('STRICT ENFORCEMENT:');
-            imagePlacementInstructions.push('- Place images ONLY after H2 headings, never in the middle of paragraphs');
-            imagePlacementInstructions.push('- Do NOT create additional images or use external image sources');
-            imagePlacementInstructions.push('- Each H2 section should have relevant content before the next H2 + image');
-            
-          } 
-          // Priority 2: General image distribution without Excel mapping
-          else if (subheadingImages.length > 0) {
-            imagePlacementInstructions.push('IMAGE PLACEMENT (DISTRIBUTED):');
-            imagePlacementInstructions.push('');
-            imagePlacementInstructions.push(`You have ${subheadingImages.length} uploaded images to distribute strategically:`);
-            imagePlacementInstructions.push('');
-            
-            // Distribute images evenly across sections
-            const imagesPerSection = Math.max(1, Math.floor(7 / subheadingImages.length));
-            subheadingImages.slice(0, 6).forEach((image, index) => {
-              const sectionNumber = (index * imagesPerSection) + 2; // Start from section 2
-              imagePlacementInstructions.push(`Image ${index + 1} - Place after H2 section ${sectionNumber}:`);
-              imagePlacementInstructions.push(`<div class="article-image-container" style="text-align: center; margin: 30px 0; padding: 20px 0;">`);
-              imagePlacementInstructions.push(`  <img src="${image.url}" alt="${image.altText || 'Relevant section image'}" style="width: 100%; max-width: 700px; height: auto; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: block; margin: 0 auto; border: 1px solid #e5e7eb;" />`);
-              imagePlacementInstructions.push(`</div>`);
-              imagePlacementInstructions.push('');
+          } else if (subheadingImages.length > 0) {
+            // General distribution for non-Excel articles
+            imagePlacementInstructions.push('RESIM DAĞITIMI:');
+            subheadingImages.slice(0, 3).forEach((image, index) => {
+              imagePlacementInstructions.push(`${index + 1}. resim - ${index + 2}. H2 bölümünden sonra:`);
+              imagePlacementInstructions.push(`<img src="${image.url}" alt="${image.altText || 'Makale görseli'}" style="width:100%;max-width:650px;height:auto;display:block;margin:20px auto;border-radius:8px;" />`);
             });
-          }
-          // Priority 3: Automatic image search fallback
-          else if (settings.imageSource && settings.imageSource !== "0") {
-            imagePlacementInstructions.push('IMAGE PLACEMENT (AUTO-SEARCH):');
-            imagePlacementInstructions.push('- Add 3-4 relevant images from Unsplash/Pexels after different H2 headings');
-            imagePlacementInstructions.push('- Use focus keyword and section content for image search queries');
-            imagePlacementInstructions.push('- Ensure images are contextually relevant to their sections');
-            imagePlacementInstructions.push('- Place images after H2 headings, not in the middle of content');
           }
           
           // Debug log to see what we're getting
