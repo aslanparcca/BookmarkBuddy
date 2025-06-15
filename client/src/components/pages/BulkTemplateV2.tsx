@@ -46,6 +46,8 @@ interface BulkV2Settings {
   
   // Görsel Seçenekleri
   imageSource: string;
+  featuredImage: string;
+  autoImageInsertion: boolean;
   
   // İçerik Özellikleri
   faqNormal: boolean;
@@ -131,6 +133,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     excludedUrls: "",
     customUrls: "",
     imageSource: "none",
+    featuredImage: "",
+    autoImageInsertion: true,
     faqNormal: false,
     faqSchema: false,
     metaDescription: false,
@@ -949,26 +953,68 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
           </CardHeader>
 
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="imageSource">Makale Resmi</Label>
-                <Select value={imageSource} onValueChange={(value) => {
-                  setImageSource(value);
-                  setSettings({...settings, imageSource: value});
-                }}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">Görsel istemiyorum</SelectItem>
-                    <SelectItem value="1">Unsplash (Ücretsiz)</SelectItem>
-                    <SelectItem value="5">Pexels (Ücretsiz)</SelectItem>
-                    <SelectItem value="6">Pixabay (Ücretsiz)</SelectItem>
-                    <SelectItem value="3">Google (Ücretsiz)</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="imageSource">Makale Resmi</Label>
+                  <Select value={imageSource} onValueChange={(value) => {
+                    setImageSource(value);
+                    setSettings({...settings, imageSource: value});
+                  }}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Görsel istemiyorum</SelectItem>
+                      <SelectItem value="1">Unsplash (Ücretsiz)</SelectItem>
+                      <SelectItem value="5">Pexels (Ücretsiz)</SelectItem>
+                      <SelectItem value="6">Pixabay (Ücretsiz)</SelectItem>
+                      <SelectItem value="3">Google (Ücretsiz)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
+
+              {/* Öne Çıkan Görsel Seçin */}
+              <div>
+                <Label htmlFor="featuredImage">Öne Çıkan Görsel Seçin</Label>
+                <Input
+                  id="featuredImage"
+                  type="url"
+                  placeholder="https://example.com/images/featured-image.jpg"
+                  value={settings.featuredImage}
+                  onChange={(e) => setSettings({...settings, featuredImage: e.target.value})}
+                  className="mt-2"
+                />
+                <p className="text-sm text-muted-foreground mt-2">
+                  Bu görsel tüm oluşturulan makalelerde öne çıkan görsel olarak kullanılacaktır. 
+                  Görsel URL'sini buraya yapıştırın.
+                </p>
+              </div>
+
+              {/* Otomatik Görsel Ekleme */}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="autoImageInsertion"
+                  checked={settings.autoImageInsertion}
+                  onCheckedChange={(checked) => setSettings({...settings, autoImageInsertion: checked as boolean})}
+                />
+                <Label htmlFor="autoImageInsertion" className="font-medium">
+                  Alt başlıklara otomatik görsel ekle
+                </Label>
+              </div>
+              
+              {settings.autoImageInsertion && (
+                <div className="ml-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-blue-900 mb-2">Otomatik Görsel Ekleme Sistemi</h4>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Alt başlık içeriğine uygun görseller otomatik olarak bulunup eklenecek</li>
+                    <li>• Örnek: "Evden Eve Nakliyat" alt başlığı için nakliyat görseli eklenecek</li>
+                    <li>• Görseller paragraf sonlarına yerleştirilecek</li>
+                    <li>• Sisteme entegre edeceğiniz görsel veritabanından çekilecek</li>
+                  </ul>
+                </div>
+              )}</div>
 
             {imageSource !== "0" && (
               <div className="mt-4 text-sm text-muted-foreground">

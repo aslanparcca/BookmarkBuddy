@@ -1834,6 +1834,61 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             }
           }
           
+          // Process featured image insertion
+          if (settings.featuredImage && settings.featuredImage.trim()) {
+            const featuredImageHtml = `<img src="${settings.featuredImage}" alt="${titleData.title}" class="featured-image" style="width: 100%; height: auto; margin: 20px 0;" />`;
+            
+            // Insert featured image after the first paragraph
+            const firstParagraphEnd = content.indexOf('</p>');
+            if (firstParagraphEnd !== -1) {
+              content = content.slice(0, firstParagraphEnd + 4) + '\n\n' + featuredImageHtml + '\n\n' + content.slice(firstParagraphEnd + 4);
+            }
+          }
+          
+          // Process automatic image insertion for subheadings
+          if (settings.autoImageInsertion && titleData.subheadings && titleData.subheadings.length > 0) {
+            // Find image keywords from subheadings for relevant images
+            const imageKeywords = titleData.subheadings.map(subheading => {
+              // Extract key terms from subheading for image search
+              const terms = subheading.toLowerCase()
+                .replace(/[^\w\s]/g, '')
+                .split(/\s+/)
+                .filter(word => word.length > 3);
+              
+              // Return the most relevant term for image search
+              return terms[0] || subheading.split(' ')[0];
+            });
+            
+            // Insert images after relevant sections
+            let modifiedContent = content;
+            titleData.subheadings.forEach((subheading, index) => {
+              const imageKeyword = imageKeywords[index];
+              
+              // Create image URL based on keyword (using placeholder service)
+              const imageUrl = `https://images.unsplash.com/400x300/?${encodeURIComponent(imageKeyword)}`;
+              const imageHtml = `<img src="${imageUrl}" alt="${subheading}" class="section-image" style="width: 100%; max-width: 400px; height: auto; margin: 15px 0; border-radius: 8px;" />`;
+              
+              // Find the subheading in content and insert image after its section
+              const subheadingPattern = new RegExp(`<h[23][^>]*>${subheading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</h[23]>`, 'i');
+              const match = modifiedContent.match(subheadingPattern);
+              
+              if (match) {
+                const matchEnd = modifiedContent.indexOf('>', modifiedContent.indexOf(match[0])) + 1;
+                // Find the end of the section (next heading or end of content)
+                const nextHeadingPattern = /<h[23][^>]*>/gi;
+                nextHeadingPattern.lastIndex = matchEnd;
+                const nextMatch = nextHeadingPattern.exec(modifiedContent);
+                
+                const insertionPoint = nextMatch ? nextMatch.index : modifiedContent.length;
+                
+                // Insert image before the next heading or at the end
+                modifiedContent = modifiedContent.slice(0, insertionPoint) + '\n\n' + imageHtml + '\n\n' + modifiedContent.slice(insertionPoint);
+              }
+            });
+            
+            content = modifiedContent;
+          }
+          
           // Generate article summary if requested
           let articleSummary = null;
           if (settings.articleSummary) {
