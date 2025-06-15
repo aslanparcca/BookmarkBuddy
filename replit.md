@@ -192,6 +192,7 @@ Changelog:
 - June 14, 2025. Fixed bulk article request size limit error: increased Express body parser limits from default to 50MB for both JSON and URL-encoded payloads, resolved "request entity too large" 413 errors during bulk article generation, enhanced system capacity for processing large article datasets with extensive content and metadata
 - June 14, 2025. Enhanced bulk article generation performance: implemented sequential processing with 1-second delays between requests to prevent API rate limiting, added timeout and retry logic with 60-second timeouts and 3 retry attempts per article, improved progress tracking with detailed logging every 10 articles, resolved issue where only 20 out of 81 articles were processed by adding proper error recovery and request pacing
 - June 14, 2025. Increased article display limit from 20 to 100 in İçeriklerim section and added comprehensive bulk delete functionality: updated storage interface and database operations to support bulk deletion, added API endpoint for deleting all user articles (/api/articles DELETE), implemented frontend confirmation dialog and red-themed button for safe bulk deletion with loading states
+- June 15, 2025. Completed comprehensive API key management system: created database schema for API keys with service types (OpenAI, Gemini), implemented secure backend CRUD operations with masked key display, added full frontend interface under "Web Sitelerim" menu with add/delete/default selection functionality, integrated proper authentication and error handling
 ```
 
 ## User Preferences
