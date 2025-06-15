@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertArticleSchema, insertUserSettingsSchema } from "@shared/schema";
+import { insertArticleSchema, insertUserSettingsSchema, insertApiKeySchema } from "@shared/schema";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import multer from "multer";
 import * as XLSX from "xlsx";
@@ -2205,6 +2205,48 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     } catch (error) {
       console.error("Send to website error:", error);
       res.status(500).json({ message: "Makale gönderimi başarısız oldu" });
+    }
+  });
+
+  // API Key Management endpoints
+  app.get('/api/api-keys', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      res.json(apiKeys);
+    } catch (error) {
+      console.error("Error fetching API keys:", error);
+      res.status(500).json({ message: "Failed to fetch API keys" });
+    }
+  });
+
+  app.post('/api/api-keys', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const apiKeyData = insertApiKeySchema.parse({ ...req.body, userId });
+      
+      const apiKey = await storage.createApiKey(apiKeyData);
+      res.status(201).json(apiKey);
+    } catch (error) {
+      console.error("Error creating API key:", error);
+      res.status(500).json({ message: "Failed to create API key" });
+    }
+  });
+
+  app.delete('/api/api-keys/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const keyId = parseInt(req.params.id);
+      
+      const deleted = await storage.deleteApiKey(keyId, userId);
+      if (!deleted) {
+        return res.status(404).json({ message: "API key not found" });
+      }
+      
+      res.json({ message: "API key deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting API key:", error);
+      res.status(500).json({ message: "Failed to delete API key" });
     }
   });
 

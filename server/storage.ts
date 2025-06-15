@@ -4,6 +4,7 @@ import {
   bulkJobs,
   apiUsage,
   userSettings,
+  apiKeys,
   type User,
   type UpsertUser,
   type Article,
@@ -13,6 +14,8 @@ import {
   type UserSettings,
   type InsertUserSettings,
   type ApiUsage,
+  type ApiKey,
+  type InsertApiKey,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql, like, or } from "drizzle-orm";
@@ -44,6 +47,12 @@ export interface IStorage {
   // API usage tracking
   getApiUsage(userId: string, month: string): Promise<ApiUsage | undefined>;
   incrementApiUsage(userId: string, apiType: string, requestCount: number, tokenCount: number): Promise<void>;
+  
+  // API key operations
+  createApiKey(apiKey: InsertApiKey): Promise<ApiKey>;
+  getApiKeysByUserId(userId: string): Promise<ApiKey[]>;
+  deleteApiKey(id: number, userId: string): Promise<boolean>;
+  getDefaultApiKey(userId: string, service: string): Promise<ApiKey | undefined>;
   
   // Statistics
   getUserStats(userId: string): Promise<{
@@ -317,6 +326,53 @@ export class DatabaseStorage implements IStorage {
       totalWords: totalStats.totalWords,
       monthlyArticles: monthlyStats.monthlyArticles,
     };
+  }
+
+  // API key operations
+  async createApiKey(apiKeyData: InsertApiKey): Promise<ApiKey> {
+    // If this is set as default, remove default from other keys of same service
+    if (apiKeyData.isDefault) {
+      await db
+        .update(apiKeys)
+        .set({ isDefault: false })
+        .where(and(
+          eq(apiKeys.userId, apiKeyData.userId),
+          eq(apiKeys.service, apiKeyData.service)
+        ));
+    }
+
+    const [newApiKey] = await db
+      .insert(apiKeys)
+      .values(apiKeyData)
+      .returning();
+    return newApiKey;
+  }
+
+  async getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
+    return await db
+      .select()
+      .from(apiKeys)
+      .where(eq(apiKeys.userId, userId))
+      .orderBy(desc(apiKeys.createdAt));
+  }
+
+  async deleteApiKey(id: number, userId: string): Promise<boolean> {
+    const result = await db
+      .delete(apiKeys)
+      .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)));
+    return result.rowCount > 0;
+  }
+
+  async getDefaultApiKey(userId: string, service: string): Promise<ApiKey | undefined> {
+    const [apiKey] = await db
+      .select()
+      .from(apiKeys)
+      .where(and(
+        eq(apiKeys.userId, userId),
+        eq(apiKeys.service, service),
+        eq(apiKeys.isDefault, true)
+      ));
+    return apiKey;
   }
 }
 
