@@ -142,7 +142,7 @@ export const websites = pgTable("websites", {
 
 export const seoApiSettings = pgTable("seo_api_settings", {
   id: serial("id").primaryKey(),
-  userId: text("user_id").notNull(),
+  userId: text("user_id").notNull().unique(),
   // Google Indexing API
   googleIndexingEnabled: boolean("google_indexing_enabled").default(false),
   googleServiceAccountKey: text("google_service_account_key"),

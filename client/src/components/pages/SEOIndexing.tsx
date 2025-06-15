@@ -53,6 +53,7 @@ export default function SEOIndexing() {
   const [googleSiteDomain, setGoogleSiteDomain] = useState("");
   const [indexNowApiKey, setIndexNowApiKey] = useState("");
   const [indexNowDomain, setIndexNowDomain] = useState("");
+  const [uploadedFileName, setUploadedFileName] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -168,6 +169,41 @@ export default function SEOIndexing() {
       });
     },
   });
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/json') {
+        toast({
+          title: "Hata",
+          description: "Lütfen geçerli bir JSON dosyası seçin",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target?.result as string;
+          JSON.parse(content); // Validate JSON
+          setGoogleServiceAccount(content);
+          setUploadedFileName(file.name);
+          toast({
+            title: "Başarılı",
+            description: "JSON dosyası yüklendi",
+          });
+        } catch (error) {
+          toast({
+            title: "Hata",
+            description: "Geçersiz JSON dosyası",
+            variant: "destructive",
+          });
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
 
   const handleSaveApiSettings = () => {
     const settingsData = {
@@ -532,19 +568,39 @@ export default function SEOIndexing() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="googleServiceAccount">Servis Hesabı JSON Anahtarı</Label>
-                      <Button variant="outline" size="sm" className="ml-2">
-                        Dosya Seç
-                      </Button>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Mevcut dosya: google_service86c3m/json
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          id="jsonFileInput"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => document.getElementById('jsonFileInput')?.click()}
+                          className="flex items-center gap-2"
+                        >
+                          <Upload className="w-4 h-4" />
+                          Dosya Seç
+                        </Button>
+                        {uploadedFileName && (
+                          <span className="text-sm text-green-600">
+                            ✓ {uploadedFileName}
+                          </span>
+                        )}
+                      </div>
                       <textarea
                         id="googleServiceAccount"
                         value={googleServiceAccount}
                         onChange={(e) => setGoogleServiceAccount(e.target.value)}
-                        placeholder="Google Cloud Console'den oluşturduğunuz service hesabınızın JSON anahtarını yapıştırın"
+                        placeholder="Google Cloud Console'den oluşturduğunuz service hesabınızın JSON anahtarını yapıştırın veya yukarıdan dosya seçin"
                         className="w-full h-24 p-2 border border-gray-300 rounded-md text-sm font-mono mt-2"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        JSON dosyası seçebilir veya içeriği doğrudan yapıştırabilirsiniz
+                      </p>
                     </div>
 
                     <div>
