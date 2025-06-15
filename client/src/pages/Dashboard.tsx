@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import AIEditor from "@/components/pages/AIEditor";
@@ -32,10 +33,21 @@ export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'se
   'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing';
 
 export default function Dashboard() {
+  const [location] = useLocation();
   const [currentPage, setCurrentPage] = useState<PageType>('editor');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editWebsiteId, setEditWebsiteId] = useState<string>('');
+
+  // Handle URL parameters for page navigation
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page') as PageType;
+    
+    if (pageParam && pageParam !== currentPage) {
+      setCurrentPage(pageParam);
+    }
+  }, [location]);
 
   const pageTitles: Record<PageType, string> = {
     'editor': 'Ana Sayfa',
