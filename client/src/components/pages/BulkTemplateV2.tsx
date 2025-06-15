@@ -992,10 +992,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     console.log('Bulk images uploaded successfully:', uploadedImages.length);
                     toast({
                       title: "Resimler Yüklendi!",
-                      description: `${uploadedImages.length} resim başarıyla yüklendi ve alt başlıklara otomatik yerleştirilecek`,
+                      description: `${uploadedImages.length} resim başarıyla yüklendi ve Excel alt başlıklarına sırayla yerleştirilecek`,
                     });
-                    // Force refresh to ensure latest images are available for article generation
-                    window.location.reload();
                   }}
                   maxImages={20}
                 />
