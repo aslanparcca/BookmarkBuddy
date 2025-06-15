@@ -4235,6 +4235,493 @@ Sadece JSON array'ini döndür:`;
     }
   });
 
+  // Google Ads Title Generator endpoint
+  app.post('/api/generate-google-ads-title', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { product, targetKeywords, targetAudience, tone, count } = req.body;
+      
+      if (!product?.trim() || !targetKeywords?.trim()) {
+        return res.status(400).json({ error: 'Ürün/hizmet ve hedef anahtar kelimeler gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        professional: 'profesyonel ve güvenilir',
+        friendly: 'samimi ve yakın',
+        urgent: 'acil ve hemen harekete geçiren',
+        emotional: 'duygusal ve etkileyici',
+        confident: 'kendinden emin ve kesin'
+      };
+
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      
+      const prompt = `Google Ads başlığı oluştur.
+
+Ürün/Hizmet: ${product}
+Hedef Anahtar Kelimeler: ${targetKeywords}${audienceContext}
+Ton: ${toneMap[tone] || 'profesyonel'}
+Başlık Sayısı: ${count}
+
+Google Ads başlık kuralları:
+- Maksimum 30 karakter
+- Dikkat çekici ve tıklanabilir
+- Hedef anahtar kelimeleri içermeli
+- Call-to-action içermeli
+- Rakiplerden farklılaştırıcı olmalı
+
+Sadece başlıkları listele, her satırda bir başlık:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Google Ads title generation error:', error);
+      res.status(500).json({ error: 'Google Ads başlığı oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Google Ads Description Generator endpoint
+  app.post('/api/generate-google-ads-description', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { product, benefits, callToAction, tone, count } = req.body;
+      
+      if (!product?.trim() || !benefits?.trim()) {
+        return res.status(400).json({ error: 'Ürün/hizmet ve faydalar gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        professional: 'profesyonel ve güvenilir',
+        friendly: 'samimi ve yakın',
+        persuasive: 'ikna edici ve zorlayıcı',
+        exciting: 'heyecanlı ve enerjik',
+        trustworthy: 'güvenilir ve sağlam'
+      };
+
+      const ctaContext = callToAction ? `\nEylem Çağrısı: ${callToAction}` : '';
+      
+      const prompt = `Google Ads açıklaması oluştur.
+
+Ürün/Hizmet: ${product}
+Faydalar ve Özellikler: ${benefits}${ctaContext}
+Ton: ${toneMap[tone] || 'profesyonel'}
+Açıklama Sayısı: ${count}
+
+Google Ads açıklama kuralları:
+- Maksimum 90 karakter
+- Faydaları vurgula
+- Somut değer önerisi içermeli
+- Eylem çağrısı ile bitirmeli
+- Güvenilir ve ikna edici olmalı
+
+Sadece açıklamaları listele, her satırda bir açıklama:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Google Ads description generation error:', error);
+      res.status(500).json({ error: 'Google Ads açıklaması oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Facebook Ads Title Generator endpoint
+  app.post('/api/generate-facebook-ads-title', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { product, targetAudience, objective, tone, count } = req.body;
+      
+      if (!product?.trim() || !targetAudience?.trim()) {
+        return res.status(400).json({ error: 'Ürün/hizmet ve hedef kitle gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        engaging: 'ilgi çekici ve etkileşimli',
+        emotional: 'duygusal ve etkileyici',
+        fun: 'eğlenceli ve enerjik',
+        inspirational: 'ilham verici ve motive edici',
+        professional: 'profesyonel ve güvenilir'
+      };
+
+      const objContext = objective ? `\nReklam Amacı: ${objective}` : '';
+      
+      const prompt = `Facebook Ads başlığı oluştur.
+
+Ürün/Hizmet: ${product}
+Hedef Kitle: ${targetAudience}${objContext}
+Ton: ${toneMap[tone] || 'ilgi çekici'}
+Başlık Sayısı: ${count}
+
+Facebook Ads başlık kuralları:
+- Maksimum 25 kelime (125 karakter)
+- Dikkat çekici ve duygusal bağ kurucu
+- Hedef kitleye özel yaklaşım
+- Sosyal medya diline uygun
+- Problem-çözüm odaklı
+
+Sadece başlıkları listele, her satırda bir başlık:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Facebook Ads title generation error:', error);
+      res.status(500).json({ error: 'Facebook Ads başlığı oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Facebook Ads Text Generator endpoint
+  app.post('/api/generate-facebook-ads-text', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { product, benefits, targetAudience, callToAction, tone, length, count } = req.body;
+      
+      if (!product?.trim() || !benefits?.trim()) {
+        return res.status(400).json({ error: 'Ürün/hizmet ve faydalar gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        engaging: 'ilgi çekici ve etkileşimli',
+        emotional: 'duygusal ve hikaye anlatıcı',
+        storytelling: 'hikaye odaklı ve akıcı',
+        'problem-solving': 'problem çözücü ve pratik',
+        conversational: 'sohbet tarzı ve doğal'
+      };
+
+      const lengthMap = {
+        short: '50-100 kelime',
+        medium: '100-200 kelime',
+        long: '200-300 kelime'
+      };
+
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      const ctaContext = callToAction ? `\nEylem Çağrısı: ${callToAction}` : '';
+      
+      const prompt = `Facebook Ads ana metni oluştur.
+
+Ürün/Hizmet: ${product}
+Faydalar ve Özellikler: ${benefits}${audienceContext}${ctaContext}
+Ton: ${toneMap[tone] || 'ilgi çekici'}
+Metin Uzunluğu: ${lengthMap[length] || 'orta'}
+Metin Sayısı: ${count}
+
+Facebook Ads metin kuralları:
+- Maksimum 2200 karakter
+- İlk cümle çok güçlü olmalı
+- Faydaları ve değer önerisini vurgula
+- Sosyal kanıt ve güven unsurları ekle
+- Net eylem çağrısı ile bitir
+- Emoji kullanmaktan çekinme
+
+Her metin için "--- METIN ${count} ---" başlığı ekle:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Facebook Ads text generation error:', error);
+      res.status(500).json({ error: 'Facebook Ads metni oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Homepage Content Generator endpoint
+  app.post('/api/generate-homepage-content', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { businessName, industry, services, targetAudience, uniqueValue, tone, sections } = req.body;
+      
+      if (!businessName?.trim() || !industry?.trim() || !services?.trim()) {
+        return res.status(400).json({ error: 'İşletme adı, sektör ve hizmetler gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        professional: 'profesyonel ve güvenilir',
+        friendly: 'samimi ve yakın',
+        corporate: 'kurumsal ve resmi',
+        modern: 'modern ve yenilikçi',
+        trustworthy: 'güvenilir ve sağlam'
+      };
+
+      const sectionsMap = {
+        hero: 'Sadece Hero bölümü (ana başlık ve alt başlık)',
+        about: 'Hero + Hakkımızda bölümü',
+        services: 'Hero + Hizmetler bölümü',
+        full: 'Tam ana sayfa (Hero, Hakkımızda, Hizmetler, İletişim)'
+      };
+
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      const valueContext = uniqueValue ? `\nBenzersiz Değer Önerisi: ${uniqueValue}` : '';
+      
+      const prompt = `Ana sayfa içeriği oluştur.
+
+İşletme Adı: ${businessName}
+Sektör: ${industry}
+Hizmetler/Ürünler: ${services}${audienceContext}${valueContext}
+Ton: ${toneMap[tone] || 'profesyonel'}
+İçerik Kapsamı: ${sectionsMap[sections] || 'Tam ana sayfa'}
+
+Ana sayfa içerik kuralları:
+- SEO uyumlu başlıklar
+- Net değer önerisi
+- Güven unsurları
+- Eylem çağrıları
+- Müşteri odaklı dil
+- Kısa ve etkili paragraflar
+
+Her bölüm için uygun HTML başlıkları (H1, H2, H3) kullan:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Homepage content generation error:', error);
+      res.status(500).json({ error: 'Ana sayfa içeriği oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Contact Page Generator endpoint
+  app.post('/api/generate-contact-page', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { businessName, industry, contactMethods, location, workingHours, tone, sections } = req.body;
+      
+      if (!businessName?.trim() || !industry?.trim()) {
+        return res.status(400).json({ error: 'İşletme adı ve sektör gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const toneMap = {
+        professional: 'profesyonel ve güvenilir',
+        friendly: 'samimi ve yakın',
+        welcoming: 'karşılayıcı ve sıcak',
+        helpful: 'yardımsever ve destekleyici',
+        trustworthy: 'güvenilir ve sağlam'
+      };
+
+      const sectionsMap = {
+        basic: 'Temel iletişim bilgileri',
+        detailed: 'Detaylı iletişim + firma hakkında',
+        faq: 'İletişim + Sıkça Sorulan Sorular',
+        full: 'Tam iletişim sayfası (giriş, bilgiler, form, SSS)'
+      };
+
+      const methodsContext = contactMethods ? `\nİletişim Yöntemleri: ${contactMethods}` : '';
+      const locationContext = location ? `\nKonum: ${location}` : '';
+      const hoursContext = workingHours ? `\nÇalışma Saatleri: ${workingHours}` : '';
+      
+      const prompt = `İletişim sayfası içeriği oluştur.
+
+İşletme Adı: ${businessName}
+Sektör: ${industry}${methodsContext}${locationContext}${hoursContext}
+Ton: ${toneMap[tone] || 'profesyonel'}
+İçerik Kapsamı: ${sectionsMap[sections] || 'Tam iletişim sayfası'}
+
+İletişim sayfası kuralları:
+- Güven veren açılış metni
+- Net iletişim bilgileri
+- Yanıt süresi beklentileri
+- Müşteri odaklı yaklaşım
+- Profesyonel dil
+- Yardımcı SSS bölümü
+
+Her bölüm için uygun HTML başlıkları (H1, H2, H3) kullan:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Contact page generation error:', error);
+      res.status(500).json({ error: 'İletişim sayfası oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Customer Review Generator endpoint
+  app.post('/api/generate-customer-review', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { businessName, serviceType, positivePoints, customerProfile, rating, reviewStyle, count } = req.body;
+      
+      if (!businessName?.trim() || !serviceType?.trim()) {
+        return res.status(400).json({ error: 'İşletme adı ve hizmet türü gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        console.log('No user Gemini API keys found, using system key');
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const styleMap = {
+        detailed: 'detaylı ve açıklayıcı',
+        short: 'kısa ve öz',
+        emotional: 'duygusal ve samimi',
+        professional: 'profesyonel ve objektif',
+        casual: 'gündelik ve doğal'
+      };
+
+      const ratingMap = {
+        5: '5 yıldız (mükemmel)',
+        4: '4 yıldız (çok iyi)',
+        3: '3 yıldız (iyi)',
+        mixed: 'karışık (3-5 yıldız arası)'
+      };
+
+      const pointsContext = positivePoints ? `\nÖvülecek Özellikler: ${positivePoints}` : '';
+      const profileContext = customerProfile ? `\nMüşteri Profili: ${customerProfile}` : '';
+      
+      const prompt = `Müşteri yorumu oluştur.
+
+İşletme Adı: ${businessName}
+Hizmet/Ürün Türü: ${serviceType}${pointsContext}${profileContext}
+Puan: ${ratingMap[rating] || '5 yıldız'}
+Yorum Tarzı: ${styleMap[reviewStyle] || 'detaylı'}
+Yorum Sayısı: ${count}
+
+Müşteri yorumu kuralları:
+- Gerçekçi ve doğal olmalı
+- Spesifik deneyimler içermeli
+- Farklı müşteri perspektifleri
+- Olumlu ama abartısız
+- Güvenilir detaylar
+- Farklı yorum uzunlukları
+
+Her yorum için "--- YORUM ${count} ---" başlığı ve yıldız puanı ekle:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+
+      res.json({ content });
+    } catch (error) {
+      console.error('Customer review generation error:', error);
+      res.status(500).json({ error: 'Müşteri yorumu oluşturma sırasında hata oluştu' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
