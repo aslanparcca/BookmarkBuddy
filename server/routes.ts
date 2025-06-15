@@ -13,9 +13,32 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
-// Initialize Gemini AI with backup key
-const BACKUP_GEMINI_KEY = 'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A';
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY);
+// Initialize Gemini AI with multiple backup keys for quota management
+const BACKUP_GEMINI_KEYS = [
+  'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A',
+  process.env.GOOGLE_GEMINI_API_KEY || ''
+].filter(key => key && key.length > 0);
+
+// Helper function to get available API key from user settings or fallback to backups
+async function getAvailableGeminiKey(userId: string): Promise<string> {
+  try {
+    // Try to get user's default Gemini API key
+    const userApiKey = await storage.getDefaultApiKey(userId, 'gemini');
+    if (userApiKey) {
+      return userApiKey.apiKey;
+    }
+  } catch (error) {
+    console.log('No user API key found, using backup keys');
+  }
+  
+  // Fallback to rotating backup keys
+  const keyIndex = Math.floor(Date.now() / (1000 * 60 * 60)) % BACKUP_GEMINI_KEYS.length;
+  return BACKUP_GEMINI_KEYS[keyIndex] || BACKUP_GEMINI_KEYS[0] || '';
+}
+
+// Initialize Gemini AI
+const defaultKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEYS[0] || '';
+const genAI = new GoogleGenerativeAI(defaultKey);
 
 // Helper function to intelligently distribute links across article sections
 function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
@@ -221,8 +244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const { titles, settings, focusKeywords } = req.body;
       
-      // Use backup API key if primary is quota limited
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
+      // Get available API key with rotation support
+      let apiKey = await getAvailableGeminiKey(userId);
       const userSettings = await storage.getUserSettings(userId);
       if (userSettings?.geminiApiKey) {
         apiKey = userSettings.geminiApiKey;
@@ -520,7 +543,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       setImmediate(async () => {
         try {
           const userSettings = await storage.getUserSettings(userId);
-          const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
+          const apiKey = await getAvailableGeminiKey(userId);
 
           const genAI = new GoogleGenerativeAI(apiKey);
           const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
@@ -718,8 +741,8 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
 
       const userSettings = await storage.getUserSettings(userId);
       
-      // Use backup API key if primary is quota limited  
-      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
+      // Get available API key with rotation support
+      const apiKey = await getAvailableGeminiKey(userId);
 
       const genAI = new GoogleGenerativeAI(apiKey);
       // Map frontend AI model selection to actual model names
@@ -1577,8 +1600,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
-      // Use backup API key if primary is quota limited
-      const apiKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEY;
+      // Get available API key with rotation support
+      const apiKey = await getAvailableGeminiKey(userId);
       const genAI = new GoogleGenerativeAI(apiKey);
       
       // Map frontend AI model selection to actual model names
