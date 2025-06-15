@@ -1141,7 +1141,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                   onValueChange={(value) => {
                     setSettings({...settings, website: value, categoryId: ""});
                     // Trigger category sync when website is selected
-                    if (value && value !== "none") {
+                    if (value && value !== "none" && websites && websites.length > 0) {
                       const selectedWebsite = websites.find(w => w.id.toString() === value);
                       if (selectedWebsite) {
                         syncWebsiteMutation.mutate(selectedWebsite.id);
@@ -1153,7 +1153,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue placeholder="Lütfen bir web sitesi seçiniz" />
                   </SelectTrigger>
                   <SelectContent>
-                    {websites.length === 0 ? (
+                    {!websites || websites.length === 0 ? (
                       <SelectItem value="none">Henüz web siteniz bulunmuyor</SelectItem>
                     ) : (
                       websites.map((website) => (
