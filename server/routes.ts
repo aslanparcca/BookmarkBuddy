@@ -2835,11 +2835,15 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                             if (processedImages === 0) {
                               featuredMediaId = mediaResult.id;
                               console.log(`Set as featured image: Media ID ${featuredMediaId}`);
+                              
+                              // Remove the first image from content since it will be featured image
+                              cleanContent = cleanContent.replace(imgTag, '');
+                              console.log(`Removed first image from content (now featured image)`);
+                            } else {
+                              // Replace data URL with WordPress URL for other images
+                              cleanContent = cleanContent.replace(imageUrl, wordpressImageUrl);
+                              console.log(`Replaced data URL with WordPress URL in content`);
                             }
-                            
-                            // Replace data URL with WordPress URL in content
-                            cleanContent = cleanContent.replace(imageUrl, wordpressImageUrl);
-                            console.log(`Replaced data URL with WordPress URL in content`);
                             
                             processedImages++;
                             
