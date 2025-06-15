@@ -42,6 +42,11 @@ import FacebookAdsText from "@/components/modules/FacebookAdsText";
 import HomepageContent from "@/components/modules/HomepageContent";
 import ContactPage from "@/components/modules/ContactPage";
 import CustomerReview from "@/components/modules/CustomerReview";
+import AIContentPreview from "@/pages/AIContentPreview";
+import VoiceToText from "@/pages/VoiceToText";
+import CollaborativeEditor from "@/pages/CollaborativeEditor";
+import AIQualityScorer from "@/pages/AIQualityScorer";
+import ContentLocalization from "@/pages/ContentLocalization";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -51,7 +56,8 @@ export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'se
   'keyword-generator' | 'wp-comment-generator' | 'title-generator' | 'about-generator' |
   'cv-writer' | 'service-description' | 'product-description' | 'faq-generator' | 'google-review' |
   'google-ads-title' | 'google-ads-description' | 'facebook-ads-title' | 'facebook-ads-text' |
-  'homepage-content' | 'contact-page' | 'customer-review';
+  'homepage-content' | 'contact-page' | 'customer-review' | 'ai-content-preview' | 'voice-to-text' |
+  'collaborative-editor' | 'ai-quality-scorer' | 'content-localization';
 
 export default function Dashboard() {
   const [location] = useLocation();
@@ -111,7 +117,12 @@ export default function Dashboard() {
     'facebook-ads-text': 'Facebook Ads Ana Metin',
     'homepage-content': 'Ana Sayfa Yazısı',
     'contact-page': 'İletişim Sayfası Yazısı',
-    'customer-review': 'Müşteri Yorumu'
+    'customer-review': 'Müşteri Yorumu',
+    'ai-content-preview': 'Etkileşimli İçerik Önizlemesi',
+    'voice-to-text': 'Sesli İçerik Oluşturucu',
+    'collaborative-editor': 'İşbirliği Editörü',
+    'ai-quality-scorer': 'AI Kalite Puanlama',
+    'content-localization': 'İçerik Yerelleştirme'
   };
 
   const renderPage = () => {
@@ -199,6 +210,18 @@ export default function Dashboard() {
         return <ContactPage />;
       case 'customer-review':
         return <CustomerReview />;
+      
+      // Advanced AI Modules
+      case 'ai-content-preview':
+        return <AIContentPreview setLoading={setLoading} />;
+      case 'voice-to-text':
+        return <VoiceToText setLoading={setLoading} />;
+      case 'collaborative-editor':
+        return <CollaborativeEditor setLoading={setLoading} />;
+      case 'ai-quality-scorer':
+        return <AIQualityScorer setLoading={setLoading} />;
+      case 'content-localization':
+        return <ContentLocalization setLoading={setLoading} />;
       
       default:
         return <AIEditor setLoading={setLoading} />;
