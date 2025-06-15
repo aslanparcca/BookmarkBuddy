@@ -15,6 +15,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
     { id: 'editor' as PageType, icon: 'fas fa-home', label: 'Ana Sayfa', color: 'text-purple-500' },
     { id: 'articles' as PageType, icon: 'fas fa-file-alt', label: 'İçeriklerim', color: 'text-slate-500' },
     { id: 'websites' as PageType, icon: 'fas fa-globe', label: 'Web Sitelerim', color: 'text-slate-500' },
+    { id: 'api-keys' as PageType, icon: 'fas fa-key', label: 'Api Keylerim', color: 'text-slate-500' },
     { id: 'bulk-editor' as PageType, icon: 'fas fa-layer-group', label: 'Tüm Şablonlar', color: 'text-slate-500' },
     { id: 'wp-editor' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V1', color: 'text-orange-500' },
     { id: 'settings' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V2', color: 'text-green-500' },
