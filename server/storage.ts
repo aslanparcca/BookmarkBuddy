@@ -77,6 +77,12 @@ export interface IStorage {
   // SEO API settings operations
   getSeoApiSettings(userId: string): Promise<SeoApiSettings | undefined>;
   upsertSeoApiSettings(settings: InsertSeoApiSettings): Promise<SeoApiSettings>;
+  
+  // Image operations
+  createImage(image: InsertImage): Promise<Image>;
+  getImagesByUserId(userId: string): Promise<Image[]>;
+  getImageById(id: number, userId: string): Promise<Image | undefined>;
+  deleteImage(id: number, userId: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -464,6 +470,38 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return settings;
+  }
+
+  // Image operations
+  async createImage(imageData: InsertImage): Promise<Image> {
+    const [image] = await db
+      .insert(images)
+      .values(imageData)
+      .returning();
+    return image;
+  }
+
+  async getImagesByUserId(userId: string): Promise<Image[]> {
+    return await db
+      .select()
+      .from(images)
+      .where(eq(images.userId, userId))
+      .orderBy(desc(images.createdAt));
+  }
+
+  async getImageById(id: number, userId: string): Promise<Image | undefined> {
+    const [image] = await db
+      .select()
+      .from(images)
+      .where(and(eq(images.id, id), eq(images.userId, userId)));
+    return image || undefined;
+  }
+
+  async deleteImage(id: number, userId: string): Promise<boolean> {
+    const result = await db
+      .delete(images)
+      .where(and(eq(images.id, id), eq(images.userId, userId)));
+    return result.rowCount > 0;
   }
 }
 

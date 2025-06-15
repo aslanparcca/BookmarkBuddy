@@ -209,3 +209,28 @@ export const insertSeoApiSettingsSchema = createInsertSchema(seoApiSettings).omi
 
 export type InsertSeoApiSettings = z.infer<typeof insertSeoApiSettingsSchema>;
 export type SeoApiSettings = typeof seoApiSettings.$inferSelect;
+
+// Image storage table for bulk uploads
+export const images = pgTable("images", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id", { length: 50 }).notNull(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  size: integer("size").notNull(),
+  url: text("url").notNull(),
+  altText: text("alt_text"),
+  category: varchar("category", { length: 50 }).default("general"),
+  tags: text("tags").array(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertImageSchema = createInsertSchema(images).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertImage = z.infer<typeof insertImageSchema>;
+export type Image = typeof images.$inferSelect;
