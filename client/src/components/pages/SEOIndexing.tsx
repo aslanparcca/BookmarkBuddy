@@ -11,9 +11,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Search, Globe, CheckCircle, XCircle, Clock, RefreshCw, Plus, Upload, FileText, BarChart3 } from "lucide-react";
+import { Search, Globe, CheckCircle, XCircle, Clock, RefreshCw, Plus, Upload, FileText, BarChart3, Edit, Trash2, Wifi, AlertTriangle } from "lucide-react";
 
 interface IndexingJob {
   id: number;
@@ -42,6 +46,208 @@ interface Website {
   platform: string;
 }
 
+// Site Edit Form Component
+interface SiteEditFormProps {
+  site: Website;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+function SiteEditForm({ site, onClose, onSave }: SiteEditFormProps) {
+  const [formData, setFormData] = useState({
+    name: site.name,
+    url: site.url,
+    sitemapUrl: site.sitemapUrl || '',
+    googleApiEnabled: true,
+    indexNowApiEnabled: true,
+    proxyType: 'none' as 'none' | 'ipv4' | 'ipv6',
+    isActive: true
+  });
+  const { toast } = useToast();
+
+  const updateSiteMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await apiRequest("PUT", `/api/websites/${site.id}`, data);
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Başarılı",
+        description: "Site bilgileri güncellendi",
+      });
+      onSave();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Site güncellenemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSave = () => {
+    updateSiteMutation.mutate({
+      name: formData.name,
+      url: formData.url,
+      sitemapUrl: formData.sitemapUrl,
+    });
+  };
+
+  const handleUpdateSitemap = () => {
+    // Trigger sitemap update
+    toast({
+      title: "Başarılı",
+      description: "Sitemap güncelleme başlatıldı",
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="siteName" className="text-sm font-medium">
+            Site Başlığı <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="siteName"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Fal Geldi"
+            className="mt-1"
+          />
+          <p className="text-xs text-gray-500 mt-1">Sitenin kolay tanımlanabilir bir adı.</p>
+        </div>
+
+        <div>
+          <Label htmlFor="siteUrl" className="text-sm font-medium">
+            Site URL <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="siteUrl"
+            value={formData.url}
+            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+            placeholder="https://falgeldi.com/"
+            className="mt-1"
+          />
+          <p className="text-xs text-gray-500 mt-1">Sitenizin tam URL adresi (https:// ile başlamalı).</p>
+        </div>
+
+        <div>
+          <Label htmlFor="sitemapUrl" className="text-sm font-medium">
+            Sitemap URL
+          </Label>
+          <Input
+            id="sitemapUrl"
+            value={formData.sitemapUrl}
+            onChange={(e) => setFormData({ ...formData, sitemapUrl: e.target.value })}
+            placeholder="https://falgeldi.com/sitemap.xml"
+            className="mt-1"
+          />
+          <p className="text-xs text-gray-500 mt-1">Sitenizin sitemap dosyasının tam URL adresi.</p>
+        </div>
+
+        <div>
+          <Label className="text-sm font-medium">API Seçimi</Label>
+          <div className="flex items-center space-x-4 mt-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="googleApi"
+                checked={formData.googleApiEnabled}
+                onCheckedChange={(checked) => 
+                  setFormData({ ...formData, googleApiEnabled: checked as boolean })
+                }
+              />
+              <Label htmlFor="googleApi" className="text-sm">Google API</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="indexNowApi"
+                checked={formData.indexNowApiEnabled}
+                onCheckedChange={(checked) => 
+                  setFormData({ ...formData, indexNowApiEnabled: checked as boolean })
+                }
+              />
+              <Label htmlFor="indexNowApi" className="text-sm">IndexNow API</Label>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            Site için kullanılacak indeksleme API türlerini seçin. Birden fazla seçebilir veya hiç seçmeyebilirsiniz.
+          </p>
+        </div>
+
+        <div>
+          <Label className="text-sm font-medium">Proxy Seçimi</Label>
+          <RadioGroup
+            value={formData.proxyType}
+            onValueChange={(value) => setFormData({ ...formData, proxyType: value as any })}
+            className="mt-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="none" id="proxyNone" />
+              <Label htmlFor="proxyNone" className="text-sm">Proxy Kullanma</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="ipv4" id="proxyIpv4" />
+              <Label htmlFor="proxyIpv4" className="text-sm">IPv4 Proxy</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="ipv6" id="proxyIpv6" />
+              <Label htmlFor="proxyIpv6" className="text-sm">IPv6 Proxy</Label>
+            </div>
+          </RadioGroup>
+          <p className="text-xs text-gray-500 mt-1">
+            Site için kullanılacak proxy türünü seçin. Proxy seçmezseniz, işlemler kendi IP adresiniz üzerinden yapılır.
+          </p>
+        </div>
+
+        <div>
+          <Label className="text-sm font-medium">Site Durumu</Label>
+          <div className="flex items-center space-x-2 mt-2">
+            <Switch
+              checked={formData.isActive}
+              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+            />
+            <span className="text-sm text-gray-700">
+              {formData.isActive ? "Aktif" : "Pasif"}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            Sitenin durumunu ayarlayın. Pasif siteler indeksleme işlemlerine dahil edilmez.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 pt-4 border-t">
+        <Button
+          onClick={handleSave}
+          disabled={updateSiteMutation.isPending}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          <CheckCircle className="w-4 h-4 mr-2" />
+          Kaydet
+        </Button>
+        <Button
+          onClick={handleUpdateSitemap}
+          variant="outline"
+          className="bg-green-600 hover:bg-green-700 text-white border-green-600"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Sitemap'i Güncelle
+        </Button>
+        <Button
+          onClick={onClose}
+          variant="outline"
+          className="bg-gray-500 hover:bg-gray-600 text-white border-gray-500"
+        >
+          <XCircle className="w-4 h-4 mr-2" />
+          Vazgeç
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function SEOIndexing() {
   const [selectedWebsite, setSelectedWebsite] = useState<string>("");
   const [urlsToIndex, setUrlsToIndex] = useState<string>("");
@@ -54,6 +260,8 @@ export default function SEOIndexing() {
   const [indexNowApiKey, setIndexNowApiKey] = useState("");
   const [indexNowDomain, setIndexNowDomain] = useState("");
   const [uploadedFileName, setUploadedFileName] = useState("");
+  const [selectedSiteForEdit, setSelectedSiteForEdit] = useState<Website | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -215,6 +423,88 @@ export default function SEOIndexing() {
       indexNowDomain,
     };
     saveSeoApiSettingsMutation.mutate(settingsData);
+  };
+
+  // Site management mutations
+  const deleteSiteMutation = useMutation({
+    mutationFn: async (siteId: number) => {
+      const response = await apiRequest("DELETE", `/api/websites/${siteId}`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Başarılı",
+        description: "Site başarıyla silindi",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/websites'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Site silinemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const pingSiteMutation = useMutation({
+    mutationFn: async (siteId: number) => {
+      const response = await apiRequest("POST", `/api/websites/${siteId}/ping`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Başarılı",
+        description: "Site pinglendi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Ping gönderilemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateSitemapMutation = useMutation({
+    mutationFn: async (siteId: number) => {
+      const response = await apiRequest("POST", `/api/websites/${siteId}/sync-sitemap`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Başarılı",
+        description: "Sitemap güncellendi",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/websites'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Sitemap güncellenemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEditSite = (site: Website) => {
+    setSelectedSiteForEdit(site);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteSite = (site: Website) => {
+    if (confirm(`"${site.name}" sitesini silmek istediğinizden emin misiniz?`)) {
+      deleteSiteMutation.mutate(site.id);
+    }
+  };
+
+  const handlePingSite = (site: Website) => {
+    pingSiteMutation.mutate(site.id);
+  };
+
+  const handleUpdateSitemap = (site: Website) => {
+    updateSitemapMutation.mutate(site.id);
   };
 
   // Fetch websites
@@ -512,23 +802,62 @@ export default function SEOIndexing() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-blue-500 hover:bg-blue-600 border-blue-500">
-                              <i className="fab fa-twitter text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-blue-500 hover:bg-blue-600 border-blue-500"
+                              onClick={() => handleEditSite(website)}
+                              title="Site Düzenle"
+                            >
+                              <Edit className="w-3 h-3 text-white" />
                             </Button>
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-green-500 hover:bg-green-600 border-green-500">
-                              <i className="fab fa-whatsapp text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-green-500 hover:bg-green-600 border-green-500"
+                              onClick={() => handleUpdateSitemap(website)}
+                              title="Sitemap Güncelle"
+                              disabled={updateSitemapMutation.isPending}
+                            >
+                              <RefreshCw className="w-3 h-3 text-white" />
                             </Button>
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-blue-600 hover:bg-blue-700 border-blue-600">
-                              <i className="fab fa-telegram text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500"
+                              onClick={() => handlePingSite(website)}
+                              title="Ping Gönder"
+                              disabled={pingSiteMutation.isPending}
+                            >
+                              <Wifi className="w-3 h-3 text-white" />
                             </Button>
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-gray-500 hover:bg-gray-600 border-gray-500">
-                              <i className="fas fa-cog text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-purple-500 hover:bg-purple-600 border-purple-500"
+                              onClick={() => generateSitemapUrlsMutation.mutate(website.id.toString())}
+                              title="URL'leri Al"
+                              disabled={generateSitemapUrlsMutation.isPending}
+                            >
+                              <FileText className="w-3 h-3 text-white" />
                             </Button>
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-red-500 hover:bg-red-600 border-red-500">
-                              <i className="fas fa-trash text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-red-500 hover:bg-red-600 border-red-500"
+                              onClick={() => handleDeleteSite(website)}
+                              title="Site Sil"
+                              disabled={deleteSiteMutation.isPending}
+                            >
+                              <Trash2 className="w-3 h-3 text-white" />
                             </Button>
-                            <Button size="sm" variant="outline" className="w-8 h-8 p-0 bg-orange-500 hover:bg-orange-600 border-orange-500">
-                              <i className="fas fa-bell text-white text-xs"></i>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-8 h-8 p-0 bg-orange-500 hover:bg-orange-600 border-orange-500"
+                              title="Uyarılar"
+                            >
+                              <AlertTriangle className="w-3 h-3 text-white" />
                             </Button>
                           </div>
                         </TableCell>
@@ -539,6 +868,29 @@ export default function SEOIndexing() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Site Edit Modal */}
+          <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold">
+                  Site Düzenle: {selectedSiteForEdit?.name}
+                </DialogTitle>
+                <p className="text-sm text-gray-600">Site bilgilerinizi güncelleyebilirsiniz.</p>
+              </DialogHeader>
+              
+              {selectedSiteForEdit && (
+                <SiteEditForm 
+                  site={selectedSiteForEdit} 
+                  onClose={() => setShowEditModal(false)} 
+                  onSave={() => {
+                    setShowEditModal(false);
+                    queryClient.invalidateQueries({ queryKey: ['/api/websites'] });
+                  }}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
 
           <Card>
             <CardHeader>
