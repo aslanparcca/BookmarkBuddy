@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,131 @@ export default function SEOIndexing() {
   const [indexNowDomain, setIndexNowDomain] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Load SEO API settings
+  const { data: seoApiSettings } = useQuery({
+    queryKey: ["/api/seo-api-settings"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/seo-api-settings");
+      return await response.json();
+    },
+  });
+
+  // Update state when settings are loaded
+  React.useEffect(() => {
+    if (seoApiSettings) {
+      setGoogleIndexingEnabled(seoApiSettings.googleIndexingEnabled || false);
+      setGoogleServiceAccount(seoApiSettings.googleServiceAccountKey || "");
+      setGoogleSiteDomain(seoApiSettings.googleSiteDomain || "");
+      setIndexNowEnabled(seoApiSettings.indexNowEnabled || false);
+      setIndexNowApiKey(seoApiSettings.indexNowApiKey || "");
+      setIndexNowDomain(seoApiSettings.indexNowDomain || "");
+    }
+  }, [seoApiSettings]);
+
+  // Save SEO API settings mutation
+  const saveSeoApiSettingsMutation = useMutation({
+    mutationFn: async (settingsData: any) => {
+      const response = await apiRequest("POST", "/api/seo-api-settings", settingsData);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/seo-api-settings"] });
+      toast({
+        title: "Başarılı",
+        description: "SEO API ayarları kaydedildi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Ayarlar kaydedilemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Generate IndexNow key mutation
+  const generateIndexNowKeyMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/seo-api-settings/generate-indexnow-key");
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setIndexNowApiKey(data.apiKey);
+      toast({
+        title: "Başarılı",
+        description: "IndexNow API anahtarı oluşturuldu",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "API anahtarı oluşturulamadı",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Test Google API mutation
+  const testGoogleApiMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/seo-api-settings/test-google-api", {
+        serviceAccountKey: googleServiceAccount,
+        siteDomain: googleSiteDomain,
+      });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Başarılı",
+        description: data.message,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "API test edilemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Test IndexNow key mutation
+  const testIndexNowKeyMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/seo-api-settings/test-indexnow-key", {
+        apiKey: indexNowApiKey,
+        domain: indexNowDomain,
+      });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Başarılı",
+        description: data.message,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message || "API key test edilemedi",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSaveApiSettings = () => {
+    const settingsData = {
+      googleIndexingEnabled,
+      googleServiceAccountKey: googleServiceAccount,
+      googleSiteDomain,
+      indexNowEnabled,
+      indexNowApiKey,
+      indexNowDomain,
+    };
+    saveSeoApiSettingsMutation.mutate(settingsData);
+  };
 
   // Fetch websites
   const { data: websites = [] } = useQuery<Website[]>({
@@ -449,13 +574,23 @@ export default function SEOIndexing() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex items-center gap-2"
+                        onClick={handleSaveApiSettings}
+                        disabled={saveSeoApiSettingsMutation.isPending}
+                      >
                         <RefreshCw className="w-4 h-4" />
-                        Ayarları Kaydet
+                        {saveSeoApiSettingsMutation.isPending ? "Kaydediliyor..." : "Ayarları Kaydet"}
                       </Button>
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex items-center gap-2"
+                        onClick={() => testGoogleApiMutation.mutate()}
+                        disabled={testGoogleApiMutation.isPending || !googleServiceAccount || !googleSiteDomain}
+                      >
                         <CheckCircle className="w-4 h-4" />
-                        API Bağlantısı Test Et
+                        {testGoogleApiMutation.isPending ? "Test Ediliyor..." : "API Bağlantısı Test Et"}
                       </Button>
                     </div>
                   </div>

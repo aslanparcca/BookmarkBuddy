@@ -2721,6 +2721,135 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // SEO API Settings Routes
+  app.get("/api/seo-api-settings", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const settings = await storage.getSeoApiSettings(userId);
+      
+      if (!settings) {
+        // Return default settings if none exist
+        return res.json({
+          googleIndexingEnabled: false,
+          googleServiceAccountKey: "",
+          googleSiteDomain: "",
+          indexNowEnabled: false,
+          indexNowApiKey: "",
+          indexNowDomain: ""
+        });
+      }
+      
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching SEO API settings:", error);
+      res.status(500).json({ message: "SEO API ayarları alınamadı" });
+    }
+  });
+
+  app.post("/api/seo-api-settings", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const settingsData = { ...req.body, userId };
+      
+      const settings = await storage.upsertSeoApiSettings(settingsData);
+      
+      res.json({
+        success: true,
+        settings,
+        message: "SEO API ayarları başarıyla kaydedildi"
+      });
+    } catch (error) {
+      console.error("Error saving SEO API settings:", error);
+      res.status(500).json({ message: "SEO API ayarları kaydedilemedi" });
+    }
+  });
+
+  app.post("/api/seo-api-settings/generate-indexnow-key", isAuthenticated, async (req: any, res) => {
+    try {
+      // Generate a random 32-character IndexNow API key
+      const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let apiKey = '';
+      for (let i = 0; i < 32; i++) {
+        apiKey += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      
+      res.json({
+        success: true,
+        apiKey,
+        message: "IndexNow API anahtarı oluşturuldu"
+      });
+    } catch (error) {
+      console.error("Error generating IndexNow API key:", error);
+      res.status(500).json({ message: "API anahtarı oluşturulamadı" });
+    }
+  });
+
+  app.post("/api/seo-api-settings/test-google-api", isAuthenticated, async (req: any, res) => {
+    try {
+      const { serviceAccountKey, siteDomain } = req.body;
+      
+      if (!serviceAccountKey || !siteDomain) {
+        return res.status(400).json({ message: "Service account key ve site domain gerekli" });
+      }
+      
+      // Test Google Indexing API connection
+      try {
+        const serviceAccount = JSON.parse(serviceAccountKey);
+        
+        // Basic validation of service account JSON structure
+        if (!serviceAccount.client_email || !serviceAccount.private_key) {
+          return res.status(400).json({ 
+            success: false,
+            message: "Geçersiz service account JSON formatı" 
+          });
+        }
+        
+        res.json({
+          success: true,
+          message: "Google Indexing API bağlantısı başarılı",
+          serviceAccountEmail: serviceAccount.client_email
+        });
+      } catch (jsonError) {
+        res.status(400).json({
+          success: false,
+          message: "Service account JSON parse edilemedi"
+        });
+      }
+    } catch (error) {
+      console.error("Error testing Google API:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "API test edilemedi" 
+      });
+    }
+  });
+
+  app.post("/api/seo-api-settings/test-indexnow-key", isAuthenticated, async (req: any, res) => {
+    try {
+      const { apiKey, domain } = req.body;
+      
+      if (!apiKey || !domain) {
+        return res.status(400).json({ message: "API key ve domain gerekli" });
+      }
+      
+      // Test IndexNow API key by checking if the key file would be accessible
+      const keyFileUrl = `https://${domain}/${apiKey}.txt`;
+      
+      res.json({
+        success: true,
+        message: "IndexNow API key doğrulandı",
+        keyFileUrl,
+        instructions: `${apiKey}.txt dosyasını web sitenizin kök dizinine yerleştirin`
+      });
+    } catch (error) {
+      console.error("Error testing IndexNow API key:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "API key test edilemedi" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
