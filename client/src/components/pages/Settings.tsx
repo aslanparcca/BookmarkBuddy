@@ -9,16 +9,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Trash2, Edit, Key, ChevronDown, ExternalLink, Eye, EyeOff } from "lucide-react";
-
-interface ApiKey {
-  id: string;
-  service: 'openai' | 'gemini';
-  title: string;
-  apiKey: string;
-  organization?: string;
-  isDefault: boolean;
-  createdAt: string;
-}
+import type { ApiKey } from "@shared/schema";
 
 export default function Settings() {
   const [selectedService, setSelectedService] = useState<'openai' | 'gemini'>('gemini');
@@ -27,7 +18,7 @@ export default function Settings() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: apiKeys = [], isLoading: keysLoading } = useQuery({
+  const { data: apiKeys = [], isLoading: keysLoading } = useQuery<ApiKey[]>({
     queryKey: ['/api/api-keys'],
     enabled: true,
   });
@@ -150,7 +141,7 @@ export default function Settings() {
                       </tr>
                     </thead>
                     <tbody>
-                      {apiKeys.map((key: ApiKey) => (
+                      {(apiKeys as ApiKey[]).map((key: ApiKey) => (
                         <tr key={key.id}>
                           <td>
                             <span className={`badge ${key.service === 'openai' ? 'bg-primary' : 'bg-success'}`}>
@@ -168,7 +159,7 @@ export default function Settings() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => deleteApiKeyMutation.mutate(key.id)}
+                              onClick={() => deleteApiKeyMutation.mutate(key.id.toString())}
                               className="text-danger"
                             >
                               <Trash2 className="h-4 w-4" />

@@ -360,7 +360,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .delete(apiKeys)
       .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async getDefaultApiKey(userId: string, service: string): Promise<ApiKey | undefined> {
