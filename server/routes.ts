@@ -9,7 +9,7 @@ import * as XLSX from "xlsx";
 import { z } from "zod";
 import { upload, generateImageFilename, bufferToDataUrl } from "./imageUpload";
 import { nanoid } from "nanoid";
-import { ContentAggregator } from "./webScraper";
+import { CurrentInfoGatherer } from "./currentInfoGatherer";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
@@ -517,6 +517,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
+      // Gather current information if enabled
+      let currentInfoText = '';
+      if (settings.currentInfo) {
+        console.log('Gathering current information for:', settings.focusKeyword);
+        const infoGatherer = new CurrentInfoGatherer();
+        const currentInfo = await infoGatherer.gatherCurrentInfo(settings.focusKeyword);
+        
+        if (currentInfo.sources.length > 0) {
+          currentInfoText = `
+GÜNCEL BİLGİLER (Son güncelleme: ${currentInfo.lastUpdated}):
+${currentInfo.summary}
+
+Kaynak detayları:
+${currentInfo.sources.map((source, index) => 
+  `${index + 1}. ${source.title} (${source.source}) - Güvenilirlik: ${Math.round(source.reliability * 100)}%`
+).join('\n')}
+
+Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
+        }
+      }
+      
       // Build comprehensive prompt based on all settings
       let prompt = `
         Türkçe bir WordPress makalesi oluştur. Detaylı ayarlar:
@@ -540,6 +561,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ${settings.italicText ? '- Vurgu için italik kullan' : ''}
         
         Anahtar Kelimeler: ${settings.keywords || settings.focusKeyword}
+        
+        ${currentInfoText}
         
         Makale şunları içermelidir:
         - SEO uyumlu giriş paragrafı
@@ -4751,22 +4774,51 @@ Müşteri yorumu kuralları:
 - Güvenilir detaylar
 - Farklı yorum uzunlukları
 
-Her yorum için "--- YORUM ${count} ---" başlığı ve yıldız puanı ekle:`;
+      Sonuç olarak ${tone[settings.tone] || settings.tone} ton kullanarak ${length[settings.length] || settings.length} uzunlukta ${settings.count} adet müşteri yorumu üret.`;
 
-      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
       const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const content = response.text();
+      const content = result.response.text();
 
-      // Track API usage
-      await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
+      res.json({ 
+        success: true, 
+        content: content.trim(),
+        message: 'Müşteri yorumları başarıyla oluşturuldu!'
+      });
 
-      res.json({ content });
     } catch (error) {
       console.error('Customer review generation error:', error);
-      res.status(500).json({ error: 'Müşteri yorumu oluşturma sırasında hata oluştu' });
+      res.status(500).json({ 
+        success: false, 
+        message: 'Müşteri yorumu oluşturulurken hata oluştu: ' + (error as Error).message 
+      });
+    }
+  });
+
+  // Current Information Gathering API
+  app.post('/api/gather-current-info', isAuthenticated, async (req, res) => {
+    try {
+      const { topic } = req.body;
+      
+      if (!topic) {
+        return res.status(400).json({ message: 'Topic is required' });
+      }
+
+      console.log(`Gathering current information for: ${topic}`);
+      const infoGatherer = new CurrentInfoGatherer();
+      const currentInfo = await infoGatherer.gatherCurrentInfo(topic);
+
+      res.json({
+        success: true,
+        data: currentInfo,
+        message: 'Güncel bilgiler başarıyla toplandı!'
+      });
+
+    } catch (error) {
+      console.error('Current info gathering error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Güncel bilgi toplama sırasında hata oluştu: ' + (error as Error).message
+      });
     }
   });
 
