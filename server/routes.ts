@@ -1864,14 +1864,31 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             }
           }
           
-          // Process featured image insertion
+          // Process featured image insertion (after second paragraph to avoid intro)
           if (settings.featuredImage && settings.featuredImage.trim()) {
             const featuredImageHtml = `<img src="${settings.featuredImage}" alt="${titleData.title}" class="featured-image" style="width: 100%; height: auto; margin: 20px 0;" />`;
             
-            // Insert featured image after the first paragraph
-            const firstParagraphEnd = content.indexOf('</p>');
-            if (firstParagraphEnd !== -1) {
-              content = content.slice(0, firstParagraphEnd + 4) + '\n\n' + featuredImageHtml + '\n\n' + content.slice(firstParagraphEnd + 4);
+            // Find the second paragraph to insert featured image after intro
+            const paragraphs = content.match(/<\/p>/g);
+            if (paragraphs && paragraphs.length >= 2) {
+              let secondParagraphEnd = -1;
+              let count = 0;
+              let searchIndex = 0;
+              
+              while (count < 2 && searchIndex < content.length) {
+                const index = content.indexOf('</p>', searchIndex);
+                if (index === -1) break;
+                count++;
+                if (count === 2) {
+                  secondParagraphEnd = index + 4;
+                  break;
+                }
+                searchIndex = index + 4;
+              }
+              
+              if (secondParagraphEnd !== -1) {
+                content = content.slice(0, secondParagraphEnd) + '\n\n' + featuredImageHtml + '\n\n' + content.slice(secondParagraphEnd);
+              }
             }
           }
           

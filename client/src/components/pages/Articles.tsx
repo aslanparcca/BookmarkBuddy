@@ -314,8 +314,8 @@ export default function Articles() {
                         </SelectTrigger>
                         <SelectContent>
                           {categories.map((category, index) => (
-                            <SelectItem key={index} value={category}>
-                              {category}
+                            <SelectItem key={index} value={typeof category === 'string' ? category : category.name || category.id?.toString() || `category-${index}`}>
+                              {typeof category === 'string' ? category : category.name || 'Unnamed Category'}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -552,8 +552,8 @@ export default function Articles() {
                                     </SelectTrigger>
                                     <SelectContent>
                                       {categories.map((category, index) => (
-                                        <SelectItem key={index} value={category}>
-                                          {category}
+                                        <SelectItem key={index} value={typeof category === 'string' ? category : category.name || category.id?.toString() || `category-${index}`}>
+                                          {typeof category === 'string' ? category : category.name || 'Unnamed Category'}
                                         </SelectItem>
                                       ))}
                                     </SelectContent>
