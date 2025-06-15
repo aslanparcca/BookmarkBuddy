@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -48,6 +48,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
   const [generationResults, setGenerationResults] = useState<GenerationResult[]>([]);
   const [generationProgress, setGenerationProgress] = useState(0);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // İçerik kalite ayarları
   const [settings, setSettings] = useState({

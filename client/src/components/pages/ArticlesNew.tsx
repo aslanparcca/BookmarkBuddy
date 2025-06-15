@@ -60,13 +60,19 @@ export default function ArticlesNew() {
       if (searchQuery.trim()) {
         params.append('search', searchQuery);
       }
+      
+      console.log('Fetching articles with params:', params.toString());
       const response = await apiRequest('GET', `/api/articles?${params}`);
       const data = await response.json();
       console.log('Articles API Response:', data);
+      console.log('Articles count:', data?.articles?.length || 0);
+      console.log('Pagination info:', data?.pagination);
       return data;
     },
     staleTime: 0,
     gcTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const articles = (responseData as any)?.articles || [];
@@ -269,6 +275,15 @@ export default function ArticlesNew() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           {/* Left side - Title and dropdown */}
           <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => refetch()} 
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <i className="fas fa-sync-alt"></i>
+              Yenile
+            </Button>
             <div className="relative">
               <Button variant="outline" className="justify-start min-w-[200px]">
                 <i className="fas fa-folder-open mr-2"></i>
