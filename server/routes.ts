@@ -209,15 +209,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const { titles, settings, focusKeywords } = req.body;
       
-      // Use system API key if user hasn't set their own
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY;
-      const userSettings = await storage.getUserSettings(userId);
-      if (userSettings?.geminiApiKey) {
-        apiKey = userSettings.geminiApiKey;
-      }
-
-      if (!apiKey) {
-        return res.status(400).json({ message: "Gemini API key not available" });
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
@@ -290,13 +295,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const settings = req.body;
-      const userSettings = await storage.getUserSettings(userId);
       
-      if (!userSettings?.geminiApiKey) {
-        return res.status(400).json({ message: "Gemini API key not configured. Please update your settings." });
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
       }
 
-      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
       // Generate main content
@@ -383,13 +399,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const settings = req.body;
-      const userSettings = await storage.getUserSettings(userId);
       
-      if (!userSettings?.geminiApiKey) {
-        return res.status(400).json({ message: "Gemini API key not configured. Please update your settings." });
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
       }
 
-      const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
       // Build comprehensive prompt based on all settings
@@ -708,12 +735,20 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
         return res.status(400).json({ message: "Makale verileri geçersiz" });
       }
 
-      const userSettings = await storage.getUserSettings(userId);
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
       
-      // Environment variable'dan veya kullanıcı ayarlarından API anahtarını al
-      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY;
-      if (!apiKey) {
-        return res.status(400).json({ message: "Gemini API anahtarı bulunamadı. Lütfen ayarlarınızı kontrol edin." });
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
@@ -1572,7 +1607,23 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+      // Get user's API keys, prioritizing Gemini keys
+      const userApiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
+      
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
+      
+      if (geminiKeys.length > 0) {
+        // Try to use default key first, then any available key
+        const defaultKey = geminiKeys.find(key => key.isDefault);
+        const selectedKey = defaultKey || geminiKeys[0];
+        apiKey = selectedKey.apiKey;
+        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
+      } else {
+        console.log('No user Gemini API keys found, using system key');
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
       
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
