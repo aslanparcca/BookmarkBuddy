@@ -140,6 +140,21 @@ export const websites = pgTable("websites", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const seoApiSettings = pgTable("seo_api_settings", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  // Google Indexing API
+  googleIndexingEnabled: boolean("google_indexing_enabled").default(false),
+  googleServiceAccountKey: text("google_service_account_key"),
+  googleSiteDomain: text("google_site_domain"),
+  // IndexNow API
+  indexNowEnabled: boolean("indexnow_enabled").default(false),
+  indexNowApiKey: text("indexnow_api_key"),
+  indexNowDomain: text("indexnow_domain"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
@@ -184,3 +199,12 @@ export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type InsertWebsite = z.infer<typeof insertWebsiteSchema>;
 export type Website = typeof websites.$inferSelect;
+
+export const insertSeoApiSettingsSchema = createInsertSchema(seoApiSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertSeoApiSettings = z.infer<typeof insertSeoApiSettingsSchema>;
+export type SeoApiSettings = typeof seoApiSettings.$inferSelect;

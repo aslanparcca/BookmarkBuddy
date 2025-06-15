@@ -47,6 +47,12 @@ export default function SEOIndexing() {
   const [urlsToIndex, setUrlsToIndex] = useState<string>("");
   const [selectedEngines, setSelectedEngines] = useState<string[]>(['google']);
   const [activeTab, setActiveTab] = useState("submit");
+  const [googleIndexingEnabled, setGoogleIndexingEnabled] = useState(false);
+  const [indexNowEnabled, setIndexNowEnabled] = useState(false);
+  const [googleServiceAccount, setGoogleServiceAccount] = useState("");
+  const [googleSiteDomain, setGoogleSiteDomain] = useState("");
+  const [indexNowApiKey, setIndexNowApiKey] = useState("");
+  const [indexNowDomain, setIndexNowDomain] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -212,8 +218,9 @@ export default function SEOIndexing() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="submit">URL Gönder</TabsTrigger>
+          <TabsTrigger value="api-settings">API Ayarları</TabsTrigger>
           <TabsTrigger value="jobs">İndeksleme İşleri</TabsTrigger>
           <TabsTrigger value="stats">İstatistikler</TabsTrigger>
         </TabsList>
@@ -329,6 +336,274 @@ export default function SEOIndexing() {
               </Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* API Settings Tab */}
+        <TabsContent value="api-settings" className="space-y-6">
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-blue-800 mb-2">API Ayarları</h3>
+              <p className="text-blue-700 text-sm">
+                Arama motoru indeksleme API'lerini yapılandırın ve yönetin.
+              </p>
+              <div className="mt-2 flex items-center gap-2 text-sm text-blue-600">
+                <CheckCircle className="w-4 h-4" />
+                <span>API ayarlarını yapılandırarak sitelerinizin arama motorlarında daha hızlı indekslenmesini sağlayabilirsiniz.</span>
+              </div>
+            </div>
+
+            {/* API Selection Buttons */}
+            <div className="flex gap-4">
+              <Button
+                variant={googleIndexingEnabled ? "default" : "outline"}
+                onClick={() => setGoogleIndexingEnabled(!googleIndexingEnabled)}
+                className="flex-1 h-12"
+              >
+                <i className="fab fa-google mr-2"></i>
+                Google API
+              </Button>
+              <Button
+                variant={indexNowEnabled ? "default" : "outline"}
+                onClick={() => setIndexNowEnabled(!indexNowEnabled)}
+                className="flex-1 h-12"
+              >
+                <Globe className="w-4 h-4 mr-2" />
+                IndexNow API
+              </Button>
+            </div>
+
+            {/* Google Indexing API Settings */}
+            {googleIndexingEnabled && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <i className="fab fa-google text-blue-600"></i>
+                    Google Indexing API Ayarları
+                    <Badge variant="secondary" className="ml-2">Beta</Badge>
+                  </CardTitle>
+                  <p className="text-sm text-gray-600">
+                    Google Indexing API, URL'leri Google İndeksleme göndermenizi ve durumlarını kontrol etmenizi sağlar. <a href="#" className="text-blue-600 hover:underline">Dokümantasyon</a>
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-700">
+                      <strong>Not:</strong> Google Indexing API, URL'leri Google İndeksleme göndermenizi ve durumlarını kontrol etmenizi sağlar. API için gerekli yetkilendirme bilgilerini aşağıda yapılandırabilirsiniz.
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="checkbox" 
+                      id="googleApiEnabled" 
+                      checked={googleIndexingEnabled}
+                      onChange={(e) => setGoogleIndexingEnabled(e.target.checked)}
+                      className="rounded border-gray-300"
+                    />
+                    <Label htmlFor="googleApiEnabled">Google Indexing API'yi etkinleştir</Label>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="googleServiceAccount">Servis Hesabı JSON Anahtarı</Label>
+                      <Button variant="outline" size="sm" className="ml-2">
+                        Dosya Seç
+                      </Button>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Mevcut dosya: google_service86c3m/json
+                      </p>
+                      <textarea
+                        id="googleServiceAccount"
+                        value={googleServiceAccount}
+                        onChange={(e) => setGoogleServiceAccount(e.target.value)}
+                        placeholder="Google Cloud Console'den oluşturduğunuz service hesabınızın JSON anahtarını yapıştırın"
+                        className="w-full h-24 p-2 border border-gray-300 rounded-md text-sm font-mono mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="googleSiteDomain">Servis Hesabı E-Posta</Label>
+                      <Input
+                        id="googleSiteDomain"
+                        value={googleSiteDomain}
+                        onChange={(e) => setGoogleSiteDomain(e.target.value)}
+                        placeholder="dursoft@gmail.com"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Google Cloud Console'dan oluşturduğunuz servis hesabınızın e-posta adresi
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="googleTestDomain">Site Domaini (Test için)</Label>
+                      <Input
+                        id="googleTestDomain"
+                        placeholder="fegeled.com"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Sitenizin domaini adı (www olmadan ve http:// veya https:// protokolü olmadan) *enel test için gerekli.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <RefreshCw className="w-4 h-4" />
+                        Ayarları Kaydet
+                      </Button>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4" />
+                        API Bağlantısı Test Et
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* IndexNow API Settings */}
+            {indexNowEnabled && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-blue-600" />
+                    IndexNow API Ayarları
+                    <Badge variant="secondary" className="ml-2">Beta</Badge>
+                  </CardTitle>
+                  <p className="text-sm text-gray-600">
+                    IndexNow, tek bir API ile birden fazla arama motorunu (Bing, Yandex vb.) aynı anda bilgilendirmenizi sağlar. <a href="#" className="text-blue-600 hover:underline">Resmi Site</a>
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-700">
+                      <strong>Not:</strong> IndexNow, Bing, Yandex, Seznam.cz gibi çeşitli arama motorlarına aynı anda URL göndermenizi sağlayan bir protokoldür.
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="checkbox" 
+                      id="indexNowApiEnabled" 
+                      checked={indexNowEnabled}
+                      onChange={(e) => setIndexNowEnabled(e.target.checked)}
+                      className="rounded border-gray-300"
+                    />
+                    <Label htmlFor="indexNowApiEnabled">IndexNow API'yi etkinleştir</Label>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="indexNowDomain">Ana Domain</Label>
+                      <Input
+                        id="indexNowDomain"
+                        value={indexNowDomain}
+                        onChange={(e) => setIndexNowDomain(e.target.value)}
+                        placeholder="fegeled.com"
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Sitenizin domain adı (www olmadan ve http:// veya https:// protokolü olmadan)
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="indexNowApiKey">API Key</Label>
+                      <div className="flex gap-2 mt-1">
+                        <Input
+                          id="indexNowApiKey"
+                          value={indexNowApiKey}
+                          onChange={(e) => setIndexNowApiKey(e.target.value)}
+                          placeholder="nALeZRXCJr6VWWrKYFK97XK95y2SeehSMZnS"
+                          className="flex-1"
+                        />
+                        <Button variant="outline" size="sm">
+                          Üret
+                        </Button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        API key boş bırakılırsa sistem otomatik olarak oluşturacaktır.
+                      </p>
+                    </div>
+
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                      <h4 className="font-medium text-yellow-800 mb-2">IndexNow Hakkında:</h4>
+                      <p className="text-sm text-yellow-700 mb-2">
+                        IndexNow aşağıdaki arama motorları tarafından desteklenmektedir:
+                      </p>
+                      <ul className="text-sm text-yellow-700 space-y-1 list-disc list-inside">
+                        <li><strong>Bing</strong> - Yandex - Seznam.cz - Naver - DuckDuckGo</li>
+                      </ul>
+                      
+                      <h5 className="font-medium text-yellow-800 mt-3 mb-1">Kurulum Adımları:</h5>
+                      <ol className="text-sm text-yellow-700 space-y-1 list-decimal list-inside">
+                        <li>API Key Oluşturun - "Üret" düğmesine tıklayın veya kendi anahtarınızı değiştiriniz girin.</li>
+                        <li>Doğrulama Dosyası - Kaydettiğinizde sistem kök dizininize bir dosya daha oluşturacaktır.</li>
+                        <li>Dosya Erişimi Kontrol Edin - API key dosyasının web sunucunuzun kök dizinindeki olmması gerektiği.</li>
+                      </ol>
+                      
+                      <p className="text-sm text-yellow-700 mt-2">
+                        <strong>Önemli:</strong> API key dosyasının web sitenizin kök dizinindeki olması gerektiği.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <RefreshCw className="w-4 h-4" />
+                        Ayarları Kaydet
+                      </Button>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4" />
+                        API Key Dosyasını Kontrol Et
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* IndexNow API Details Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Globe className="w-5 h-5" />
+                  IndexNow API Ayarları
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">
+                  IndexNow, tek bir API ile birden fazla arama motorunu (Bing, Yandex vb.) aynı anda bilgilendirmenizi sağlar. <a href="#" className="text-blue-600 hover:underline">Resmi Site</a>
+                </p>
+                
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-800 mb-2">IndexNow Hakkında:</h4>
+                  <p className="text-sm text-gray-600 mb-2">
+                    IndexNow aşağıdaki arama motorları tarafından desteklenmektedir:
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                    <div>• <strong>Bing</strong></div>
+                    <div>• <strong>Yandex</strong></div>
+                    <div>• <strong>Seznam.cz</strong></div>
+                    <div>• <strong>Naver</strong></div>
+                    <div>• <strong>DuckDuckGo</strong></div>
+                  </div>
+                  
+                  <h5 className="font-medium text-gray-800 mt-4 mb-2">Kurulum Adımları:</h5>
+                  <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+                    <li><strong>API Key Oluşturun</strong> - "Üret" düğmesine tıklayın veya kendi anahtarınızı değiştirin.</li>
+                    <li><strong>Doğrulama Dosyası</strong> - Kaydettiğinizde sistem kök dizininize bir dosya oluşturacaktır.</li>
+                    <li><strong>Dosya Erişimi Kontrol Edin</strong> - API key dosyasının web sunucunuzun kök dizininde olması gerekir.</li>
+                  </ol>
+                  
+                  <div className="mt-3 p-2 bg-yellow-100 border border-yellow-300 rounded text-sm text-yellow-800">
+                    <strong>Önemli:</strong> API key dosyasının web sitenizin kök dizininde olması gerekir.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Indexing Jobs Tab */}

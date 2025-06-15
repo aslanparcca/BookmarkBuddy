@@ -201,6 +201,7 @@ Changelog:
 - June 15, 2025. Enhanced SEO indexing sitemap support: added dual sitemap format compatibility (sitemap.xml and sitemap_index.xml), implemented intelligent sitemap detection with fallback system, added sitemap index parsing for multi-sitemap websites, fixed JavaScript null safety errors in frontend components
 - June 15, 2025. Implemented persistent website storage: migrated from in-memory to PostgreSQL database storage for websites, added comprehensive website CRUD operations in storage layer, automatic category synchronization on website creation, websites now persist between app restarts and automatically sync WordPress categories
 - June 15, 2025. Added comprehensive Google Search Console integration: extended website schema with GSC fields (service account key, property URL, connection status), integrated GSC configuration into website creation form with detailed setup instructions, added GSC status indicators in website management interface, prepared foundation for Search Console API operations
+- June 15, 2025. Fixed website editing functionality: created comprehensive EditWebsite component with form validation and data loading, added GET/PUT API endpoints for individual website management, implemented proper navigation system between website list and edit pages, resolved API response parsing issue where form fields were empty due to missing JSON parsing, GSC integration links now properly navigate to edit form with scroll-to-section functionality
 ```
 
 ## User Preferences
