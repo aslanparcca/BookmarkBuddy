@@ -35,6 +35,13 @@ import CVWriter from "@/components/pages/CVWriter";
 import ServiceDescriptionWriter from "@/components/pages/ServiceDescriptionWriter";
 import ProductDescriptionGenerator from "@/components/pages/ProductDescriptionGenerator";
 import FAQGenerator from "@/components/pages/FAQGenerator";
+import GoogleAdsTitle from "@/components/modules/GoogleAdsTitle";
+import GoogleAdsDescription from "@/components/modules/GoogleAdsDescription";
+import FacebookAdsTitle from "@/components/modules/FacebookAdsTitle";
+import FacebookAdsText from "@/components/modules/FacebookAdsText";
+import HomepageContent from "@/components/modules/HomepageContent";
+import ContactPage from "@/components/modules/ContactPage";
+import CustomerReview from "@/components/modules/CustomerReview";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -42,7 +49,9 @@ export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'se
   'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
   'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing' |
   'keyword-generator' | 'wp-comment-generator' | 'title-generator' | 'about-generator' |
-  'cv-writer' | 'service-description' | 'product-description' | 'faq-generator' | 'google-review';
+  'cv-writer' | 'service-description' | 'product-description' | 'faq-generator' | 'google-review' |
+  'google-ads-title' | 'google-ads-description' | 'facebook-ads-title' | 'facebook-ads-text' |
+  'homepage-content' | 'contact-page' | 'customer-review';
 
 export default function Dashboard() {
   const [location] = useLocation();
@@ -95,7 +104,14 @@ export default function Dashboard() {
     'service-description': 'Hizmet Açıklaması Yazarı',
     'product-description': 'Ürün Açıklaması Üretici',
     'faq-generator': 'Sıkça Sorulan Sorular',
-    'google-review': 'Google Yorum Üretici'
+    'google-review': 'Google Yorum Üretici',
+    'google-ads-title': 'Google Ads Başlığı',
+    'google-ads-description': 'Google Ads Açıklaması',
+    'facebook-ads-title': 'Facebook Ads Başlığı',
+    'facebook-ads-text': 'Facebook Ads Ana Metin',
+    'homepage-content': 'Ana Sayfa Yazısı',
+    'contact-page': 'İletişim Sayfası Yazısı',
+    'customer-review': 'Müşteri Yorumu'
   };
 
   const renderPage = () => {
@@ -169,6 +185,20 @@ export default function Dashboard() {
         return <FAQGenerator setLoading={setLoading} />;
       case 'google-review':
         return <PlaceholderPage title="Google Yorum Üretici" description="Google Maps için gerçek yorumlar üretin" icon="fab fa-google" iconColor="text-red-600" />;
+      case 'google-ads-title':
+        return <GoogleAdsTitle />;
+      case 'google-ads-description':
+        return <GoogleAdsDescription />;
+      case 'facebook-ads-title':
+        return <FacebookAdsTitle />;
+      case 'facebook-ads-text':
+        return <FacebookAdsText />;
+      case 'homepage-content':
+        return <HomepageContent />;
+      case 'contact-page':
+        return <ContactPage />;
+      case 'customer-review':
+        return <CustomerReview />;
       
       default:
         return <AIEditor setLoading={setLoading} />;
