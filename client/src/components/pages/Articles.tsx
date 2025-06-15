@@ -32,6 +32,8 @@ export default function Articles() {
   const [selectedWebsite, setSelectedWebsite] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [publishStatus, setPublishStatus] = useState<string>("draft");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -142,10 +144,27 @@ export default function Articles() {
     (article.category && article.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedArticles = filteredArticles.slice(startIndex, endIndex);
+
+  // Reset to first page when changing items per page or search
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(parseInt(value));
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
+
   // Selection functions
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedArticles(filteredArticles.map((article: any) => article.id));
+      setSelectedArticles(paginatedArticles.map((article: any) => article.id));
     } else {
       setSelectedArticles([]);
     }
@@ -235,7 +254,7 @@ export default function Articles() {
               type="text"
               placeholder="Makale ara..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="pl-10 w-64"
             />
             <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
@@ -353,13 +372,74 @@ export default function Articles() {
         </div>
       ) : (
         <>
+          {/* Pagination Controls */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-slate-600">Sayfa başına:</span>
+                <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                    <SelectItem value="200">200</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="text-sm text-slate-600">
+                {filteredArticles.length} makaleden {startIndex + 1}-{Math.min(endIndex, filteredArticles.length)} arası gösteriliyor
+              </div>
+            </div>
+            
+            {totalPages > 1 && (
+              <div className="flex items-center space-x-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </Button>
+                
+                {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                  const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                  if (pageNum > totalPages) return null;
+                  
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </Button>
+              </div>
+            )}
+          </div>
+
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-12">
                     <Checkbox
-                      checked={selectedArticles.length === filteredArticles.length && filteredArticles.length > 0}
+                      checked={selectedArticles.length === paginatedArticles.length && paginatedArticles.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
@@ -371,7 +451,7 @@ export default function Articles() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredArticles.map((article: any) => (
+                {paginatedArticles.map((article: any) => (
                   <TableRow key={article.id} className="hover:bg-slate-50">
                     <TableCell>
                       <Checkbox
