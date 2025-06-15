@@ -4,6 +4,7 @@ import {
   bulkJobs,
   apiUsage,
   userSettings,
+  apiKeys,
   type User,
   type UpsertUser,
   type Article,
@@ -13,6 +14,8 @@ import {
   type UserSettings,
   type InsertUserSettings,
   type ApiUsage,
+  type ApiKey,
+  type InsertApiKey,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -50,6 +53,12 @@ export interface IStorage {
     totalWords: number;
     monthlyArticles: number;
   }>;
+  
+  // API key operations
+  createApiKey(apiKey: InsertApiKey): Promise<ApiKey>;
+  getApiKeysByUserId(userId: string): Promise<ApiKey[]>;
+  deleteApiKey(id: number, userId: string): Promise<boolean>;
+  updateApiKeyDefault(userId: string, keyId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -271,6 +280,49 @@ export class DatabaseStorage implements IStorage {
       totalWords: totalStats.totalWords,
       monthlyArticles: monthlyStats.monthlyArticles,
     };
+  }
+
+  // API key operations
+  async createApiKey(apiKeyData: InsertApiKey): Promise<ApiKey> {
+    // If this is set as default, remove default from other keys
+    if (apiKeyData.isDefault) {
+      await db
+        .update(apiKeys)
+        .set({ isDefault: false })
+        .where(eq(apiKeys.userId, apiKeyData.userId));
+    }
+
+    const [newApiKey] = await db.insert(apiKeys).values(apiKeyData).returning();
+    return newApiKey;
+  }
+
+  async getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
+    return await db
+      .select()
+      .from(apiKeys)
+      .where(eq(apiKeys.userId, userId))
+      .orderBy(desc(apiKeys.createdAt));
+  }
+
+  async deleteApiKey(id: number, userId: string): Promise<boolean> {
+    const result = await db
+      .delete(apiKeys)
+      .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async updateApiKeyDefault(userId: string, keyId: number): Promise<void> {
+    // Remove default from all keys
+    await db
+      .update(apiKeys)
+      .set({ isDefault: false })
+      .where(eq(apiKeys.userId, userId));
+
+    // Set new default
+    await db
+      .update(apiKeys)
+      .set({ isDefault: true })
+      .where(and(eq(apiKeys.id, keyId), eq(apiKeys.userId, userId)));
   }
 }
 

@@ -2201,6 +2201,74 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // API Keys Routes
+  app.get("/api/api-keys", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      
+      // Mask API keys for security
+      const maskedKeys = apiKeys.map(key => ({
+        ...key,
+        maskedKey: key.apiKey.substring(0, 8) + "..." + key.apiKey.substring(key.apiKey.length - 4)
+      }));
+      
+      res.json(maskedKeys);
+    } catch (error) {
+      console.error("Error fetching API keys:", error);
+      res.status(500).json({ message: "API anahtarları alınamadı" });
+    }
+  });
+
+  app.post("/api/api-keys", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const apiKeyData = { ...req.body, userId };
+      
+      const newApiKey = await storage.createApiKey(apiKeyData);
+      
+      // Return masked key
+      res.json({
+        ...newApiKey,
+        maskedKey: newApiKey.apiKey.substring(0, 8) + "..." + newApiKey.apiKey.substring(newApiKey.apiKey.length - 4)
+      });
+    } catch (error) {
+      console.error("Error creating API key:", error);
+      res.status(500).json({ message: "API anahtarı oluşturulamadı" });
+    }
+  });
+
+  app.delete("/api/api-keys/:id", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const keyId = parseInt(req.params.id);
+      
+      const deleted = await storage.deleteApiKey(keyId, userId);
+      
+      if (deleted) {
+        res.json({ message: "API anahtarı silindi" });
+      } else {
+        res.status(404).json({ message: "API anahtarı bulunamadı" });
+      }
+    } catch (error) {
+      console.error("Error deleting API key:", error);
+      res.status(500).json({ message: "API anahtarı silinemedi" });
+    }
+  });
+
+  app.patch("/api/api-keys/:id/default", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const keyId = parseInt(req.params.id);
+      
+      await storage.updateApiKeyDefault(userId, keyId);
+      res.json({ message: "Varsayılan API anahtarı güncellendi" });
+    } catch (error) {
+      console.error("Error updating default API key:", error);
+      res.status(500).json({ message: "Varsayılan API anahtarı güncellenemedi" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
