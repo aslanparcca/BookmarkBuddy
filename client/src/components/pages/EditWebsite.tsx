@@ -34,9 +34,11 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
     queryKey: [`/api/websites/${websiteId}`],
     queryFn: async () => {
       const response = await apiRequest("GET", `/api/websites/${websiteId}`);
+      console.log('API Response:', response);
       return response as any;
     },
     retry: false,
+    enabled: !!websiteId,
   });
 
   const form = useForm<WebsiteFormData>({
@@ -55,16 +57,23 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
   // Update form when website data is loaded
   useEffect(() => {
     if (website) {
-      form.reset({
+      console.log('Loading website data into form:', website);
+      
+      // Map backend response to form fields
+      const formData = {
         url: website.url || "",
         wp_username: website.wpUsername || "",
         wp_app_password: website.wpAppPassword || "",
         seo_plugin: website.seoPlugin === "Yoast SEO" ? "yoast_seo" : 
-                   website.seoPlugin === "Rank Math SEO" ? "rank_math_seo" : "yok",
+                   website.seoPlugin === "Rank Math SEO" ? "rank_math_seo" : 
+                   website.seoPlugin === "Yok" ? "yok" : "yok",
         woocommerce: "0",
         gsc_service_account_key: website.gscServiceAccountKey || "",
         gsc_property_url: website.gscPropertyUrl || "",
-      });
+      };
+      
+      console.log('Form data being set:', formData);
+      form.reset(formData);
     }
   }, [website, form]);
 
