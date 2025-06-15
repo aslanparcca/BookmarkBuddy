@@ -200,6 +200,7 @@ Changelog:
 - June 15, 2025. Created comprehensive SEO indexing panel: added new "SEO İndeksleme" menu item with complete interface for automated search engine indexing, supports Google/Bing/Yandex/Yahoo/Baidu with bulk URL submission, automatic sitemap URL extraction, real-time indexing progress tracking, job management dashboard, and detailed statistics reporting system
 - June 15, 2025. Enhanced SEO indexing sitemap support: added dual sitemap format compatibility (sitemap.xml and sitemap_index.xml), implemented intelligent sitemap detection with fallback system, added sitemap index parsing for multi-sitemap websites, fixed JavaScript null safety errors in frontend components
 - June 15, 2025. Implemented persistent website storage: migrated from in-memory to PostgreSQL database storage for websites, added comprehensive website CRUD operations in storage layer, automatic category synchronization on website creation, websites now persist between app restarts and automatically sync WordPress categories
+- June 15, 2025. Added comprehensive Google Search Console integration: extended website schema with GSC fields (service account key, property URL, connection status), integrated GSC configuration into website creation form with detailed setup instructions, added GSC status indicators in website management interface, prepared foundation for Search Console API operations
 ```
 
 ## User Preferences
