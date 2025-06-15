@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import HomePage from "@/components/pages/HomePage";
 import AIEditor from "@/components/pages/AIEditor";
 import WordPressEditor from "@/components/pages/WordPressEditor";
 import WordPressEditorV2 from "@/components/pages/WordPressEditorV2";
@@ -80,7 +81,7 @@ export default function Dashboard() {
   const renderPage = () => {
     switch (currentPage) {
       case 'editor':
-        return <AIEditor setLoading={setLoading} />;
+        return <HomePage />;
       case 'wp-editor':
         return <WordPressEditor setLoading={setLoading} />;
       case 'bulk-editor':
