@@ -48,6 +48,7 @@ interface BulkV2Settings {
   imageSource: string;
   featuredImage: string;
   autoImageInsertion: boolean;
+  subheadingImages: { [key: string]: string };
   
   // İçerik Özellikleri
   faqNormal: boolean;
@@ -135,6 +136,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
     imageSource: "none",
     featuredImage: "",
     autoImageInsertion: true,
+    subheadingImages: {},
     faqNormal: false,
     faqSchema: false,
     metaDescription: false,
@@ -976,20 +978,83 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
               </div>
 
               {/* Öne Çıkan Görsel Seçin */}
-              <div>
-                <Label htmlFor="featuredImage">Öne Çıkan Görsel Seçin</Label>
-                <Input
-                  id="featuredImage"
-                  type="url"
-                  placeholder="https://example.com/images/featured-image.jpg"
-                  value={settings.featuredImage}
-                  onChange={(e) => setSettings({...settings, featuredImage: e.target.value})}
-                  className="mt-2"
-                />
-                <p className="text-sm text-muted-foreground mt-2">
-                  Bu görsel tüm oluşturulan makalelerde öne çıkan görsel olarak kullanılacaktır. 
-                  Görsel URL'sini buraya yapıştırın.
-                </p>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
+                  <Label className="text-gray-700 font-medium">Öne Çıkan Görsel Seçin</Label>
+                  <button className="ml-auto">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <div className="text-center py-8">
+                  <div className="text-gray-500 mb-4">
+                    <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <p className="text-lg font-medium">Kendi görsellerinizi yükleyin</p>
+                    <p className="text-sm text-gray-400 mt-1">
+                      Lütfen yükleme işleminden sonra öne çıkan görsel olarak seçmeyi unutmayınız
+                    </p>
+                  </div>
+                  
+                  <div className="flex gap-3 justify-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="featuredImageUpload"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          // Create a URL for the file (in real implementation, upload to server)
+                          const imageUrl = URL.createObjectURL(file);
+                          setSettings({...settings, featuredImage: imageUrl});
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('featuredImageUpload')?.click()}
+                      className="bg-blue-500 text-white hover:bg-blue-600 border-0"
+                    >
+                      Dosya Seç
+                    </Button>
+                    <Button
+                      type="button" 
+                      variant="outline"
+                      onClick={() => {
+                        const url = prompt('Görsel URL\'sini girin:');
+                        if (url) {
+                          setSettings({...settings, featuredImage: url});
+                        }
+                      }}
+                      className="border-gray-300"
+                    >
+                      URL'den Çek
+                    </Button>
+                  </div>
+                  
+                  {settings.featuredImage && (
+                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <p className="text-sm text-green-700">
+                        ✓ Öne çıkan görsel seçildi: {settings.featuredImage.length > 50 ? settings.featuredImage.substring(0, 50) + '...' : settings.featuredImage}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSettings({...settings, featuredImage: ''})}
+                        className="mt-2 text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        Kaldır
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Otomatik Görsel Ekleme */}
@@ -1005,15 +1070,118 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
               </div>
               
               {settings.autoImageInsertion && (
-                <div className="ml-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900 mb-2">Otomatik Görsel Ekleme Sistemi</h4>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• Alt başlık içeriğine uygun görseller otomatik olarak bulunup eklenecek</li>
-                    <li>• Örnek: "Evden Eve Nakliyat" alt başlığı için nakliyat görseli eklenecek</li>
-                    <li>• Görseller paragraf sonlarına yerleştirilecek</li>
-                    <li>• Sisteme entegre edeceğiniz görsel veritabanından çekilecek</li>
-                  </ul>
-                </div>
+                <>
+                  <div className="ml-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-medium text-blue-900 mb-2">Otomatik Görsel Ekleme Sistemi</h4>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>• Alt başlık içeriğine uygun görseller otomatik olarak bulunup eklenecek</li>
+                      <li>• Örnek: "Evden Eve Nakliyat" alt başlığı için nakliyat görseli eklenecek</li>
+                      <li>• Görseller paragraf sonlarına yerleştirilecek</li>
+                      <li>• Kendi görsellerinizi yükleyebilir veya URL'den çekebilirsiniz</li>
+                    </ul>
+                  </div>
+
+                  {/* Alt Başlık Görselleri */}
+                  {generatedTitles.length > 0 && generatedTitles[0]?.subheadings && (
+                    <div className="ml-6 mt-4 space-y-4">
+                      <h4 className="font-medium text-gray-900">Alt Başlık Görselleri</h4>
+                      <p className="text-sm text-gray-600 mb-4">
+                        Her alt başlık için özel görsel seçebilirsiniz. Görsel seçmediğiniz başlıklar için otomatik görsel aranacak.
+                      </p>
+                      
+                      {generatedTitles[0].subheadings.map((subheading: string, index: number) => (
+                        <div key={index} className="border border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h5 className="font-medium text-gray-800">{subheading}</h5>
+                            {settings.subheadingImages[subheading] && (
+                              <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+                                ✓ Görsel seçildi
+                              </span>
+                            )}
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              id={`subheading-image-${index}`}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const imageUrl = URL.createObjectURL(file);
+                                  setSettings({
+                                    ...settings,
+                                    subheadingImages: {
+                                      ...settings.subheadingImages,
+                                      [subheading]: imageUrl
+                                    }
+                                  });
+                                }
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => document.getElementById(`subheading-image-${index}`)?.click()}
+                              className="bg-blue-500 text-white hover:bg-blue-600 border-0"
+                            >
+                              Dosya Seç
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const url = prompt(`"${subheading}" için görsel URL'sini girin:`);
+                                if (url) {
+                                  setSettings({
+                                    ...settings,
+                                    subheadingImages: {
+                                      ...settings.subheadingImages,
+                                      [subheading]: url
+                                    }
+                                  });
+                                }
+                              }}
+                              className="border-gray-300"
+                            >
+                              URL'den Çek
+                            </Button>
+                            {settings.subheadingImages[subheading] && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const newImages = { ...settings.subheadingImages };
+                                  delete newImages[subheading];
+                                  setSettings({
+                                    ...settings,
+                                    subheadingImages: newImages
+                                  });
+                                }}
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                              >
+                                Kaldır
+                              </Button>
+                            )}
+                          </div>
+                          
+                          {settings.subheadingImages[subheading] && (
+                            <div className="mt-3 p-2 bg-gray-50 rounded text-sm text-gray-600">
+                              <strong>Seçili görsel:</strong> {settings.subheadingImages[subheading].length > 60 ? 
+                                settings.subheadingImages[subheading].substring(0, 60) + '...' : 
+                                settings.subheadingImages[subheading]
+                              }
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}</div>
 
             {imageSource !== "0" && (

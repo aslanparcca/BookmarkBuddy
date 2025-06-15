@@ -1847,26 +1847,27 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           
           // Process automatic image insertion for subheadings
           if (settings.autoImageInsertion && titleData.subheadings && titleData.subheadings.length > 0) {
-            // Find image keywords from subheadings for relevant images
-            const imageKeywords = titleData.subheadings.map(subheading => {
-              // Extract key terms from subheading for image search
-              const terms = subheading.toLowerCase()
-                .replace(/[^\w\s]/g, '')
-                .split(/\s+/)
-                .filter(word => word.length > 3);
-              
-              // Return the most relevant term for image search
-              return terms[0] || subheading.split(' ')[0];
-            });
-            
             // Insert images after relevant sections
             let modifiedContent = content;
-            titleData.subheadings.forEach((subheading, index) => {
-              const imageKeyword = imageKeywords[index];
+            titleData.subheadings.forEach((subheading: string, index: number) => {
+              // Check if user provided custom image for this subheading
+              let imageUrl = '';
+              if (settings.subheadingImages && settings.subheadingImages[subheading]) {
+                // Use user-provided image
+                imageUrl = settings.subheadingImages[subheading];
+              } else {
+                // Extract key terms from subheading for automatic image search
+                const terms = subheading.toLowerCase()
+                  .replace(/[^\w\s]/g, '')
+                  .split(/\s+/)
+                  .filter((word: string) => word.length > 3);
+                
+                const imageKeyword = terms[0] || subheading.split(' ')[0];
+                // Use Unsplash with relevant search term
+                imageUrl = `https://source.unsplash.com/600x400/?${encodeURIComponent(imageKeyword)}`;
+              }
               
-              // Create image URL based on keyword (using placeholder service)
-              const imageUrl = `https://images.unsplash.com/400x300/?${encodeURIComponent(imageKeyword)}`;
-              const imageHtml = `<img src="${imageUrl}" alt="${subheading}" class="section-image" style="width: 100%; max-width: 400px; height: auto; margin: 15px 0; border-radius: 8px;" />`;
+              const imageHtml = `<img src="${imageUrl}" alt="${subheading}" class="section-image" style="width: 100%; max-width: 600px; height: auto; margin: 20px 0; border-radius: 8px; display: block;" />`;
               
               // Find the subheading in content and insert image after its section
               const subheadingPattern = new RegExp(`<h[23][^>]*>${subheading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</h[23]>`, 'i');
