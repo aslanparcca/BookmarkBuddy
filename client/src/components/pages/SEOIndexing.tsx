@@ -475,7 +475,7 @@ export default function SEOIndexing() {
   // Site management mutations
   const deleteSiteMutation = useMutation({
     mutationFn: async (siteId: number) => {
-      const response = await apiRequest("DELETE", `/api/websites/${siteId}`);
+      const response = await apiRequest(`/api/websites/${siteId}`, "DELETE");
       return await response.json();
     },
     onSuccess: () => {
@@ -496,7 +496,7 @@ export default function SEOIndexing() {
 
   const pingSiteMutation = useMutation({
     mutationFn: async (siteId: number) => {
-      const response = await apiRequest("POST", `/api/websites/${siteId}/ping`);
+      const response = await apiRequest(`/api/websites/${siteId}/ping`, "POST");
       return await response.json();
     },
     onSuccess: () => {
@@ -516,7 +516,7 @@ export default function SEOIndexing() {
 
   const updateSitemapMutation = useMutation({
     mutationFn: async (siteId: number) => {
-      const response = await apiRequest("POST", `/api/websites/${siteId}/sync-sitemap`);
+      const response = await apiRequest(`/api/websites/${siteId}/sync-sitemap`, "POST");
       return await response.json();
     },
     onSuccess: () => {
@@ -568,7 +568,7 @@ export default function SEOIndexing() {
 
   const submitIndexingMutation = useMutation({
     mutationFn: async (data: { websiteId: string, urls: string[], searchEngines: string[] }) => {
-      const response = await apiRequest("POST", "/api/seo-indexing/submit", data);
+      const response = await apiRequest("/api/seo-indexing/submit", "POST", data);
       return await response.json();
     },
     onSuccess: (data: any) => {
@@ -602,7 +602,7 @@ export default function SEOIndexing() {
 
   const generateSitemapUrlsMutation = useMutation({
     mutationFn: async (websiteId: string) => {
-      return await apiRequest("POST", `/api/seo-indexing/generate-sitemap-urls/${websiteId}`, {});
+      return await apiRequest(`/api/seo-indexing/generate-sitemap-urls/${websiteId}`, "POST", {});
     },
     onSuccess: (data: any) => {
       if (data.urls && Array.isArray(data.urls)) {

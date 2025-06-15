@@ -44,7 +44,7 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
       }
 
       const validKeywords = focusKeywords.filter(keyword => keyword.trim() !== '');
-      const response = await apiRequest('POST', '/api/generate-content', {
+      const response = await apiRequest('/api/generate-content', 'POST', {
         titles: validTitles,
         settings,
         focusKeywords: validKeywords,
@@ -78,7 +78,7 @@ export default function AIEditor({ setLoading }: AIEditorProps) {
   const saveArticleMutation = useMutation({
     mutationFn: async () => {
       const validTitles = titles.filter(title => title.trim() !== '');
-      const response = await apiRequest('POST', '/api/articles', {
+      const response = await apiRequest('/api/articles', 'POST', {
         title: validTitles[0] || 'Başlıksız Makale',
         content,
         htmlContent: content,
