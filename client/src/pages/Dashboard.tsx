@@ -30,6 +30,9 @@ import PlaceholderPage from "@/components/pages/PlaceholderPage";
 import KeywordGenerator from "@/components/pages/KeywordGenerator";
 import WPCommentGenerator from "@/components/pages/WPCommentGenerator";
 import TitleGenerator from "@/components/pages/TitleGenerator";
+import AboutGenerator from "@/components/pages/AboutGenerator";
+import CVWriter from "@/components/pages/CVWriter";
+import ServiceDescriptionWriter from "@/components/pages/ServiceDescriptionWriter";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -153,11 +156,11 @@ export default function Dashboard() {
       case 'title-generator':
         return <TitleGenerator setLoading={setLoading} />;
       case 'about-generator':
-        return <PlaceholderPage title="Hakkımda Yazısı Üretici" description="Dilediğiniz dilde hakkımda yazısı üretin" icon="fas fa-user" iconColor="text-green-600" />;
+        return <AboutGenerator setLoading={setLoading} />;
       case 'cv-writer':
-        return <PlaceholderPage title="CV Yazarı" description="Kişisel bilgilerinizle CV metni üretin" icon="fas fa-file-alt" iconColor="text-indigo-600" />;
+        return <CVWriter setLoading={setLoading} />;
       case 'service-description':
-        return <PlaceholderPage title="Hizmet Açıklaması Yazarı" description="Verdiğiniz hizmetler için açıklamalar üretin" icon="fas fa-tools" iconColor="text-orange-600" />;
+        return <ServiceDescriptionWriter setLoading={setLoading} />;
       case 'product-description':
         return <PlaceholderPage title="Ürün Açıklaması Üretici" description="E-ticaret için SEO uyumlu ürün açıklamaları" icon="fas fa-tag" iconColor="text-red-600" />;
       case 'faq-generator':

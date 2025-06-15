@@ -3812,6 +3812,429 @@ Başlıklar:`;
     }
   });
 
+  // About Generator endpoint
+  app.post('/api/generate-about', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { fullName, profession, experience, skills, achievements, personalInfo, language, tone } = req.body;
+      
+      if (!fullName?.trim() || !profession?.trim()) {
+        return res.status(400).json({ error: 'Ad soyad ve meslek bilgileri gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      // Build tone instructions
+      let toneInstructions = '';
+      switch (tone) {
+        case 'friendly':
+          toneInstructions = 'Samimi ve arkadaşça bir ton kullan.';
+          break;
+        case 'formal':
+          toneInstructions = 'Resmi ve kurumsal bir dil kullan.';
+          break;
+        case 'creative':
+          toneInstructions = 'Yaratıcı ve özgün bir anlatım kullan.';
+          break;
+        default:
+          toneInstructions = 'Profesyonel ama yaklaşılabilir bir ton kullan.';
+      }
+
+      const experienceContext = experience ? `\nDeneyim: ${experience}` : '';
+      const skillsContext = skills ? `\nYetenekler: ${skills}` : '';
+      const achievementsContext = achievements ? `\nBaşarılar: ${achievements}` : '';
+      const personalContext = personalInfo ? `\nKişisel Bilgiler: ${personalInfo}` : '';
+      
+      const prompt = `Kişi Bilgileri:
+Ad Soyad: ${fullName}
+Meslek: ${profession}${experienceContext}${skillsContext}${achievementsContext}${personalContext}
+
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+
+Görev: Bu kişi için profesyonel bir "Hakkımda" yazısı oluştur.
+
+Talimatlar:
+- ${toneInstructions}
+- 2-3 paragraf uzunluğunda olsun
+- Kişinin uzmanlık alanını ve deneyimini vurgula
+- Verilmeyen bilgileri uydurmayın
+- Gerçekçi ve inandırıcı olsun
+- Web sitesi, CV veya sosyal medya profili için uygun olsun
+- Sadece hakkımda yazısını döndür, başka açıklama yapma
+
+Hakkımda Yazısı:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const aboutText = response.text().trim();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, aboutText.length);
+
+      res.json({ aboutText });
+    } catch (error) {
+      console.error('About generation error:', error);
+      res.status(500).json({ error: 'Hakkımda yazısı oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // CV Writer endpoint
+  app.post('/api/generate-cv', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { fullName, profession, experience, education, skills, contact, language, style } = req.body;
+      
+      if (!fullName?.trim() || !profession?.trim()) {
+        return res.status(400).json({ error: 'Ad soyad ve meslek bilgileri gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const experienceContext = experience ? `\nDeneyim: ${experience}` : '';
+      const educationContext = education ? `\nEğitim: ${education}` : '';
+      const skillsContext = skills ? `\nYetenekler: ${skills}` : '';
+      const contactContext = contact ? `\nİletişim: ${contact}` : '';
+      
+      const prompt = `Kişi Bilgileri:
+Ad Soyad: ${fullName}
+Meslek: ${profession}${experienceContext}${educationContext}${skillsContext}${contactContext}
+
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Stil: ${style || 'Standart'}
+
+Görev: Bu kişi için profesyonel bir CV metni oluştur.
+
+Talimatlar:
+- CV formatında düzenli ve sistematik olsun
+- Özgeçmiş başlıkları kullan (Kişisel Bilgiler, Deneyim, Eğitim, Yetenekler vb.)
+- Verilmeyen bilgileri uydurmayın
+- İş başvuruları için uygun olsun
+- Profesyonel dil kullan
+- Madde işaretleri ve başlıklar kullan
+
+CV Metni:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const cvText = response.text().trim();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, cvText.length);
+
+      res.json({ cvText });
+    } catch (error) {
+      console.error('CV generation error:', error);
+      res.status(500).json({ error: 'CV oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Service Description Generator endpoint
+  app.post('/api/generate-service-description', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { serviceName, serviceDetails, targetAudience, benefits, language, tone } = req.body;
+      
+      if (!serviceName?.trim()) {
+        return res.status(400).json({ error: 'Hizmet adı gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const detailsContext = serviceDetails ? `\nDetaylar: ${serviceDetails}` : '';
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      const benefitsContext = benefits ? `\nFaydalar: ${benefits}` : '';
+      
+      const prompt = `Hizmet Bilgileri:
+Hizmet Adı: ${serviceName}${detailsContext}${audienceContext}${benefitsContext}
+
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Ton: ${tone || 'Profesyonel'}
+
+Görev: Bu hizmet için çekici bir açıklama metni oluştur.
+
+Talimatlar:
+- Hizmetin faydalarını vurgula
+- Müşterileri ikna edici olsun
+- 2-3 paragraf uzunluğunda
+- Web sitesi veya broşür için uygun
+- Verilmeyen bilgileri uydurmayın
+
+Hizmet Açıklaması:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const serviceDescription = response.text().trim();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, serviceDescription.length);
+
+      res.json({ serviceDescription });
+    } catch (error) {
+      console.error('Service description generation error:', error);
+      res.status(500).json({ error: 'Hizmet açıklaması oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Product Description Generator endpoint
+  app.post('/api/generate-product-description', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { productName, productFeatures, targetAudience, price, category, language, tone } = req.body;
+      
+      if (!productName?.trim()) {
+        return res.status(400).json({ error: 'Ürün adı gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const featuresContext = productFeatures ? `\nÖzellikler: ${productFeatures}` : '';
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      const priceContext = price ? `\nFiyat: ${price}` : '';
+      const categoryContext = category ? `\nKategori: ${category}` : '';
+      
+      const prompt = `Ürün Bilgileri:
+Ürün Adı: ${productName}${featuresContext}${audienceContext}${priceContext}${categoryContext}
+
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Ton: ${tone || 'Satış odaklı'}
+
+Görev: Bu ürün için SEO uyumlu ve satış odaklı bir açıklama oluştur.
+
+Talimatlar:
+- E-ticaret sitesi için uygun olsun
+- Ürünün faydalarını ve özelliklerini vurgula
+- SEO anahtar kelimeleri doğal şekilde kullan
+- Müşterileri satın almaya ikna edici olsun
+- 2-3 paragraf uzunluğunda
+- Verilmeyen bilgileri uydurmayın
+- Madde işaretleri ile önemli özellikleri listele
+
+Ürün Açıklaması:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const productDescription = response.text().trim();
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, productDescription.length);
+
+      res.json({ productDescription });
+    } catch (error) {
+      console.error('Product description generation error:', error);
+      res.status(500).json({ error: 'Ürün açıklaması oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // FAQ Generator endpoint
+  app.post('/api/generate-faq', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { topic, targetAudience, questionCount, language, tone } = req.body;
+      
+      if (!topic?.trim()) {
+        return res.status(400).json({ error: 'Konu gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const audienceContext = targetAudience ? `\nHedef Kitle: ${targetAudience}` : '';
+      
+      const prompt = `Konu: ${topic}${audienceContext}
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Soru Sayısı: ${questionCount || 10}
+
+Görev: Bu konu hakkında sıkça sorulan sorular ve cevaplar oluştur.
+
+Talimatlar:
+- Gerçekçi ve yararlı sorular sor
+- Detaylı ve bilgilendirici cevaplar ver
+- Web sitesi SSS sayfası için uygun olsun
+- Farklı zorluk seviyelerinde sorular ekle
+- JSON formatında döndür
+
+JSON Format:
+[
+  {
+    "question": "Bu konu hakkında en çok merak edilen nedir?",
+    "answer": "Detaylı ve açıklayıcı cevap..."
+  }
+]
+
+Sadece JSON array'ini döndür:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Parse JSON response
+      let faqs = [];
+      try {
+        const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
+        faqs = JSON.parse(cleanedText);
+      } catch (parseError) {
+        // Fallback parsing if JSON is malformed
+        const lines = text.split('\n').filter(line => line.trim());
+        faqs = lines.slice(0, questionCount * 2).reduce((acc: any[], line, index) => {
+          if (index % 2 === 0) {
+            acc.push({
+              question: line.replace(/^\d+\.?\s*[-•]?\s*/, '').trim(),
+              answer: lines[index + 1]?.replace(/^\d+\.?\s*[-•]?\s*/, '').trim() || 'Cevap oluşturulamadı.'
+            });
+          }
+          return acc;
+        }, []);
+      }
+
+      // Ensure we have the requested number of FAQs
+      faqs = faqs.slice(0, questionCount);
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, text.length);
+
+      res.json({ faqs });
+    } catch (error) {
+      console.error('FAQ generation error:', error);
+      res.status(500).json({ error: 'SSS oluşturma sırasında hata oluştu' });
+    }
+  });
+
+  // Google Review Generator endpoint
+  app.post('/api/generate-google-reviews', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { businessName, businessType, reviewCount, tone, language } = req.body;
+      
+      if (!businessName?.trim()) {
+        return res.status(400).json({ error: 'İşletme adı gereklidir' });
+      }
+
+      const userId = req.user.claims.sub;
+      
+      // Get user's API key
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                       apiKeys.find(key => key.service === 'gemini');
+      
+      if (!geminiKey) {
+        return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
+      }
+
+      const businessContext = businessType ? `\nİşletme Türü: ${businessType}` : '';
+      
+      const prompt = `İşletme: ${businessName}${businessContext}
+Dil: ${language === 'tr' ? 'Türkçe' : language === 'en' ? 'İngilizce' : language}
+Yorum Sayısı: ${reviewCount}
+Ton: ${tone || 'Pozitif'}
+
+Görev: Bu işletme için Google yorumları oluştur.
+
+Talimatlar:
+- Gerçekçi müşteri yorumları gibi olsun
+- Farklı deneyimler ve bakış açıları ekle
+- 1-5 yıldız arasında puanlar ver
+- Kısa ve orta uzunlukta yorumlar
+- JSON formatında döndür
+
+JSON Format:
+[
+  {
+    "reviewer": "Müşteri Adı",
+    "rating": 5,
+    "review": "Yorum metni..."
+  }
+]
+
+Sadece JSON array'ini döndür:`;
+
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Parse JSON response
+      let reviews = [];
+      try {
+        const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
+        reviews = JSON.parse(cleanedText);
+      } catch (parseError) {
+        // Fallback parsing if JSON is malformed
+        const lines = text.split('\n').filter(line => line.trim());
+        reviews = lines.slice(0, reviewCount).map((line, index) => ({
+          reviewer: `Müşteri ${index + 1}`,
+          rating: Math.floor(Math.random() * 2) + 4, // 4-5 stars
+          review: line.replace(/^\d+\.?\s*[-•]?\s*/, '').trim()
+        }));
+      }
+
+      // Ensure we have the requested number of reviews
+      reviews = reviews.slice(0, reviewCount);
+
+      // Track API usage
+      await storage.incrementApiUsage(userId, 'gemini', 1, text.length);
+
+      res.json({ reviews });
+    } catch (error) {
+      console.error('Google review generation error:', error);
+      res.status(500).json({ error: 'Google yorum oluşturma sırasında hata oluştu' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
