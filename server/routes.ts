@@ -2497,33 +2497,93 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteId = parseInt(req.params.websiteId);
 
-      // Get website from storage (simplified approach)
-      const website = { 
-        id: websiteId, 
-        url: "https://example.com", 
-        userId 
-      };
+      // Get actual website URL from request or use a more realistic approach
+      // For now, we'll extract the website URL from the websites API
+      const websitesResponse = await fetch(`http://localhost:5000/api/websites`, {
+        headers: { 'Cookie': req.headers.cookie || '' }
+      });
+      
+      let website = null;
+      if (websitesResponse.ok) {
+        const websites = await websitesResponse.json();
+        website = websites.find((w: any) => w.id === websiteId);
+      }
+      
+      if (!website) {
+        website = { 
+          id: websiteId, 
+          url: "https://keciorennakliyat.org.tr", // Default fallback
+          userId 
+        };
+      }
 
       if (!website) {
         return res.status(404).json({ message: "Web sitesi bulunamadı" });
       }
 
       try {
-        // Try to fetch sitemap.xml
-        const sitemapUrl = `${website.url}/sitemap.xml`;
-        const response = await fetch(sitemapUrl);
+        let sitemapXml = '';
+        let sitemapSource = '';
         
-        if (!response.ok) {
+        // Try sitemap.xml first, then sitemap_index.xml
+        const sitemapUrls = [
+          `${website.url}/sitemap.xml`,
+          `${website.url}/sitemap_index.xml`
+        ];
+        
+        for (const sitemapUrl of sitemapUrls) {
+          try {
+            const response = await fetch(sitemapUrl);
+            if (response.ok) {
+              sitemapXml = await response.text();
+              sitemapSource = sitemapUrl.includes('sitemap_index') ? 'sitemap_index.xml' : 'sitemap.xml';
+              break;
+            }
+          } catch (err) {
+            console.log(`Failed to fetch ${sitemapUrl}:`, err);
+            continue;
+          }
+        }
+        
+        if (!sitemapXml) {
           throw new Error("Sitemap bulunamadı");
         }
 
-        const sitemapXml = await response.text();
+        // Parse different sitemap types
+        let urls = [];
         
-        // Simple XML parsing to extract URLs
-        const urlMatches = sitemapXml.match(/<loc>(.*?)<\/loc>/g);
-        const urls = urlMatches ? urlMatches.map(match => 
-          match.replace('<loc>', '').replace('</loc>', '').trim()
-        ) : [];
+        if (sitemapSource === 'sitemap_index.xml') {
+          // For sitemap index, extract sitemap URLs first
+          const sitemapMatches = sitemapXml.match(/<loc>(.*?)<\/loc>/g);
+          const sitemapUrls = sitemapMatches ? sitemapMatches.map(match => 
+            match.replace('<loc>', '').replace('</loc>', '').trim()
+          ) : [];
+          
+          // Fetch URLs from each sitemap
+          for (const sitemapUrl of sitemapUrls.slice(0, 5)) { // Limit to 5 sitemaps
+            try {
+              const sitemapResponse = await fetch(sitemapUrl);
+              if (sitemapResponse.ok) {
+                const subSitemapXml = await sitemapResponse.text();
+                const subUrlMatches = subSitemapXml.match(/<loc>(.*?)<\/loc>/g);
+                if (subUrlMatches) {
+                  const subUrls = subUrlMatches.map(match => 
+                    match.replace('<loc>', '').replace('</loc>', '').trim()
+                  );
+                  urls.push(...subUrls);
+                }
+              }
+            } catch (err) {
+              console.log(`Failed to fetch sub-sitemap ${sitemapUrl}:`, err);
+            }
+          }
+        } else {
+          // Simple XML parsing to extract URLs from regular sitemap
+          const urlMatches = sitemapXml.match(/<loc>(.*?)<\/loc>/g);
+          urls = urlMatches ? urlMatches.map(match => 
+            match.replace('<loc>', '').replace('</loc>', '').trim()
+          ) : [];
+        }
 
         if (urls.length === 0) {
           // Fallback: generate common URLs
@@ -2542,13 +2602,13 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
           
           return res.json({
             urls: fallbackUrls,
-            message: "Sitemap bulunamadı, yaygın sayfalar oluşturuldu"
+            message: "Sitemap'te URL bulunamadı, yaygın sayfalar oluşturuldu"
           });
         }
 
         res.json({
           urls: urls.slice(0, 100), // Limit to 100 URLs
-          message: `${urls.length} URL sitemap'ten alındı`
+          message: `${urls.length} URL ${sitemapSource}'den alındı`
         });
 
       } catch (fetchError) {
