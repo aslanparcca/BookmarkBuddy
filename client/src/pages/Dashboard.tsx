@@ -33,6 +33,8 @@ import TitleGenerator from "@/components/pages/TitleGenerator";
 import AboutGenerator from "@/components/pages/AboutGenerator";
 import CVWriter from "@/components/pages/CVWriter";
 import ServiceDescriptionWriter from "@/components/pages/ServiceDescriptionWriter";
+import ProductDescriptionGenerator from "@/components/pages/ProductDescriptionGenerator";
+import FAQGenerator from "@/components/pages/FAQGenerator";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -162,9 +164,9 @@ export default function Dashboard() {
       case 'service-description':
         return <ServiceDescriptionWriter setLoading={setLoading} />;
       case 'product-description':
-        return <PlaceholderPage title="Ürün Açıklaması Üretici" description="E-ticaret için SEO uyumlu ürün açıklamaları" icon="fas fa-tag" iconColor="text-red-600" />;
+        return <ProductDescriptionGenerator setLoading={setLoading} />;
       case 'faq-generator':
-        return <PlaceholderPage title="Sıkça Sorulan Sorular" description="İstediğin konuda SSS ve cevapları üret" icon="fas fa-question-circle" iconColor="text-blue-600" />;
+        return <FAQGenerator setLoading={setLoading} />;
       case 'google-review':
         return <PlaceholderPage title="Google Yorum Üretici" description="Google Maps için gerçek yorumlar üretin" icon="fab fa-google" iconColor="text-red-600" />;
       
