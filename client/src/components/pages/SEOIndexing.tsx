@@ -654,8 +654,13 @@ export default function SEOIndexing() {
                           placeholder="nALeZRXCJr6VWWrKYFK97XK95y2SeehSMZnS"
                           className="flex-1"
                         />
-                        <Button variant="outline" size="sm">
-                          Üret
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => generateIndexNowKeyMutation.mutate()}
+                          disabled={generateIndexNowKeyMutation.isPending}
+                        >
+                          {generateIndexNowKeyMutation.isPending ? "Üretiliyor..." : "Üret"}
                         </Button>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
@@ -685,13 +690,23 @@ export default function SEOIndexing() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex items-center gap-2"
+                        onClick={handleSaveApiSettings}
+                        disabled={saveSeoApiSettingsMutation.isPending}
+                      >
                         <RefreshCw className="w-4 h-4" />
-                        Ayarları Kaydet
+                        {saveSeoApiSettingsMutation.isPending ? "Kaydediliyor..." : "Ayarları Kaydet"}
                       </Button>
-                      <Button variant="outline" className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex items-center gap-2"
+                        onClick={() => testIndexNowKeyMutation.mutate()}
+                        disabled={testIndexNowKeyMutation.isPending || !indexNowApiKey || !indexNowDomain}
+                      >
                         <CheckCircle className="w-4 h-4" />
-                        API Key Dosyasını Kontrol Et
+                        {testIndexNowKeyMutation.isPending ? "Kontrol Ediliyor..." : "API Key Dosyasını Kontrol Et"}
                       </Button>
                     </div>
                   </div>
