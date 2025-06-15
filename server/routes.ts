@@ -2020,17 +2020,30 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
-  // In-memory storage for websites per user
-  const userWebsites: Record<string, any[]> = {};
-
   // Website management endpoints
   app.get('/api/websites', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-
-      // Return user's websites or empty array
-      const websites = userWebsites[userId] || [];
-      res.json(websites);
+      const websites = await storage.getWebsitesByUserId(userId);
+      
+      // Format websites for frontend compatibility
+      const formattedWebsites = websites.map(website => ({
+        id: website.id,
+        url: website.url,
+        name: website.name,
+        type: website.platform === 'wordpress' ? 'WordPress' : 
+              website.platform === 'xenforo' ? 'XenForo' : 'Blogger',
+        seoPlugin: website.seoPlugin === 'yoast' ? 'Yoast SEO' : 
+                   website.seoPlugin === 'rankmath' ? 'Rank Math SEO' : 'Yok',
+        gscConnected: website.status === 'active',
+        apiConnected: website.wpUsername && website.wpAppPassword ? true : false,
+        wpUsername: website.wpUsername,
+        wpAppPassword: website.wpAppPassword,
+        categories: website.categories || [],
+        lastSync: website.lastSync
+      }));
+      
+      res.json(formattedWebsites);
     } catch (error) {
       console.error("Website list error:", error);
       res.status(500).json({ message: "Web sitesi listesi alınamadı" });
@@ -2042,34 +2055,41 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteData = req.body;
 
-      // Simulate website addition process
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const newWebsite = {
-        id: Math.floor(Math.random() * 10000),
+      const newWebsiteData = {
+        userId,
+        name: websiteData.url.replace(/^https?:\/\//, '').replace(/\/$/, ''),
         url: websiteData.url,
-        type: websiteData.type === "1" ? "WordPress" : "XenForo",
-        seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "Yoast SEO" : 
-                   websiteData.seo_plugin === "rank_math_seo" ? "Rank Math SEO" : "Yok",
-        gscConnected: Math.random() > 0.5,
-        apiConnected: Math.random() > 0.6,
-        // WordPress credentials
-        wpUsername: websiteData.wp_username || '',
-        wpAppPassword: websiteData.wp_app_password || '',
-        categories: []
+        platform: websiteData.type === "1" ? "wordpress" : "xenforo",
+        wpUsername: websiteData.wp_username || null,
+        wpAppPassword: websiteData.wp_app_password || null,
+        adminUsername: websiteData.admin_username || null,
+        adminPassword: websiteData.admin_password || null,
+        seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "yoast" : 
+                   websiteData.seo_plugin === "rank_math_seo" ? "rankmath" : null,
+        status: "active"
       };
 
-      // Initialize user's websites array if it doesn't exist
-      if (!userWebsites[userId]) {
-        userWebsites[userId] = [];
-      }
+      const newWebsite = await storage.createWebsite(newWebsiteData);
 
-      // Add new website to user's list
-      userWebsites[userId].push(newWebsite);
+      // Format for frontend compatibility
+      const formattedWebsite = {
+        id: newWebsite.id,
+        url: newWebsite.url,
+        name: newWebsite.name,
+        type: newWebsite.platform === 'wordpress' ? 'WordPress' : 'XenForo',
+        seoPlugin: newWebsite.seoPlugin === 'yoast' ? 'Yoast SEO' : 
+                   newWebsite.seoPlugin === 'rankmath' ? 'Rank Math SEO' : 'Yok',
+        gscConnected: true,
+        apiConnected: newWebsite.wpUsername && newWebsite.wpAppPassword ? true : false,
+        wpUsername: newWebsite.wpUsername,
+        wpAppPassword: newWebsite.wpAppPassword,
+        categories: newWebsite.categories || [],
+        lastSync: newWebsite.lastSync
+      };
 
       res.json({
         success: true,
-        website: newWebsite,
+        website: formattedWebsite,
         message: "Web sitesi başarıyla eklendi"
       });
     } catch (error) {
@@ -2083,42 +2103,16 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteId = parseInt(req.params.id);
 
-      // Find the website to update
-      if (userWebsites[userId]) {
-        const websiteIndex = userWebsites[userId].findIndex(w => w.id === websiteId);
-        if (websiteIndex !== -1) {
-          const website = userWebsites[userId][websiteIndex];
-          let categories = [];
-
-          try {
-            // Fetch real categories from WordPress REST API
-            const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?per_page=100`;
-            const response = await fetch(categoriesUrl);
-            
-            if (response.ok) {
-              const wpCategories = await response.json();
-              categories = wpCategories.map((cat: any) => cat.name);
-            } else {
-              // If WordPress API fails, use default categories
-              categories = ["Genel", "Haberler", "Teknoloji", "Yazılım", "Web Tasarım"];
-            }
-          } catch (error) {
-            console.error("WordPress API error:", error);
-            // Fallback to default categories if API fails
-            categories = ["Genel", "Haberler", "Teknoloji", "Yazılım", "Web Tasarım"];
-          }
-
-          // Update website with categories
-          userWebsites[userId][websiteIndex].categories = categories;
-        }
+      const updatedWebsite = await storage.syncWebsiteCategories(websiteId, userId);
+      
+      if (!updatedWebsite) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
       }
-
-      // Simulate category and tag sync process
-      await new Promise(resolve => setTimeout(resolve, 1000));
 
       res.json({ 
         success: true,
-        message: "Kategori ve etiketler güncellendi"
+        message: "Kategori ve etiketler güncellendi",
+        categories: updatedWebsite.categories
       });
     } catch (error) {
       console.error("Website sync error:", error);
@@ -2131,12 +2125,10 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteId = parseInt(req.params.id);
 
-      // Simulate website deletion
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Remove website from user's list
-      if (userWebsites[userId]) {
-        userWebsites[userId] = userWebsites[userId].filter(website => website.id !== websiteId);
+      const deleted = await storage.deleteWebsite(websiteId, userId);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
       }
 
       res.json({ 
@@ -2159,8 +2151,8 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
         return res.status(400).json({ message: "Eksik parametreler" });
       }
 
-      // Find the website
-      const website = userWebsites[userId]?.find(w => w.id.toString() === websiteId);
+      // Find the website from database
+      const website = await storage.getWebsiteById(parseInt(websiteId), userId);
       if (!website) {
         return res.status(404).json({ message: "Web sitesi bulunamadı" });
       }
@@ -2182,7 +2174,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const results = [];
       for (const article of articles) {
         try {
-          if (website.type === "WordPress") {
+          if (website.platform === "wordpress") {
             // WordPress REST API endpoint for posts
             const wpApiUrl = `${website.url}/wp-json/wp/v2/posts`;
             
@@ -2286,7 +2278,7 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               });
             }
 
-          } else if (website.type === "XenForo") {
+          } else if (website.platform === "xenforo") {
             // XenForo API implementation would go here
             console.log(`Sending article "${article.title}" to XenForo site ${website.url}`);
             
