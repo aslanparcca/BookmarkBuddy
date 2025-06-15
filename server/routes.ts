@@ -2110,6 +2110,16 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             '<h3>Question 2 about the topic?</h3>',
             '<p>Comprehensive answer with useful information...</p>',
             '',
+            imagePlacementInstructions.length > 0 ? 'IMAGE PLACEMENT EXAMPLE (FOLLOW THIS EXACTLY):' : '',
+            imagePlacementInstructions.length > 0 ? '<h2>Section Title</h2>' : '',
+            imagePlacementInstructions.length > 0 ? '<p>This is the paragraph content about the section. All the text goes here first. The paragraph content continues here with detailed information about the topic. This is where you write all the important details and information.</p>' : '',
+            imagePlacementInstructions.length > 0 ? '<div class="wp-block-image">...[IMAGE GOES HERE AT END OF PARAGRAPH]...</div>' : '',
+            imagePlacementInstructions.length > 0 ? '' : '',
+            imagePlacementInstructions.length > 0 ? 'WRONG EXAMPLE (DO NOT DO THIS):' : '',
+            imagePlacementInstructions.length > 0 ? '<h2>Section Title</h2>' : '',
+            imagePlacementInstructions.length > 0 ? '<div class="wp-block-image">...[WRONG - IMAGE IMMEDIATELY AFTER HEADING]...</div>' : '',
+            imagePlacementInstructions.length > 0 ? '<p>This is wrong because the image came before the paragraph text.</p>' : '',
+            imagePlacementInstructions.length > 0 ? '' : '',
             'IMPORTANT: Return only the article body content in Turkish. NO title, NO summary section, NO explanations. Start directly with the first introductory paragraph. ALWAYS end with FAQ section.'
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
