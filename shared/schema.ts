@@ -123,6 +123,7 @@ export const websites = pgTable("websites", {
   name: varchar("name", { length: 255 }).notNull(),
   url: text("url").notNull(),
   platform: varchar("platform", { length: 20 }).notNull(), // wordpress, blogger, xenforo
+  sitemapUrl: text("sitemap_url"), // Sitemap URL for SEO indexing
   wpUsername: varchar("wp_username", { length: 255 }),
   wpAppPassword: text("wp_app_password"),
   adminUsername: varchar("admin_username", { length: 255 }),

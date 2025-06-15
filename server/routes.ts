@@ -2204,6 +2204,95 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // Website ping endpoint
+  app.post('/api/websites/:id/ping', isAuthenticated, async (req: any, res) => {
+    try {
+      const websiteId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      
+      const website = await storage.getWebsiteById(websiteId, userId);
+      if (!website) {
+        return res.status(404).json({ message: 'Website not found' });
+      }
+
+      // Simple ping implementation - check if URL is accessible
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await fetch(website.url, { 
+        method: 'HEAD', 
+        signal: controller.signal 
+      });
+      clearTimeout(timeoutId);
+      const status = response.ok ? 'success' : 'failed';
+      
+      res.json({ 
+        status,
+        message: status === 'success' ? 'Site başarıyla pinglendi' : 'Site ping başarısız',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Ping error:', error);
+      res.status(500).json({ message: 'Ping işlemi başarısız' });
+    }
+  });
+
+  // Website sitemap sync endpoint
+  app.post('/api/websites/:id/sync-sitemap', isAuthenticated, async (req: any, res) => {
+    try {
+      const websiteId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      
+      const website = await storage.getWebsiteById(websiteId, userId);
+      if (!website) {
+        return res.status(404).json({ message: 'Website not found' });
+      }
+
+      // Try to fetch sitemap and extract URLs
+      let sitemapUrl = website.sitemapUrl;
+      if (!sitemapUrl) {
+        // Try common sitemap locations
+        const commonSitemaps = [
+          `${website.url}/sitemap.xml`,
+          `${website.url}/sitemap_index.xml`,
+          `${website.url}/wp-sitemap.xml`
+        ];
+        
+        for (const url of commonSitemaps) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (response.ok) {
+              sitemapUrl = url;
+              break;
+            }
+          } catch (e) {
+            // Continue to next URL
+          }
+        }
+      }
+
+      if (!sitemapUrl) {
+        return res.status(404).json({ message: 'Sitemap bulunamadı' });
+      }
+
+      // Update website with found sitemap URL
+      await storage.updateWebsite(websiteId, userId, { sitemapUrl });
+      
+      res.json({ 
+        message: 'Sitemap başarıyla güncellendi',
+        sitemapUrl,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Sitemap sync error:', error);
+      res.status(500).json({ message: 'Sitemap güncelleme başarısız' });
+    }
+  });
+
   app.post('/api/websites/:id/sync', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;

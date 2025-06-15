@@ -44,6 +44,7 @@ interface Website {
   url: string;
   name: string;
   platform: string;
+  sitemapUrl?: string;
 }
 
 // Site Edit Form Component
