@@ -1916,8 +1916,34 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
               imagePlacementInstructions.push(`</div>`);
             });
           } else {
-            console.log('No user images available - no automatic image placement');
-            imagePlacementInstructions.push('RESIM EKLEME: Bu makale için kullanıcı tarafından resim yüklenmemiş, hiçbir resim ekleme');
+            // No user images - generate automatic images for subheadings
+            console.log('No user images - enabling automatic image generation for subheadings');
+            
+            if (hasExcelSubheadings && titleData.subheadings && titleData.subheadings.length > 0) {
+              imagePlacementInstructions.push('OTOMATİK RESİM EKLEME:');
+              imagePlacementInstructions.push('Her H2 alt başlık için konuyla ilgili uygun resim ekle');
+              imagePlacementInstructions.push('');
+              
+              titleData.subheadings.forEach((subheading: string, index: number) => {
+                if (index < 6) { // Maksimum 6 resim
+                  // Generate relevant image keyword from subheading
+                  const imageKeyword = subheading.toLowerCase()
+                    .replace(/[^\w\s]/g, ' ')
+                    .split(/\s+/)
+                    .filter((word: any) => word.length > 3)
+                    .slice(0, 3)
+                    .join(' ') || subheading.split(' ')[0];
+                  
+                  imagePlacementInstructions.push(`H2 "${subheading}" başlığından sonra konu ile ilgili resim ekle:`);
+                  imagePlacementInstructions.push(`<div class="wp-block-image" style="text-align:center;margin:25px 0;">`);
+                  imagePlacementInstructions.push(`<img src="https://source.unsplash.com/600x400/?${encodeURIComponent(imageKeyword + ' ' + titleData.focusKeyword)}" alt="${subheading} görseli" style="width:100%;max-width:650px;height:auto;display:block;margin:0 auto;border-radius:8px;" />`);
+                  imagePlacementInstructions.push(`</div>`);
+                  imagePlacementInstructions.push('');
+                }
+              });
+            } else {
+              imagePlacementInstructions.push('RESIM EKLEME: Makale için uygun görseller ekle, maksimum 3-4 resim');
+            }
           }
           
           // Debug log to see what we're getting
