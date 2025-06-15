@@ -16,6 +16,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
     { id: 'articles' as PageType, icon: 'fas fa-file-alt', label: 'İçeriklerim', color: 'text-slate-500' },
     { id: 'websites' as PageType, icon: 'fas fa-globe', label: 'Web Sitelerim', color: 'text-slate-500' },
     { id: 'api-keys' as PageType, icon: 'fas fa-key', label: 'Api Keylerim', color: 'text-slate-500' },
+    { id: 'seo-indexing' as PageType, icon: 'fas fa-search', label: 'SEO İndeksleme', color: 'text-blue-500', badge: 'yeni' },
     { id: 'bulk-editor' as PageType, icon: 'fas fa-layer-group', label: 'Tüm Şablonlar', color: 'text-slate-500' },
     { id: 'wp-editor' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V1', color: 'text-orange-500' },
     { id: 'settings' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V2', color: 'text-green-500' },
