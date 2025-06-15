@@ -242,7 +242,7 @@ export default function ArticlesNew() {
                     <AlertDialogCancel>İptal</AlertDialogCancel>
                     <AlertDialogAction 
                       onClick={() => deleteAllMutation.mutate()}
-                      className="bg-red-600 hover:bg-red-700"
+                      className="bg-red-600 hover:bg red-700"
                       disabled={deleteAllMutation.isPending}
                     >
                       {deleteAllMutation.isPending ? "Siliniyor..." : "Sil"}
