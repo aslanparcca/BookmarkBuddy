@@ -126,6 +126,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Bulk image upload endpoint for subheadings
+  app.post("/api/images/bulk-upload", isAuthenticated, upload.array('images', 20), async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const files = req.files as Express.Multer.File[];
+      
+      if (!files || files.length === 0) {
+        return res.status(400).json({ message: "No images uploaded" });
+      }
+
+      const uploadedImages = [];
+      
+      for (const file of files) {
+        try {
+          // Generate unique filename
+          const filename = generateImageFilename(file.originalname);
+          
+          // Convert to data URL for storage
+          const dataUrl = bufferToDataUrl(file.buffer, file.mimetype);
+          
+          // Store in database
+          const imageData = {
+            userId,
+            filename,
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            url: dataUrl,
+            altText: file.originalname.replace(/\.[^/.]+$/, ""), // Remove extension for alt text
+            category: "subheading",
+            tags: ["bulk-upload", "subheading"]
+          };
+          
+          const savedImage = await storage.createImage(imageData);
+          uploadedImages.push(savedImage);
+          
+        } catch (error) {
+          console.error(`Error uploading image ${file.originalname}:`, error);
+        }
+      }
+
+      res.json({
+        success: true,
+        message: `${uploadedImages.length} images uploaded successfully`,
+        images: uploadedImages
+      });
+
+    } catch (error) {
+      console.error("Bulk image upload error:", error);
+      res.status(500).json({ message: "Image upload failed" });
+    }
+  });
+
+  // Get user images
+  app.get("/api/images", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const images = await storage.getImagesByUserId(userId);
+      res.json(images);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+      res.status(500).json({ message: "Failed to fetch images" });
+    }
+  });
+
+  // Delete image
+  app.delete("/api/images/:id", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const imageId = parseInt(req.params.id);
+      
+      const deleted = await storage.deleteImage(imageId, userId);
+      
+      if (deleted) {
+        res.json({ success: true, message: "Image deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Image not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      res.status(500).json({ message: "Failed to delete image" });
+    }
+  });
+
   // Articles routes
   app.get('/api/articles', isAuthenticated, async (req: any, res) => {
     try {
@@ -1705,6 +1789,12 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       let successCount = 0;
       let failedCount = 0;
+
+      // Fetch user's uploaded images for automatic placement
+      const userImages = await storage.getImagesByUserId(userId);
+      const subheadingImages = userImages.filter(img => img.category === 'subheading');
+      
+      console.log(`Found ${subheadingImages.length} uploaded images for automatic placement`);
 
       for (const titleData of titles) {
         try {
