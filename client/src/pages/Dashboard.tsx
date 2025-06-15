@@ -16,6 +16,7 @@ import CustomArticles from "@/components/pages/CustomArticles";
 import ArticleCustomizer from "@/components/pages/ArticleCustomizer";
 import WebSites from "@/components/pages/WebSites";
 import AddWebsite from "@/components/pages/AddWebsite";
+import EditWebsite from "@/components/pages/EditWebsite";
 import ApiKeys from "@/components/pages/ApiKeys";
 import Articles from "@/components/pages/Articles";
 import SEOIndexing from "@/components/pages/SEOIndexing";
@@ -28,12 +29,13 @@ import { Toaster } from "@/components/ui/toaster";
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
   'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
-  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'api-keys' | 'seo-indexing';
+  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('editor');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editWebsiteId, setEditWebsiteId] = useState<string>('');
 
   const pageTitles: Record<PageType, string> = {
     'editor': 'Ana Sayfa',
@@ -58,6 +60,7 @@ export default function Dashboard() {
     'help-sss': 'Yardım & SSS',
     'websites': 'Web Sitelerim',
     'add-website': 'Yeni Web Sitesi Ekle',
+    'edit-website': 'Web Sitesi Düzenle',
     'api-keys': 'Api Keylerim',
     'seo-indexing': 'SEO İndeksleme'
   };
@@ -104,9 +107,11 @@ export default function Dashboard() {
       case 'help-sss':
         return <PlaceholderPage title="Yardım & SSS" description="Sıkça sorulan sorular ve yardım dokümantasyonu" icon="fas fa-question-circle" iconColor="text-blue-600" />;
       case 'websites':
-        return <WebSites setCurrentPage={setCurrentPage} />;
+        return <WebSites setCurrentPage={setCurrentPage} setEditWebsiteId={setEditWebsiteId} />;
       case 'add-website':
         return <AddWebsite setCurrentPage={setCurrentPage} />;
+      case 'edit-website':
+        return <EditWebsite websiteId={editWebsiteId} setCurrentPage={setCurrentPage} />;
       case 'api-keys':
         return <ApiKeys />;
       case 'seo-indexing':

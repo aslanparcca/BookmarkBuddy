@@ -2108,6 +2108,97 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  app.get('/api/websites/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const websiteId = parseInt(req.params.id);
+
+      const website = await storage.getWebsiteById(websiteId, userId);
+      
+      if (!website) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
+      }
+
+      // Format for frontend compatibility
+      const formattedWebsite = {
+        id: website.id,
+        url: website.url,
+        name: website.name,
+        type: website.platform === 'wordpress' ? 'WordPress' : 'XenForo',
+        seoPlugin: website.seoPlugin === 'yoast' ? 'Yoast SEO' : 
+                   website.seoPlugin === 'rankmath' ? 'Rank Math SEO' : 'Yok',
+        gscConnected: website.gscConnected || false,
+        apiConnected: website.wpUsername && website.wpAppPassword ? true : false,
+        wpUsername: website.wpUsername,
+        wpAppPassword: website.wpAppPassword,
+        categories: website.categories || [],
+        lastSync: website.lastSync,
+        gscPropertyUrl: website.gscPropertyUrl,
+        gscServiceAccountKey: website.gscServiceAccountKey,
+        lastGscSync: website.lastGscSync
+      };
+
+      res.json(formattedWebsite);
+    } catch (error) {
+      console.error("Website fetch error:", error);
+      res.status(500).json({ message: "Web sitesi bilgileri alınamadı" });
+    }
+  });
+
+  app.put('/api/websites/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const websiteId = parseInt(req.params.id);
+      const websiteData = req.body;
+
+      const updateData = {
+        url: websiteData.url,
+        name: websiteData.url.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+        wpUsername: websiteData.wp_username || null,
+        wpAppPassword: websiteData.wp_app_password || null,
+        seoPlugin: websiteData.seo_plugin === "yoast_seo" ? "yoast" : 
+                   websiteData.seo_plugin === "rank_math_seo" ? "rankmath" : null,
+        // Google Search Console integration
+        gscConnected: !!(websiteData.gsc_service_account_key && websiteData.gsc_property_url),
+        gscServiceAccountKey: websiteData.gsc_service_account_key || null,
+        gscPropertyUrl: websiteData.gsc_property_url || null,
+      };
+
+      const updatedWebsite = await storage.updateWebsite(websiteId, userId, updateData);
+      
+      if (!updatedWebsite) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
+      }
+
+      // Format for frontend compatibility
+      const formattedWebsite = {
+        id: updatedWebsite.id,
+        url: updatedWebsite.url,
+        name: updatedWebsite.name,
+        type: updatedWebsite.platform === 'wordpress' ? 'WordPress' : 'XenForo',
+        seoPlugin: updatedWebsite.seoPlugin === 'yoast' ? 'Yoast SEO' : 
+                   updatedWebsite.seoPlugin === 'rankmath' ? 'Rank Math SEO' : 'Yok',
+        gscConnected: updatedWebsite.gscConnected || false,
+        apiConnected: updatedWebsite.wpUsername && updatedWebsite.wpAppPassword ? true : false,
+        wpUsername: updatedWebsite.wpUsername,
+        wpAppPassword: updatedWebsite.wpAppPassword,
+        categories: updatedWebsite.categories || [],
+        lastSync: updatedWebsite.lastSync,
+        gscPropertyUrl: updatedWebsite.gscPropertyUrl,
+        lastGscSync: updatedWebsite.lastGscSync
+      };
+
+      res.json({
+        success: true,
+        website: formattedWebsite,
+        message: "Web sitesi başarıyla güncellendi"
+      });
+    } catch (error) {
+      console.error("Website update error:", error);
+      res.status(500).json({ message: "Web sitesi güncellenirken bir hata oluştu" });
+    }
+  });
+
   app.post('/api/websites/:id/sync', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
