@@ -5,6 +5,7 @@ import {
   apiUsage,
   userSettings,
   apiKeys,
+  websites,
   type User,
   type UpsertUser,
   type Article,
@@ -16,6 +17,8 @@ import {
   type ApiUsage,
   type ApiKey,
   type InsertApiKey,
+  type Website,
+  type InsertWebsite,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -59,6 +62,14 @@ export interface IStorage {
   getApiKeysByUserId(userId: string): Promise<ApiKey[]>;
   deleteApiKey(id: number, userId: string): Promise<boolean>;
   updateApiKeyDefault(userId: string, keyId: number): Promise<void>;
+  
+  // Website operations
+  createWebsite(website: InsertWebsite): Promise<Website>;
+  getWebsitesByUserId(userId: string): Promise<Website[]>;
+  getWebsiteById(id: number, userId: string): Promise<Website | undefined>;
+  updateWebsite(id: number, userId: string, updates: Partial<InsertWebsite>): Promise<Website | undefined>;
+  deleteWebsite(id: number, userId: string): Promise<boolean>;
+  syncWebsiteCategories(id: number, userId: string): Promise<Website | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -323,6 +334,87 @@ export class DatabaseStorage implements IStorage {
       .update(apiKeys)
       .set({ isDefault: true })
       .where(and(eq(apiKeys.id, keyId), eq(apiKeys.userId, userId)));
+  }
+
+  // Website operations
+  async createWebsite(websiteData: InsertWebsite): Promise<Website> {
+    const [newWebsite] = await db.insert(websites).values(websiteData).returning();
+    
+    // Auto-sync categories if it's WordPress
+    if (websiteData.platform === 'wordpress' && websiteData.wpUsername && websiteData.wpAppPassword) {
+      setTimeout(() => this.syncWebsiteCategories(newWebsite.id, websiteData.userId), 1000);
+    }
+    
+    return newWebsite;
+  }
+
+  async getWebsitesByUserId(userId: string): Promise<Website[]> {
+    return await db
+      .select()
+      .from(websites)
+      .where(eq(websites.userId, userId))
+      .orderBy(desc(websites.createdAt));
+  }
+
+  async getWebsiteById(id: number, userId: string): Promise<Website | undefined> {
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, id), eq(websites.userId, userId)));
+    return website;
+  }
+
+  async updateWebsite(id: number, userId: string, updates: Partial<InsertWebsite>): Promise<Website | undefined> {
+    const [updatedWebsite] = await db
+      .update(websites)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(and(eq(websites.id, id), eq(websites.userId, userId)))
+      .returning();
+    return updatedWebsite;
+  }
+
+  async deleteWebsite(id: number, userId: string): Promise<boolean> {
+    const result = await db
+      .delete(websites)
+      .where(and(eq(websites.id, id), eq(websites.userId, userId)));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async syncWebsiteCategories(id: number, userId: string): Promise<Website | undefined> {
+    try {
+      const website = await this.getWebsiteById(id, userId);
+      if (!website || website.platform !== 'wordpress') {
+        return website;
+      }
+
+      // Fetch categories from WordPress
+      const auth = Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64');
+      const response = await fetch(`${website.url}/wp-json/wp/v2/categories?per_page=100`, {
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const categories = await response.json();
+        const categoryData = categories.map((cat: any) => ({
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug,
+          count: cat.count
+        }));
+
+        return await this.updateWebsite(id, userId, {
+          categories: categoryData,
+          lastSync: new Date()
+        });
+      }
+    } catch (error) {
+      console.error('Category sync failed:', error);
+    }
+    
+    return await this.getWebsiteById(id, userId);
   }
 }
 

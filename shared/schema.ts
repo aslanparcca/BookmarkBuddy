@@ -116,6 +116,25 @@ export const apiKeys = pgTable("api_keys", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Websites table for persistent website storage
+export const websites = pgTable("websites", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  url: text("url").notNull(),
+  platform: varchar("platform", { length: 20 }).notNull(), // wordpress, blogger, xenforo
+  wpUsername: varchar("wp_username", { length: 255 }),
+  wpAppPassword: text("wp_app_password"),
+  adminUsername: varchar("admin_username", { length: 255 }),
+  adminPassword: text("admin_password"),
+  seoPlugin: varchar("seo_plugin", { length: 20 }), // yoast, rankmath
+  status: varchar("status", { length: 20 }).default("active"), // active, inactive
+  categories: jsonb("categories"), // WordPress categories
+  lastSync: timestamp("last_sync"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
@@ -147,8 +166,16 @@ export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
   updatedAt: true,
 });
 
+export const insertWebsiteSchema = createInsertSchema(websites).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type UserSettings = typeof userSettings.$inferSelect;
 export type ApiUsage = typeof apiUsage.$inferSelect;
 export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
 export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertWebsite = z.infer<typeof insertWebsiteSchema>;
+export type Website = typeof websites.$inferSelect;
