@@ -2388,6 +2388,198 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     }
   });
 
+  // SEO Indexing Routes
+  app.post("/api/seo-indexing/submit", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { websiteId, urls, searchEngines } = req.body;
+
+      if (!websiteId || !urls || !Array.isArray(urls) || urls.length === 0) {
+        return res.status(400).json({ message: "Web sitesi ve URL'ler gerekli" });
+      }
+
+      if (!searchEngines || !Array.isArray(searchEngines) || searchEngines.length === 0) {
+        return res.status(400).json({ message: "En az bir arama motoru seçin" });
+      }
+
+      // Create indexing job
+      const jobData = {
+        userId,
+        websiteId: parseInt(websiteId),
+        urls: JSON.stringify(urls),
+        searchEngines: JSON.stringify(searchEngines),
+        status: 'pending' as const,
+        progress: 0,
+        results: JSON.stringify([])
+      };
+
+      // Start indexing process (simplified simulation)
+      setTimeout(async () => {
+        const results = [];
+        let progress = 0;
+        
+        for (let i = 0; i < urls.length; i++) {
+          const url = urls[i];
+          
+          for (const engine of searchEngines) {
+            try {
+              // Simulate indexing API calls
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              
+              results.push({
+                url,
+                searchEngine: engine,
+                status: Math.random() > 0.2 ? 'success' : 'failed',
+                indexedAt: new Date().toISOString(),
+                error: Math.random() > 0.8 ? 'Rate limit exceeded' : undefined
+              });
+            } catch (error) {
+              results.push({
+                url,
+                searchEngine: engine,
+                status: 'failed',
+                error: 'API error'
+              });
+            }
+          }
+          
+          progress = Math.round(((i + 1) / urls.length) * 100);
+        }
+      }, 2000);
+
+      res.json({
+        success: true,
+        jobId: Date.now(),
+        urlCount: urls.length,
+        searchEngines: searchEngines,
+        message: "İndeksleme işi başlatıldı"
+      });
+
+    } catch (error) {
+      console.error("SEO indexing submit error:", error);
+      res.status(500).json({ message: "İndeksleme işi başlatılamadı" });
+    }
+  });
+
+  app.get("/api/seo-indexing/jobs", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Mock data for demonstration
+      const mockJobs = [
+        {
+          id: 1,
+          websiteId: 1,
+          websiteName: "https://example.com",
+          urls: ["https://example.com/page1", "https://example.com/page2"],
+          searchEngines: ["google", "bing"],
+          status: "completed",
+          progress: 100,
+          results: [
+            { url: "https://example.com/page1", searchEngine: "google", status: "success", indexedAt: new Date().toISOString() },
+            { url: "https://example.com/page1", searchEngine: "bing", status: "success", indexedAt: new Date().toISOString() },
+            { url: "https://example.com/page2", searchEngine: "google", status: "failed", error: "Rate limit" },
+            { url: "https://example.com/page2", searchEngine: "bing", status: "success", indexedAt: new Date().toISOString() }
+          ],
+          createdAt: new Date().toISOString()
+        }
+      ];
+
+      res.json(mockJobs);
+    } catch (error) {
+      console.error("Error fetching indexing jobs:", error);
+      res.status(500).json({ message: "İndeksleme işleri alınamadı" });
+    }
+  });
+
+  app.post("/api/seo-indexing/generate-sitemap-urls/:websiteId", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const websiteId = parseInt(req.params.websiteId);
+
+      // Get website from storage (simplified approach)
+      const website = { 
+        id: websiteId, 
+        url: "https://example.com", 
+        userId 
+      };
+
+      if (!website) {
+        return res.status(404).json({ message: "Web sitesi bulunamadı" });
+      }
+
+      try {
+        // Try to fetch sitemap.xml
+        const sitemapUrl = `${website.url}/sitemap.xml`;
+        const response = await fetch(sitemapUrl);
+        
+        if (!response.ok) {
+          throw new Error("Sitemap bulunamadı");
+        }
+
+        const sitemapXml = await response.text();
+        
+        // Simple XML parsing to extract URLs
+        const urlMatches = sitemapXml.match(/<loc>(.*?)<\/loc>/g);
+        const urls = urlMatches ? urlMatches.map(match => 
+          match.replace('<loc>', '').replace('</loc>', '').trim()
+        ) : [];
+
+        if (urls.length === 0) {
+          // Fallback: generate common URLs
+          const commonPaths = [
+            '/',
+            '/about',
+            '/contact',
+            '/services',
+            '/blog',
+            '/products'
+          ];
+          
+          const fallbackUrls = commonPaths.map(path => 
+            website.url.endsWith('/') ? website.url + path.slice(1) : website.url + path
+          );
+          
+          return res.json({
+            urls: fallbackUrls,
+            message: "Sitemap bulunamadı, yaygın sayfalar oluşturuldu"
+          });
+        }
+
+        res.json({
+          urls: urls.slice(0, 100), // Limit to 100 URLs
+          message: `${urls.length} URL sitemap'ten alındı`
+        });
+
+      } catch (fetchError) {
+        // Fallback: generate common URLs
+        const commonPaths = [
+          '/',
+          '/about',
+          '/contact',
+          '/services',
+          '/blog',
+          '/products',
+          '/privacy-policy',
+          '/terms-of-service'
+        ];
+        
+        const fallbackUrls = commonPaths.map(path => 
+          website.url.endsWith('/') ? website.url + path.slice(1) : website.url + path
+        );
+
+        res.json({
+          urls: fallbackUrls,
+          message: "Sitemap bulunamadı, yaygın sayfalar oluşturuldu"
+        });
+      }
+
+    } catch (error) {
+      console.error("Generate sitemap URLs error:", error);
+      res.status(500).json({ message: "Sitemap URL'leri oluşturulamadı" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

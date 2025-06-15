@@ -99,7 +99,7 @@ export default function SEOIndexing() {
     mutationFn: async (websiteId: string) => {
       return await apiRequest("POST", `/api/seo-indexing/generate-sitemap-urls/${websiteId}`, {});
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setUrlsToIndex(data.urls.join('\n'));
       toast({
         title: "Sitemap URL'leri Yüklendi",

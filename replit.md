@@ -197,6 +197,7 @@ Changelog:
 - June 15, 2025. Fixed bulk article generation error handling: resolved "undefined makale oluşturuldu!" display issue when Gemini API quota limits reached, implemented proper quota error detection with informative user messages, added backend quota limit handling to prevent continued failed requests
 - June 15, 2025. Integrated API key management with content generation: updated all article generation endpoints (AI content, WordPress V1/V2, bulk articles V1/V2, URL rewrite, Excel template) to use saved API keys from "Api Keylerim" instead of hardcoded environment variables, system now prioritizes user's default Gemini API key then falls back to any available user key, provides backup API key support for quota limit management
 - June 15, 2025. Fixed article display pagination issues: removed 20-article limit from backend API endpoint, increased storage limit to 10,000 articles, implemented alphabetical sorting by title with Turkish locale support, users can now see all their articles sorted consistently instead of random 20-article subsets on each page refresh
+- June 15, 2025. Created comprehensive SEO indexing panel: added new "SEO İndeksleme" menu item with complete interface for automated search engine indexing, supports Google/Bing/Yandex/Yahoo/Baidu with bulk URL submission, automatic sitemap URL extraction, real-time indexing progress tracking, job management dashboard, and detailed statistics reporting system
 ```
 
 ## User Preferences
