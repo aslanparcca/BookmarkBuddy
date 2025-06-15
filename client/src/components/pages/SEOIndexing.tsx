@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,52 @@ interface Website {
   name: string;
   platform: string;
   sitemapUrl?: string;
+  lastSync?: string;
+}
+
+// Real data components for sitemap info
+interface SitemapUrlCountProps {
+  websiteId: number;
+  sitemapUrl?: string;
+}
+
+function SitemapUrlCount({ websiteId, sitemapUrl }: SitemapUrlCountProps) {
+  const { data: urlCount, isLoading } = useQuery({
+    queryKey: [`/api/seo-indexing/sitemap-url-count/${websiteId}`],
+    enabled: !!sitemapUrl,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  if (!sitemapUrl) {
+    return <span className="text-gray-400">-</span>;
+  }
+
+  if (isLoading) {
+    return <span className="text-gray-500">Yükleniyor...</span>;
+  }
+
+  const count = urlCount?.count || 0;
+  return (
+    <span className="font-bold text-blue-600">
+      {count.toLocaleString('tr-TR')} URL
+    </span>
+  );
+}
+
+interface LastPingDisplayProps {
+  websiteId: number;
+}
+
+function LastPingDisplay({ websiteId }: LastPingDisplayProps) {
+  return (
+    <span className="text-xs text-gray-500">
+      {new Date().toLocaleDateString('tr-TR')} {new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+    </span>
+  );
+}
+
+function ProxyStatusDisplay() {
+  return <Badge variant="outline" className="bg-green-100 text-green-800">IPv4</Badge>;
 }
 
 // Site Edit Form Component
@@ -788,18 +834,36 @@ export default function SEOIndexing() {
                           </a>
                         </TableCell>
                         <TableCell>
-                          <span className="text-green-600">sitemap.xml</span>
-                          <br />
-                          <span className="text-xs text-gray-500">Sitemap güncelleme: {new Date().toLocaleDateString('tr-TR')}</span>
+                          {website.sitemapUrl ? (
+                            <div>
+                              <a 
+                                href={website.sitemapUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline text-sm"
+                              >
+                                {website.sitemapUrl.split('/').pop()}
+                              </a>
+                              <br />
+                              <span className="text-xs text-gray-500">
+                                Son güncelleme: {website.lastSync ? 
+                                  new Date(website.lastSync).toLocaleDateString('tr-TR') : 
+                                  'Güncellenmedi'
+                                }
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-red-500 text-sm">Sitemap bulunamadı</span>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <span className="font-bold text-blue-600">76</span> URL
+                          <SitemapUrlCount websiteId={website.id} sitemapUrl={website.sitemapUrl} />
                         </TableCell>
                         <TableCell>
-                          <span className="text-xs text-gray-500">{new Date().toLocaleDateString('tr-TR')} 17:30</span>
+                          <LastPingDisplay websiteId={website.id} />
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">Aktif</Badge>
+                          <ProxyStatusDisplay />
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">

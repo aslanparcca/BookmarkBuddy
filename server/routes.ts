@@ -2279,8 +2279,11 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
         return res.status(404).json({ message: 'Sitemap bulunamadı' });
       }
 
-      // Update website with found sitemap URL
-      await storage.updateWebsite(websiteId, userId, { sitemapUrl });
+      // Update website with found sitemap URL and last sync time
+      await storage.updateWebsite(websiteId, userId, { 
+        sitemapUrl,
+        lastSync: new Date()
+      });
       
       res.json({ 
         message: 'Sitemap başarıyla güncellendi',
@@ -2290,6 +2293,73 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     } catch (error) {
       console.error('Sitemap sync error:', error);
       res.status(500).json({ message: 'Sitemap güncelleme başarısız' });
+    }
+  });
+
+  // Get actual sitemap URL count
+  app.get('/api/seo-indexing/sitemap-url-count/:websiteId', isAuthenticated, async (req: any, res) => {
+    try {
+      const websiteId = parseInt(req.params.websiteId);
+      const userId = req.user.claims.sub;
+      
+      const website = await storage.getWebsiteById(websiteId, userId);
+      if (!website || !website.sitemapUrl) {
+        return res.json({ count: 0 });
+      }
+
+      // Fetch sitemap content and count URLs
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      
+      const response = await fetch(website.sitemapUrl, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        return res.json({ count: 0 });
+      }
+
+      const sitemapContent = await response.text();
+      
+      // Count URLs in sitemap (look for <loc> tags or <sitemap> tags for index files)
+      const urlMatches = sitemapContent.match(/<loc>/g);
+      const sitemapMatches = sitemapContent.match(/<sitemap>/g);
+      
+      let totalCount = 0;
+      
+      if (sitemapMatches) {
+        // This is a sitemap index file, fetch each sitemap
+        const sitemapUrls = sitemapContent.match(/<loc>(.*?)<\/loc>/g);
+        if (sitemapUrls) {
+          for (const match of sitemapUrls.slice(0, 10)) { // Limit to first 10 sitemaps
+            const url = match.replace(/<\/?loc>/g, '');
+            try {
+              const subController = new AbortController();
+              const subTimeoutId = setTimeout(() => subController.abort(), 10000);
+              
+              const subResponse = await fetch(url, { signal: subController.signal });
+              clearTimeout(subTimeoutId);
+              
+              if (subResponse.ok) {
+                const subContent = await subResponse.text();
+                const subUrlMatches = subContent.match(/<loc>/g);
+                if (subUrlMatches) {
+                  totalCount += subUrlMatches.length;
+                }
+              }
+            } catch (e) {
+              // Continue to next sitemap
+            }
+          }
+        }
+      } else if (urlMatches) {
+        // Regular sitemap file
+        totalCount = urlMatches.length;
+      }
+
+      res.json({ count: totalCount });
+    } catch (error) {
+      console.error('Sitemap URL count error:', error);
+      res.json({ count: 0 });
     }
   });
 
