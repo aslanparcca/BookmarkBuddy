@@ -2719,9 +2719,44 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               metaDescription: article.metaDescription
             });
 
+            // Clean content by replacing blob URLs with stored data URLs
+            let cleanContent = article.htmlContent || article.content;
+            
+            // Find and replace blob URLs with proper data URLs from database
+            if (cleanContent && cleanContent.includes('blob:')) {
+              console.log('Processing blob URLs in article content...');
+              
+              // Get user's uploaded images to match with blob URLs
+              const userImages = await storage.getImagesByUserId(userId);
+              
+              if (userImages.length > 0) {
+                // Replace blob URLs with actual stored data URLs
+                let imageIndex = 0;
+                cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, () => {
+                  if (imageIndex < userImages.length) {
+                    const replacementUrl = userImages[imageIndex].url;
+                    imageIndex++;
+                    console.log(`Replaced blob URL with stored image ${imageIndex}`);
+                    return `src="${replacementUrl}"`;
+                  }
+                  return 'src=""'; // Fallback for excess blob URLs
+                });
+                
+                // Clean up any remaining empty img tags
+                cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
+              } else {
+                // No stored images available, remove blob URLs
+                cleanContent = cleanContent.replace(/src="blob:[^"]*"/g, 'src=""');
+                cleanContent = cleanContent.replace(/<img[^>]*src=""[^>]*>/g, '');
+                console.log('No stored images found, removed blob URLs');
+              }
+              
+              console.log('Blob URL processing complete');
+            }
+
             const postData = {
               title: article.title,
-              content: article.htmlContent || article.content,
+              content: cleanContent,
               status: publishStatus, // Use the selected publish status
               categories: [categoryId],
               excerpt: article.summary || '',
