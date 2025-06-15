@@ -7,6 +7,7 @@ import {
   apiKeys,
   websites,
   seoApiSettings,
+  images,
   type User,
   type UpsertUser,
   type Article,
@@ -22,6 +23,8 @@ import {
   type InsertWebsite,
   type SeoApiSettings,
   type InsertSeoApiSettings,
+  type Image,
+  type InsertImage,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -501,7 +504,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .delete(images)
       .where(and(eq(images.id, id), eq(images.userId, userId)));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 }
 

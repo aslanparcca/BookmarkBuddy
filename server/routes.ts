@@ -2,11 +2,13 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertArticleSchema, insertUserSettingsSchema } from "@shared/schema";
+import { insertArticleSchema, insertUserSettingsSchema, insertImageSchema } from "@shared/schema";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import multer from "multer";
 import * as XLSX from "xlsx";
 import { z } from "zod";
+import { generateImageFilename, bufferToDataUrl } from "./imageUpload";
+import { nanoid } from "nanoid";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
