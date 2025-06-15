@@ -2024,6 +2024,10 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
   app.get('/api/websites', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      
+      // Ensure user has at least one default website
+      await storage.ensureDefaultWebsite(userId);
+      
       const websites = await storage.getWebsitesByUserId(userId);
       
       // Format websites for frontend compatibility
@@ -2489,25 +2493,8 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
       const userId = req.user.claims.sub;
       const websiteId = parseInt(req.params.websiteId);
 
-      // Get actual website URL from request or use a more realistic approach
-      // For now, we'll extract the website URL from the websites API
-      const websitesResponse = await fetch(`http://localhost:5000/api/websites`, {
-        headers: { 'Cookie': req.headers.cookie || '' }
-      });
-      
-      let website = null;
-      if (websitesResponse.ok) {
-        const websites = await websitesResponse.json();
-        website = websites.find((w: any) => w.id === websiteId);
-      }
-      
-      if (!website) {
-        website = { 
-          id: websiteId, 
-          url: "https://keciorennakliyat.org.tr", // Default fallback
-          userId 
-        };
-      }
+      // Get website from database
+      const website = await storage.getWebsiteById(websiteId, userId);
 
       if (!website) {
         return res.status(404).json({ message: "Web sitesi bulunamadı" });

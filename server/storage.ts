@@ -348,6 +348,24 @@ export class DatabaseStorage implements IStorage {
     return newWebsite;
   }
 
+  async ensureDefaultWebsite(userId: string): Promise<void> {
+    const existingWebsites = await this.getWebsitesByUserId(userId);
+    
+    if (existingWebsites.length === 0) {
+      // Create default website
+      await this.createWebsite({
+        userId,
+        name: "bestwebstudio.com.tr",
+        url: "https://bestwebstudio.com.tr",
+        platform: "wordpress",
+        wpUsername: "demo",
+        wpAppPassword: "demo-password",
+        seoPlugin: "yoast",
+        status: "active"
+      });
+    }
+  }
+
   async getWebsitesByUserId(userId: string): Promise<Website[]> {
     return await db
       .select()
