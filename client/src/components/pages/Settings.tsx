@@ -8,437 +8,376 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Trash2, Edit, Key, ChevronDown, ExternalLink, Eye, EyeOff } from "lucide-react";
-import type { ApiKey } from "@shared/schema";
 
 export default function Settings() {
-  const [selectedService, setSelectedService] = useState<'openai' | 'gemini'>('gemini');
   const [showApiKey, setShowApiKey] = useState(false);
-  const [faqExpanded, setFaqExpanded] = useState(true);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: apiKeys = [], isLoading: keysLoading } = useQuery<ApiKey[]>({
-    queryKey: ['/api/api-keys'],
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ['/api/settings'],
     enabled: true,
   });
 
   const [formData, setFormData] = useState({
-    service: 'gemini' as 'openai' | 'gemini',
-    title: '',
-    apiKey: '',
-    organization: '',
-    isDefault: true,
-    apiKeyConfirm: false,
+    geminiApiKey: '',
+    geminiModel: 'gemini-1.5-flash',
+    wordpressUrl: '',
+    wordpressUsername: '',
+    wordpressAppPassword: '',
+    defaultLanguage: 'tr',
+    defaultWordCount: '800-1200',
+    defaultTone: 'professional',
+    autoPublish: false,
+    includeSeo: true,
+    includeImages: false,
   });
 
-  const addApiKeyMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const response = await apiRequest('POST', '/api/api-keys', data);
-      return await response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/api-keys'] });
+  // Update form data when settings are loaded
+  useEffect(() => {
+    if (settings) {
       setFormData({
-        service: 'gemini',
-        title: '',
-        apiKey: '',
-        organization: '',
-        isDefault: true,
-        apiKeyConfirm: false,
+        geminiApiKey: settings.geminiApiKey || '',
+        geminiModel: settings.geminiModel || 'gemini-2.5-flash',
+        wordpressUrl: settings.wordpressUrl || '',
+        wordpressUsername: settings.wordpressUsername || '',
+        wordpressAppPassword: settings.wordpressAppPassword || '',
+        defaultLanguage: settings.defaultLanguage || 'tr',
+        defaultWordCount: settings.defaultWordCount || '800-1200',
+        defaultTone: settings.defaultTone || 'professional',
+        autoPublish: settings.autoPublish || false,
+        includeSeo: settings.includeSeo !== false,
+        includeImages: settings.includeImages || false,
       });
-      toast({
-        title: "API Key Eklendi",
-        description: "API anahtarınız başarıyla kaydedildi.",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Hata",
-        description: error.message || "API anahtarı eklenirken bir hata oluştu.",
-        variant: "destructive",
-      });
-    },
-  });
+    }
+  }, [settings]);
 
-  const deleteApiKeyMutation = useMutation({
-    mutationFn: async (keyId: string) => {
-      const response = await apiRequest('DELETE', `/api/api-keys/${keyId}`);
+  const saveMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await apiRequest('POST', '/api/settings', data);
       return await response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/api-keys'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
       toast({
-        title: "API Key Silindi",
-        description: "API anahtarınız başarıyla silindi.",
+        title: "Ayarlar Kaydedildi",
+        description: "Tüm ayarlarınız başarıyla kaydedildi.",
       });
     },
     onError: (error: Error) => {
       toast({
         title: "Hata",
-        description: error.message || "API anahtarı silinirken bir hata oluştu.",
+        description: error.message || "Ayarlar kaydedilirken bir hata oluştu.",
         variant: "destructive",
       });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (section: string) => {
+    let dataToSave = {};
     
-    if (!formData.title || !formData.apiKey || !formData.apiKeyConfirm) {
-      toast({
-        title: "Eksik Bilgiler",
-        description: "Lütfen tüm gerekli alanları doldurun ve şartları kabul edin.",
-        variant: "destructive",
-      });
-      return;
+    switch (section) {
+      case 'api':
+        dataToSave = {
+          geminiApiKey: formData.geminiApiKey,
+          geminiModel: formData.geminiModel,
+        };
+        break;
+      case 'wordpress':
+        dataToSave = {
+          wordpressUrl: formData.wordpressUrl,
+          wordpressUsername: formData.wordpressUsername,
+          wordpressAppPassword: formData.wordpressAppPassword,
+          autoPublish: formData.autoPublish,
+          includeSeo: formData.includeSeo,
+          includeImages: formData.includeImages,
+        };
+        break;
+      case 'export':
+        dataToSave = {
+          defaultLanguage: formData.defaultLanguage,
+          defaultWordCount: formData.defaultWordCount,
+          defaultTone: formData.defaultTone,
+        };
+        break;
+      default:
+        dataToSave = formData;
     }
-
-    addApiKeyMutation.mutate(formData);
+    
+    saveMutation.mutate(dataToSave);
   };
 
-  if (keysLoading) {
+  if (isLoading) {
     return (
-      <div className="content-wrapper">
-        <div className="container-xxl flex-grow-1 container-p-y">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-slate-200 rounded w-1/3"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-7">
-                <div className="h-64 bg-slate-200 rounded"></div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i}>
+            <CardContent className="p-6">
+              <div className="animate-pulse space-y-4">
+                <div className="h-4 bg-slate-200 rounded w-1/3"></div>
+                <div className="space-y-3">
+                  <div className="h-10 bg-slate-200 rounded"></div>
+                  <div className="h-10 bg-slate-200 rounded"></div>
+                </div>
               </div>
-              <div className="lg:col-span-5">
-                <div className="h-64 bg-slate-200 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="content-wrapper">
-      <div className="container-xxl flex-grow-1 container-p-y">
-        
-        {/* Existing API Keys List */}
-        {apiKeys.length > 0 && (
-          <div className="mb-6">
-            <div className="card">
-              <div className="card-header border-bottom d-flex flex-row align-items-center justify-content-between pt-3 pb-2">
-                <h5 className="m-0 p-0">Mevcut API Keyler</h5>
-              </div>
-              <div className="card-body pt-4">
-                <div className="table-responsive">
-                  <table className="table table-borderless">
-                    <thead>
-                      <tr>
-                        <th>Servis</th>
-                        <th>İsim</th>
-                        <th>API Key</th>
-                        <th>Varsayılan</th>
-                        <th>İşlemler</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(apiKeys as ApiKey[]).map((key: ApiKey) => (
-                        <tr key={key.id}>
-                          <td>
-                            <span className={`badge ${key.service === 'openai' ? 'bg-primary' : 'bg-success'}`}>
-                              {key.service === 'openai' ? 'OpenAI' : 'Gemini'}
-                            </span>
-                          </td>
-                          <td>{key.title}</td>
-                          <td>
-                            <code className="text-muted">{key.apiKey.substring(0, 8)}...{key.apiKey.substring(key.apiKey.length - 8)}</code>
-                          </td>
-                          <td>
-                            {key.isDefault && <span className="badge bg-warning">Varsayılan</span>}
-                          </td>
-                          <td>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteApiKeyMutation.mutate(key.id.toString())}
-                              className="text-danger"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* API Configuration */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-primary-100 text-primary-600 flex items-center justify-center rounded-lg">
+              <i className="fas fa-key"></i>
             </div>
+            <CardTitle>API Yapılandırması</CardTitle>
           </div>
-        )}
-
-        <div className="row">
-          <div className="col-md-6 col-lg-7 mb-4">
-            <div className="card">
-              <div className="card-header border-bottom d-flex flex-row align-items-center justify-content-between pt-3 pb-2">
-                <h5 className="m-0 p-0">Yeni API Key Ekle</h5>
-                <a className="btn btn-label-primary btn-sm m-0" href="#" title="Kendi API Keylerim">Kendi API Keylerim</a>
-              </div>
-
-              <div className="card-body pt-4">
-                <form onSubmit={handleSubmit} spellCheck="false">
-                  <div className="mb-4">
-                    <Label className="form-label" htmlFor="third-party-service">
-                      Yapay Zeka Servisi <span className="text-danger">*</span>
-                    </Label>
-                    <Select 
-                      value={formData.service} 
-                      onValueChange={(value: 'openai' | 'gemini') => {
-                        setFormData({...formData, service: value});
-                        setSelectedService(value);
-                      }}
-                    >
-                      <SelectTrigger className="form-select">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="openai">OpenAI</SelectItem>
-                        <SelectItem value="gemini">Google Gemini</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="mb-4">
-                    <Label className="form-label" htmlFor="title">
-                      API Key ismi <span className="text-danger">*</span>
-                    </Label>
-                    <Input
-                      name="title"
-                      className="form-control"
-                      type="text"
-                      id="title"
-                      placeholder="Lütfen API keyinizi tanımlamak için bir isim giriniz"
-                      maxLength={255}
-                      required
-                      value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    />
-                    <div className="form-text mt-1">Bu isim içerik oluşturma sırasında kullanmak istediğiniz API keyi seçmeniz için kullanılacaktır.</div>
-                  </div>
-
-                  <div className="mb-4">
-                    <Label className="form-label" htmlFor="api_key">
-                      API Key <span className="text-danger">*</span>
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        name="api_key"
-                        className="form-control pr-10"
-                        type={showApiKey ? "text" : "password"}
-                        id="api_key"
-                        placeholder="Lütfen API keyinizi giriniz"
-                        maxLength={255}
-                        required
-                        value={formData.apiKey}
-                        onChange={(e) => setFormData({...formData, apiKey: e.target.value})}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowApiKey(!showApiKey)}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                      >
-                        {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    {selectedService === 'openai' && (
-                      <div className="form-text mt-1 service-specs">
-                        Bu bilgiye <a href="https://platform.openai.com/api-keys" className="text-muted fw-medium" target="_blank" title="OpenAI API Keys">
-                          OpenAI API Keys <ExternalLink className="inline h-3 w-3" />
-                        </a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.
-                      </div>
-                    )}
-                    {selectedService === 'gemini' && (
-                      <div className="form-text mt-1 service-specs">
-                        Bu bilgiye <a href="https://aistudio.google.com/apikey" className="text-muted fw-medium" target="_blank" title="Gemini API Keys">
-                          Gemini API Keys <ExternalLink className="inline h-3 w-3" />
-                        </a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.
-                      </div>
-                    )}
-                  </div>
-
-                  {selectedService === 'openai' && (
-                    <div className="third-party-service-cont mb-4">
-                      <Label className="form-label" htmlFor="organization">
-                        Organization
-                      </Label>
-                      <Input
-                        name="organization"
-                        className="form-control"
-                        type="text"
-                        id="organization"
-                        placeholder="Lütfen organization bilginizi giriniz (Mecburi değildir)"
-                        maxLength={255}
-                        value={formData.organization}
-                        onChange={(e) => setFormData({...formData, organization: e.target.value})}
-                      />
-                      <div className="form-text mt-1">
-                        Bu bilgiye <a href="https://platform.openai.com/account/organization" target="_blank" className="text-muted fw-medium" title="OpenAI Organization">
-                          OpenAI Organization <ExternalLink className="inline h-3 w-3" />
-                        </a> sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="mb-4">
-                    <div className="form-label">Varsayılan API Key</div>
-                    <div className="form-text mb-3 mt-n2">İçerik oluşturma formunda seçili olarak gelsin mi?</div>
-
-                    <div className="form-check form-check-inline">
-                      <input 
-                        className="form-check-input" 
-                        type="radio" 
-                        name="is_default" 
-                        id="is_default1" 
-                        value="1" 
-                        checked={formData.isDefault}
-                        onChange={() => setFormData({...formData, isDefault: true})}
-                      />
-                      <label className="form-check-label" htmlFor="is_default1">Evet</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                      <input 
-                        className="form-check-input" 
-                        type="radio" 
-                        name="is_default" 
-                        id="is_default0" 
-                        value="0"
-                        checked={!formData.isDefault}
-                        onChange={() => setFormData({...formData, isDefault: false})}
-                      />
-                      <label className="form-check-label" htmlFor="is_default0">Hayır</label>
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="form-label">API Key Şartları</div>
-
-                    <div className="border h-px-200 overflow-auto p-2 rounded mb-3 text-muted" style={{height: "200px"}}>
-                      <div className="fw-bold mb-2">OpenAI API Key Şartları</div>
-                      <ol className="ps-4">
-                        <li>Ücretsiz API keyler kullanılmamalıdır.</li>
-                        <li>Tek tek makale yazdırmak istiyorsanız <strong>minimum tier 1</strong>, toplu makale yazdırmak istiyorsanız <strong>minimum tier 2</strong> API Key kullanılmalıdır.</li>
-                        <li>Şartları sağlamayan API key kullanmanız durumunda içerik oluşturma işlemlerinde hatalar meydana gelecektir.</li>
-                        <li>Eğer kullandığınız pakete API hizmeti dahilse bu bölümde herhangi bir API key girmeniz gerekmemektedir.</li>
-                      </ol>
-
-                      <div className="fw-bold mb-2">Gemini API Key Şartları</div>
-                      <ol className="ps-4">
-                        <li>Ücretsiz API keyler kullanılmamalıdır.</li>
-                        <li>Ücretsiz API keylerin limitleri makale yazdırmak için yeterli değildir.</li>
-                        <li>Şartları sağlamayan API key kullanmanız durumunda içerik oluşturma işlemlerinde hatalar meydana gelecektir.</li>
-                        <li>Eğer kullandığınız pakete API hizmeti dahilse bu bölümde herhangi bir API key girmeniz gerekmemektedir.</li>
-                      </ol>
-                    </div>
-
-                    <div className="form-check">
-                      <Checkbox
-                        id="api_key_confirm"
-                        checked={formData.apiKeyConfirm}
-                        onCheckedChange={(checked) => setFormData({...formData, apiKeyConfirm: !!checked})}
-                      />
-                      <label className="form-check-label ms-2" htmlFor="api_key_confirm">
-                        API keyin belirtilen şartlara uyduğunu kabul ediyorum.
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <Button 
-                      className="btn btn-primary ib-spn-btn mt-3" 
-                      type="submit"
-                      disabled={addApiKeyMutation.isPending}
-                    >
-                      <span className="btn-label">Kaydet</span>
-                      {addApiKeyMutation.isPending && (
-                        <span className="spinner-border ms-1" role="status" aria-hidden="true"></span>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-6 col-lg-5">
-            <div className="card mb-4">
-              <div 
-                className="card-header border-bottom py-3 d-flex flex-row align-items-center justify-content-between cursor-pointer" 
-                onClick={() => setFaqExpanded(!faqExpanded)}
-                role="button" 
-                aria-expanded={faqExpanded}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="gemini-api-key">Gemini API Anahtarı</Label>
+            <div className="relative">
+              <Input
+                id="gemini-api-key"
+                type={showApiKey ? "text" : "password"}
+                placeholder="API anahtarınızı girin..."
+                value={formData.geminiApiKey}
+                onChange={(e) => setFormData({...formData, geminiApiKey: e.target.value})}
+                className="pr-12"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowApiKey(!showApiKey)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
-                <h5 className="m-0 p-0">API Keyler Hakkında Merak Edilenler</h5>
-                <ChevronDown className={`h-5 w-5 transition-transform ${faqExpanded ? 'rotate-180' : ''}`} />
-              </div>
+                <i className={`fas ${showApiKey ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </Button>
+            </div>
+            <p className="text-slate-500 text-xs mt-2">API anahtarınız güvenli olarak şifrelenir</p>
+          </div>
+          
+          <div>
+            <Label htmlFor="gemini-model">Model Seçimi</Label>
+            <Select value={formData.geminiModel} onValueChange={(value) => setFormData({...formData, geminiModel: value})}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gemini-1.5-flash">gemini-1.5-flash (En Hızlı)</SelectItem>
+                <SelectItem value="gemini-1.5-pro">gemini-1.5-pro (En Güçlü)</SelectItem>
+                <SelectItem value="gemini-1.0-pro">gemini-1.0-pro</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <div className="h-2 w-2 bg-emerald-500 rounded-full"></div>
+              <span className="text-emerald-700 font-medium">API Bağlantısı Aktif</span>
+            </div>
+            <Button variant="link" className="text-emerald-600 hover:text-emerald-800 text-sm font-medium p-0">
+              Test Et
+            </Button>
+          </div>
+          
+          <Button 
+            onClick={() => handleSubmit('api')}
+            disabled={saveMutation.isPending}
+            className="w-full bg-primary-600 hover:bg-primary-700"
+          >
+            Ayarları Kaydet
+          </Button>
+        </CardContent>
+      </Card>
 
-              {faqExpanded && (
-                <div className="card-body">
-                  <ol className="ps-4">
-                    <li>
-                      <div className="fw-bold mb-2">Eklediğim API keylerin güvenliğini nasıl sağlıyorsunuz?</div>
-                      <div className="mb-3">Eklenen API keyler encrypt edilerek (şifrelenerek) saklanmaktadır. Yani key bilgileri asla görüntülenememektedir.</div>
-                    </li>
+      {/* WordPress Integration */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-blue-100 text-blue-600 flex items-center justify-center rounded-lg">
+              <i className="fab fa-wordpress"></i>
+            </div>
+            <CardTitle>WordPress Entegrasyonu</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="wp-url">Site URL</Label>
+            <Input
+              id="wp-url"
+              type="url"
+              placeholder="https://siteniz.com"
+              value={formData.wordpressUrl}
+              onChange={(e) => setFormData({...formData, wordpressUrl: e.target.value})}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="wp-username">Kullanıcı Adı</Label>
+            <Input
+              id="wp-username"
+              type="text"
+              placeholder="WordPress kullanıcı adı"
+              value={formData.wordpressUsername}
+              onChange={(e) => setFormData({...formData, wordpressUsername: e.target.value})}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="wp-password">Uygulama Şifresi</Label>
+            <Input
+              id="wp-password"
+              type="password"
+              placeholder="WordPress uygulama şifresi"
+              value={formData.wordpressAppPassword}
+              onChange={(e) => setFormData({...formData, wordpressAppPassword: e.target.value})}
+            />
+          </div>
+          
+          <div className="space-y-3">
+            <label className="flex items-center space-x-3">
+              <Checkbox
+                checked={formData.autoPublish}
+                onCheckedChange={(checked) => setFormData({...formData, autoPublish: !!checked})}
+              />
+              <span className="text-sm text-slate-700">Otomatik yayınlama</span>
+            </label>
+            
+            <label className="flex items-center space-x-3">
+              <Checkbox
+                checked={formData.includeSeo}
+                onCheckedChange={(checked) => setFormData({...formData, includeSeo: !!checked})}
+              />
+              <span className="text-sm text-slate-700">SEO meta verileri ekle</span>
+            </label>
+            
+            <label className="flex items-center space-x-3">
+              <Checkbox
+                checked={formData.includeImages}
+                onCheckedChange={(checked) => setFormData({...formData, includeImages: !!checked})}
+              />
+              <span className="text-sm text-slate-700">Öne çıkan görsel oluştur</span>
+            </label>
+          </div>
+          
+          <Button 
+            onClick={() => handleSubmit('wordpress')}
+            disabled={saveMutation.isPending}
+            className="w-full bg-blue-600 hover:bg-blue-700"
+          >
+            WordPress'e Bağlan
+          </Button>
+        </CardContent>
+      </Card>
 
-                    <li>
-                      <div className="fw-bold mb-2">OpenAI'da 5$ değerinde ücretsiz hesabım var. Bu hesaba ait API keyleri kullanabilir miyim?</div>
-                      <div className="mb-3">Ücretsiz OpeanAI API keylerin limitleri olduğu için bu keyler ile yapılan işlemlerde hatalar ortaya çıkabilmektedir. Bu sebeple ücretsiz keyler contety'de kullanılamamaktadır.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Makalelerimi teker teker yazdırmak istiyorum, bunun için <u>OpenAI Tier 1 API key</u> yeterli mi?</div>
-                      <div className="mb-3">Evet, tek tek makale yazdırmak için OpenAI tier 1 API keyler kullanılabilir.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Makalelerimi teker teker yazdırmak istiyorum, bunun için <u>ücretsiz Gemini API key</u> yeterli mi?</div>
-                      <div className="mb-3">Ücretsiz Gemini API keylerin limitleri yeterli olmadığı için hatalar meydana gelmektedir. Bu nedenle makale yazdırmak için <strong>ücretli Gemini API keyler</strong> kullanılmalıdır.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Toplu makale yazdırmak istiyorum, bunun için <u>OpenAI Tier 1 API key</u> yeterli mi?</div>
-                      <div className="mb-3">OpenAI Tier 1 API keylerin limitleri toplu işlemlerde yeterli olmadığı için hatalar meydana gelebilmektedir. Bu nedenle toplu makale yazdırmak için <strong>minimum tier 2</strong> API keyler kullanılmalıdır.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Toplu makale yazdırmak istiyorum, bunun için <u>ücretsiz Gemini API key</u> yeterli mi?</div>
-                      <div className="mb-3">Ücretsiz Gemini API keylerin limitleri toplu işlemlerde yeterli olmadığı için hatalar meydana gelmektedir. Bu nedenle toplu makale yazdırmak için <strong>ücretli Gemini API keyler</strong> kullanılmalıdır.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Farklı müşterilerimize ait birden fazla API keyim var. Bunların hepsini ekleyip içerik oluşturma işlemi sırasında istediğimi seçebilir miyim?</div>
-                      <div className="mb-3">Evet, farklı OpenAI veya Gemini hesaplarına ait birden fazla API keyi ekleyebilir ve hangisiyle içerik oluşturulacağını belirleyebilirsiniz.</div>
-                    </li>
-
-                    <li>
-                      <div className="fw-bold mb-2">Eklediğim API keyleri silebilir miyim?</div>
-                      <div className="mb-3">Evet, istediğiniz zaman silebilirsiniz. Ayrıca OpenAI ve Gemini hesabınızdan da silme işlemini gerçekleştirebilirsiniz.</div>
-                    </li>
-                  </ol>
-                </div>
-              )}
+      {/* Usage Statistics */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-emerald-100 text-emerald-600 flex items-center justify-center rounded-lg">
+              <i className="fas fa-chart-bar"></i>
+            </div>
+            <CardTitle>Kullanım İstatistikleri</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-slate-700">API Kullanımı</span>
+              <span className="text-sm text-slate-500">2,340 / 10,000</span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "23.4%" }}></div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <footer className="content-footer footer bg-footer-theme">
-        <div className="d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column container-fluid">
-          <div className="mb-2 mb-md-0">
-            © 2025 <a href="#" target="_blank">AI İçerik Paneli</a> v2.0
+          
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-slate-700">Aylık Makale</span>
+              <span className="text-sm text-slate-500">47 / 100</span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="bg-primary-500 h-2 rounded-full" style={{ width: "47%" }}></div>
+            </div>
           </div>
-        </div>
-      </footer>
+          
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-900">156</p>
+              <p className="text-slate-500 text-sm">Toplam Makale</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-900">234K</p>
+              <p className="text-slate-500 text-sm">Toplam Kelime</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Export Settings */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-orange-100 text-orange-600 flex items-center justify-center rounded-lg">
+              <i className="fas fa-download"></i>
+            </div>
+            <CardTitle>Dışa Aktarma</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Varsayılan Format</Label>
+            <Select defaultValue="html">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="html">HTML</SelectItem>
+                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="txt">Plain Text</SelectItem>
+                <SelectItem value="docx">Word Document</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-3">
+            <label className="flex items-center space-x-3">
+              <Checkbox defaultChecked />
+              <span className="text-sm text-slate-700">Meta verilerini dahil et</span>
+            </label>
+            
+            <label className="flex items-center space-x-3">
+              <Checkbox />
+              <span className="text-sm text-slate-700">Görsel linklerini dahil et</span>
+            </label>
+            
+            <label className="flex items-center space-x-3">
+              <Checkbox defaultChecked />
+              <span className="text-sm text-slate-700">Otomatik yedekleme</span>
+            </label>
+          </div>
+          
+          <div className="pt-4 space-y-3">
+            <Button className="w-full bg-orange-600 hover:bg-orange-700">
+              <i className="fas fa-download mr-2"></i>
+              Tüm Makaleleri İndir
+            </Button>
+            
+            <Button variant="outline" className="w-full">
+              <i className="fas fa-cloud-download-alt mr-2"></i>
+              Yedek Oluştur
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

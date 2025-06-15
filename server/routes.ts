@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertArticleSchema, insertUserSettingsSchema, insertApiKeySchema } from "@shared/schema";
+import { insertArticleSchema, insertUserSettingsSchema } from "@shared/schema";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import multer from "multer";
 import * as XLSX from "xlsx";
@@ -13,32 +13,8 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
-// Initialize Gemini AI with multiple backup keys for quota management
-const BACKUP_GEMINI_KEYS = [
-  'AIzaSyCPRhTYcFb6JIJQ_lVHQDPcbDglH2S9B0A',
-  process.env.GOOGLE_GEMINI_API_KEY || ''
-].filter(key => key && key.length > 0);
-
-// Helper function to get available API key from user settings or fallback to backups
-async function getAvailableGeminiKey(userId: string): Promise<string> {
-  try {
-    // Try to get user's default Gemini API key
-    const userApiKey = await storage.getDefaultApiKey(userId, 'gemini');
-    if (userApiKey) {
-      return userApiKey.apiKey;
-    }
-  } catch (error) {
-    console.log('No user API key found, using backup keys');
-  }
-  
-  // Fallback to rotating backup keys
-  const keyIndex = Math.floor(Date.now() / (1000 * 60 * 60)) % BACKUP_GEMINI_KEYS.length;
-  return BACKUP_GEMINI_KEYS[keyIndex] || BACKUP_GEMINI_KEYS[0] || '';
-}
-
 // Initialize Gemini AI
-const defaultKey = process.env.GOOGLE_GEMINI_API_KEY || BACKUP_GEMINI_KEYS[0] || '';
-const genAI = new GoogleGenerativeAI(defaultKey);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 
 // Helper function to intelligently distribute links across article sections
 function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
@@ -152,22 +128,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/articles', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const limit = parseInt(req.query.limit as string) || 25;
+      const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
-      const search = req.query.search as string;
       
-      const articles = await storage.getArticlesByUserId(userId, limit, offset, search);
-      const totalCount = await storage.getArticlesCountByUserId(userId, search);
-      
-      res.json({
-        articles,
-        pagination: {
-          limit,
-          offset,
-          total: totalCount,
-          hasMore: offset + articles.length < totalCount
-        }
-      });
+      const articles = await storage.getArticlesByUserId(userId, limit, offset);
+      res.json(articles);
     } catch (error) {
       console.error("Error fetching articles:", error);
       res.status(500).json({ message: "Failed to fetch articles" });
@@ -244,11 +209,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const { titles, settings, focusKeywords } = req.body;
       
-      // Get available API key with rotation support
-      let apiKey = await getAvailableGeminiKey(userId);
+      // Use system API key if user hasn't set their own
+      let apiKey = process.env.GOOGLE_GEMINI_API_KEY;
       const userSettings = await storage.getUserSettings(userId);
       if (userSettings?.geminiApiKey) {
         apiKey = userSettings.geminiApiKey;
+      }
+
+      if (!apiKey) {
+        return res.status(400).json({ message: "Gemini API key not available" });
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
@@ -543,10 +512,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       setImmediate(async () => {
         try {
           const userSettings = await storage.getUserSettings(userId);
-          const apiKey = await getAvailableGeminiKey(userId);
+          if (!userSettings?.geminiApiKey) return;
 
-          const genAI = new GoogleGenerativeAI(apiKey);
-          const model = genAI.getGenerativeModel({ model: userSettings?.geminiModel || "gemini-1.5-flash" });
+          const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
+          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-flash" });
 
           let completed = 0;
           let failed = 0;
@@ -741,8 +710,11 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
 
       const userSettings = await storage.getUserSettings(userId);
       
-      // Get available API key with rotation support
-      const apiKey = await getAvailableGeminiKey(userId);
+      // Environment variable'dan veya kullanıcı ayarlarından API anahtarını al
+      const apiKey = userSettings?.geminiApiKey || process.env.GOOGLE_GEMINI_API_KEY;
+      if (!apiKey) {
+        return res.status(400).json({ message: "Gemini API anahtarı bulunamadı. Lütfen ayarlarınızı kontrol edin." });
+      }
 
       const genAI = new GoogleGenerativeAI(apiKey);
       // Map frontend AI model selection to actual model names
@@ -1600,9 +1572,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
-      // Get available API key with rotation support
-      const apiKey = await getAvailableGeminiKey(userId);
-      const genAI = new GoogleGenerativeAI(apiKey);
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
       
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
@@ -1624,21 +1594,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       let successCount = 0;
       let failedCount = 0;
 
-      // Process articles sequentially with delays to avoid quota limits
-      for (let i = 0; i < titles.length; i++) {
-        const titleData = titles[i];
-        
-        // Add delay between requests to prevent rate limiting
-        if (i > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 second delay
-        }
-        
+      for (const titleData of titles) {
         try {
-          console.log(`Processing article ${i + 1}/${titles.length}: ${titleData.title}`);
-          
-          // Try with different API keys on failure
-          let currentGenAI = genAI;
-          let currentModel = model;
           // Build content features section
           const contentFeatures = [];
           if (settings.faqNormal) contentFeatures.push('- Add FAQ section with 5-7 common questions and detailed answers');
@@ -1757,46 +1714,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           ];
           const prompt = promptParts.filter(part => part !== '').join('\n');
 
-          // Retry mechanism for API quota issues
-          let content: string = '';
-          let retryCount = 0;
-          const maxRetries = 3;
-          
-          while (retryCount < maxRetries) {
-            try {
-              const result = await currentModel.generateContent(prompt);
-              content = result.response.text();
-              break; // Success, exit retry loop
-            } catch (error: any) {
-              console.log(`Article generation attempt ${retryCount + 1} failed for "${titleData.title}":`, error.message);
-              
-              if (error.status === 429 && retryCount < maxRetries - 1) {
-                // Quota exceeded, try with different API key
-                console.log(`Quota exceeded, trying with backup key. Attempt: ${retryCount + 1}`);
-                const backupKeyIndex = (retryCount + 1) % BACKUP_GEMINI_KEYS.length;
-                const backupKey = BACKUP_GEMINI_KEYS[backupKeyIndex];
-                if (backupKey) {
-                  currentGenAI = new GoogleGenerativeAI(backupKey);
-                  currentModel = currentGenAI.getGenerativeModel({ model: selectedModel });
-                  console.log(`Switching to backup API key ${backupKeyIndex + 1}`);
-                }
-              }
-              
-              retryCount++;
-              if (retryCount >= maxRetries) {
-                console.log(`All retry attempts failed for "${titleData.title}"`);
-                throw error; // Re-throw if all retries failed
-              }
-              
-              // Wait before retry
-              await new Promise(resolve => setTimeout(resolve, 2000 * retryCount));
-            }
-          }
-          
-          // Ensure content is defined before processing
-          if (!content) {
-            throw new Error('Article content generation failed');
-          }
+          const result = await model.generateContent(prompt);
+          let content = result.response.text();
           
           // Clean any remaining markdown code blocks and unwanted text
           content = content.replace(/```html\s*/gi, '');
@@ -2279,48 +2198,6 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
     } catch (error) {
       console.error("Send to website error:", error);
       res.status(500).json({ message: "Makale gönderimi başarısız oldu" });
-    }
-  });
-
-  // API Key Management endpoints
-  app.get('/api/api-keys', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const apiKeys = await storage.getApiKeysByUserId(userId);
-      res.json(apiKeys);
-    } catch (error) {
-      console.error("Error fetching API keys:", error);
-      res.status(500).json({ message: "Failed to fetch API keys" });
-    }
-  });
-
-  app.post('/api/api-keys', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const apiKeyData = insertApiKeySchema.parse({ ...req.body, userId });
-      
-      const apiKey = await storage.createApiKey(apiKeyData);
-      res.status(201).json(apiKey);
-    } catch (error) {
-      console.error("Error creating API key:", error);
-      res.status(500).json({ message: "Failed to create API key" });
-    }
-  });
-
-  app.delete('/api/api-keys/:id', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const keyId = parseInt(req.params.id);
-      
-      const deleted = await storage.deleteApiKey(keyId, userId);
-      if (!deleted) {
-        return res.status(404).json({ message: "API key not found" });
-      }
-      
-      res.json({ message: "API key deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting API key:", error);
-      res.status(500).json({ message: "Failed to delete API key" });
     }
   });
 

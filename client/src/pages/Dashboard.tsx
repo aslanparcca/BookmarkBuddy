@@ -26,7 +26,7 @@ import { Toaster } from "@/components/ui/toaster";
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
   'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
   'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
-  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'api-keys';
+  'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('editor');
@@ -55,8 +55,7 @@ export default function Dashboard() {
     'create-image': 'Yeni Resim Oluştur',
     'help-sss': 'Yardım & SSS',
     'websites': 'Web Sitelerim',
-    'add-website': 'Yeni Web Sitesi Ekle',
-    'api-keys': 'API Key Ayarları'
+    'add-website': 'Yeni Web Sitesi Ekle'
   };
 
   const renderPage = () => {
@@ -104,8 +103,6 @@ export default function Dashboard() {
         return <WebSites setCurrentPage={setCurrentPage} />;
       case 'add-website':
         return <AddWebsite setCurrentPage={setCurrentPage} />;
-      case 'api-keys':
-        return <Settings />;
       default:
         return <AIEditor setLoading={setLoading} />;
     }

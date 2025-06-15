@@ -4,7 +4,6 @@ import {
   bulkJobs,
   apiUsage,
   userSettings,
-  apiKeys,
   type User,
   type UpsertUser,
   type Article,
@@ -14,11 +13,9 @@ import {
   type UserSettings,
   type InsertUserSettings,
   type ApiUsage,
-  type ApiKey,
-  type InsertApiKey,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, sql, like, or } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
@@ -28,8 +25,7 @@ export interface IStorage {
   
   // Article operations
   createArticle(article: InsertArticle): Promise<Article>;
-  getArticlesByUserId(userId: string, limit?: number, offset?: number, search?: string): Promise<Article[]>;
-  getArticlesCountByUserId(userId: string, search?: string): Promise<number>;
+  getArticlesByUserId(userId: string, limit?: number, offset?: number): Promise<Article[]>;
   getArticleById(id: number, userId: string): Promise<Article | undefined>;
   updateArticle(id: number, userId: string, updates: Partial<InsertArticle>): Promise<Article | undefined>;
   deleteArticle(id: number, userId: string): Promise<boolean>;
@@ -47,12 +43,6 @@ export interface IStorage {
   // API usage tracking
   getApiUsage(userId: string, month: string): Promise<ApiUsage | undefined>;
   incrementApiUsage(userId: string, apiType: string, requestCount: number, tokenCount: number): Promise<void>;
-  
-  // API key operations
-  createApiKey(apiKey: InsertApiKey): Promise<ApiKey>;
-  getApiKeysByUserId(userId: string): Promise<ApiKey[]>;
-  deleteApiKey(id: number, userId: string): Promise<boolean>;
-  getDefaultApiKey(userId: string, service: string): Promise<ApiKey | undefined>;
   
   // Statistics
   getUserStats(userId: string): Promise<{
@@ -109,25 +99,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getArticlesByUserId(userId: string, limit = 25, offset = 0, search?: string): Promise<Article[]> {
-    if (search && search.trim()) {
-      return await db
-        .select()
-        .from(articles)
-        .where(
-          and(
-            eq(articles.userId, userId),
-            or(
-              like(articles.title, `%${search}%`),
-              like(articles.content, `%${search}%`)
-            )
-          )
-        )
-        .orderBy(desc(articles.updatedAt))
-        .limit(limit)
-        .offset(offset);
-    }
-
+  async getArticlesByUserId(userId: string, limit = 100, offset = 0): Promise<Article[]> {
     return await db
       .select()
       .from(articles)
@@ -135,33 +107,6 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(articles.updatedAt))
       .limit(limit)
       .offset(offset);
-  }
-
-  async getArticlesCountByUserId(userId: string, search?: string): Promise<number> {
-    let query;
-    
-    if (search && search.trim()) {
-      query = db
-        .select({ count: sql`count(*)` })
-        .from(articles)
-        .where(
-          and(
-            eq(articles.userId, userId),
-            or(
-              like(articles.title, `%${search}%`),
-              like(articles.content, `%${search}%`)
-            )
-          )
-        );
-    } else {
-      query = db
-        .select({ count: sql`count(*)` })
-        .from(articles)
-        .where(eq(articles.userId, userId));
-    }
-
-    const result = await query;
-    return Number(result[0]?.count || 0);
   }
 
   async getArticleById(id: number, userId: string): Promise<Article | undefined> {
@@ -326,53 +271,6 @@ export class DatabaseStorage implements IStorage {
       totalWords: totalStats.totalWords,
       monthlyArticles: monthlyStats.monthlyArticles,
     };
-  }
-
-  // API key operations
-  async createApiKey(apiKeyData: InsertApiKey): Promise<ApiKey> {
-    // If this is set as default, remove default from other keys of same service
-    if (apiKeyData.isDefault) {
-      await db
-        .update(apiKeys)
-        .set({ isDefault: false })
-        .where(and(
-          eq(apiKeys.userId, apiKeyData.userId),
-          eq(apiKeys.service, apiKeyData.service)
-        ));
-    }
-
-    const [newApiKey] = await db
-      .insert(apiKeys)
-      .values(apiKeyData)
-      .returning();
-    return newApiKey;
-  }
-
-  async getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
-    return await db
-      .select()
-      .from(apiKeys)
-      .where(eq(apiKeys.userId, userId))
-      .orderBy(desc(apiKeys.createdAt));
-  }
-
-  async deleteApiKey(id: number, userId: string): Promise<boolean> {
-    const result = await db
-      .delete(apiKeys)
-      .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)));
-    return (result.rowCount || 0) > 0;
-  }
-
-  async getDefaultApiKey(userId: string, service: string): Promise<ApiKey | undefined> {
-    const [apiKey] = await db
-      .select()
-      .from(apiKeys)
-      .where(and(
-        eq(apiKeys.userId, userId),
-        eq(apiKeys.service, service),
-        eq(apiKeys.isDefault, true)
-      ));
-    return apiKey;
   }
 }
 

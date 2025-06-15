@@ -103,19 +103,6 @@ export const userSettings = pgTable("user_settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// API Keys table for managing multiple AI service keys
-export const apiKeys = pgTable("api_keys", {
-  id: serial("id").primaryKey(),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  service: varchar("service", { length: 20 }).notNull(), // 'openai' or 'gemini'
-  title: varchar("title", { length: 255 }).notNull(),
-  apiKey: text("api_key").notNull(),
-  organization: varchar("organization", { length: 255 }),
-  isDefault: boolean("is_default").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
@@ -137,12 +124,6 @@ export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   updatedAt: true,
 });
 
-export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
 export type InsertArticle = z.infer<typeof insertArticleSchema>;
 export type Article = typeof articles.$inferSelect;
 export type InsertBulkJob = z.infer<typeof insertBulkJobSchema>;
@@ -150,5 +131,3 @@ export type BulkJob = typeof bulkJobs.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type UserSettings = typeof userSettings.$inferSelect;
 export type ApiUsage = typeof apiUsage.$inferSelect;
-export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
-export type ApiKey = typeof apiKeys.$inferSelect;

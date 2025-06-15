@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,11 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send, CheckCircle, XCircle } from "lucide-react";
+import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
 
 interface BulkTemplateV2Props {
@@ -106,18 +104,7 @@ interface Category {
 
 export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [showStep2, setShowStep2] = useState(false);
-  
-  // Progress tracking states
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [progressData, setProgressData] = useState({
-    current: 0,
-    total: 0,
-    percentage: 0,
-    currentArticle: "",
-    status: "starting" // starting, generating, completed, error
-  });
 
   const [generatedTitles, setGeneratedTitles] = useState<GeneratedTitle[]>([]);
   const [selectedGenerateType, setSelectedGenerateType] = useState("1");
@@ -217,84 +204,33 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   const generateArticlesMutation = useMutation({
     mutationFn: async (data: { titles: GeneratedTitle[], settings: BulkV2Settings }) => {
-      // Initialize progress tracking
-      setIsGenerating(true);
-      setProgressData({
-        current: 0,
-        total: data.titles.length,
-        percentage: 0,
-        currentArticle: "Başlıyor...",
-        status: "starting"
-      });
-
-      // Start progress simulation
-      const progressInterval = setInterval(() => {
-        setProgressData(prev => {
-          const newPercentage = Math.min(prev.percentage + Math.random() * 15, 90);
-          return {
-            ...prev,
-            percentage: newPercentage,
-            status: "generating"
-          };
-        });
-      }, 2000);
-
-      try {
-        const result = await apiRequest("POST", "/api/generate-bulk-articles-v2", data);
-        clearInterval(progressInterval);
-        return result;
-      } catch (error) {
-        clearInterval(progressInterval);
-        throw error;
-      }
+      return await apiRequest("POST", "/api/generate-bulk-articles-v2", data);
     },
     onSuccess: (data: any) => {
-      setProgressData(prev => ({
-        ...prev,
-        status: "completed",
-        percentage: 100,
-        currentArticle: "Tamamlandı!"
-      }));
-
-      setTimeout(() => {
-        setIsGenerating(false);
-        // Clear articles cache to show new articles
-        queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
-        queryClient.refetchQueries({ queryKey: ['/api/articles'] });
-        console.log("Cache invalidated and refetched for articles");
-        toast({
-          title: "Başarılı",
-          description: `${data.successCount} makale oluşturuldu! İçeriklerim sayfasında görüntüleyebilirsiniz.`,
-        });
-        setLoading(false);
-      }, 1500);
+      toast({
+        title: "Başarılı",
+        description: `${data.successCount} makale oluşturuldu!`,
+      });
+      setLoading(false);
     },
     onError: (error: Error) => {
-      setProgressData(prev => ({
-        ...prev,
-        status: "error"
-      }));
-
-      setTimeout(() => {
-        setIsGenerating(false);
-        if (isUnauthorizedError(error)) {
-          toast({
-            title: "Oturum Süresi Doldu",
-            description: "Tekrar giriş yapılıyor...",
-            variant: "destructive",
-          });
-          setTimeout(() => {
-            window.location.href = "/api/login";
-          }, 500);
-          return;
-        }
+      if (isUnauthorizedError(error)) {
         toast({
-          title: "Hata",
-          description: error.message || "Makale oluşturma işlemi başarısız oldu",
+          title: "Oturum Süresi Doldu",
+          description: "Tekrar giriş yapılıyor...",
           variant: "destructive",
         });
-        setLoading(false);
-      }, 1500);
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Hata",
+        description: error.message || "Makale oluşturma işlemi başarısız oldu",
+        variant: "destructive",
+      });
+      setLoading(false);
     },
   });
 
@@ -1277,65 +1213,6 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
           </CardContent>
         </Card>
       )}
-
-      {/* Progress Modal */}
-      <Dialog open={isGenerating} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md [&>button]:hidden">
-          <DialogHeader>
-            <DialogTitle className="text-center">
-              {progressData.status === "starting" && "Hazırlanıyor..."}
-              {progressData.status === "generating" && "AI İçerik Oluşturuluyor..."}
-              {progressData.status === "completed" && "Tamamlandı!"}
-              {progressData.status === "error" && "Hata Oluştu"}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-6 py-4">
-            {/* Progress Circle or Status Icon */}
-            <div className="flex justify-center">
-              {progressData.status === "completed" ? (
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-              ) : progressData.status === "error" ? (
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                  <XCircle className="w-8 h-8 text-red-600" />
-                </div>
-              ) : (
-                <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-              )}
-            </div>
-
-            {/* Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm text-slate-600">
-                <span>İlerleme</span>
-                <span>{progressData.current}/{progressData.total}</span>
-              </div>
-              <Progress value={progressData.percentage} className="h-2" />
-              <div className="text-center text-xs text-slate-500">
-                %{progressData.percentage} tamamlandı
-              </div>
-            </div>
-
-            {/* Current Article */}
-            {progressData.currentArticle && progressData.status === "generating" && (
-              <div className="text-center">
-                <p className="text-sm text-slate-600 mb-1">Şu anda oluşturuluyor:</p>
-                <p className="font-medium text-slate-800">{progressData.currentArticle}</p>
-              </div>
-            )}
-
-            {/* Status Message */}
-            <div className="text-center text-sm text-slate-500">
-              {progressData.status === "starting" && "Bu işlem birkaç dakika sürebilir"}
-              {progressData.status === "generating" && "Bu işlem birkaç dakika sürebilir"}
-              {progressData.status === "completed" && "Tüm makaleler başarıyla oluşturuldu"}
-              {progressData.status === "error" && "Bir hata oluştu, lütfen tekrar deneyin"}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -48,7 +48,6 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
   const [generationResults, setGenerationResults] = useState<GenerationResult[]>([]);
   const [generationProgress, setGenerationProgress] = useState(0);
   const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   // İçerik kalite ayarları
   const [settings, setSettings] = useState({
@@ -120,12 +119,9 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
       setGenerationResults(data.results || []);
       setStep(3);
       setGenerationProgress(100);
-      // Clear articles cache to show new articles
-      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
-      queryClient.refetchQueries({ queryKey: ['/api/articles'] });
       toast({
         title: "Makaleler Oluşturuldu!",
-        description: `${data.count || 0}/${data.total || 0} makale başarıyla oluşturuldu. İçeriklerim sayfasında görüntüleyebilirsiniz.`,
+        description: `${data.count || 0}/${data.total || 0} makale başarıyla oluşturuldu.`,
       });
     },
     onError: (error: Error) => {
