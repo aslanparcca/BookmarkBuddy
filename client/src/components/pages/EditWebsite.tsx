@@ -34,7 +34,7 @@ export default function EditWebsite({ websiteId, setCurrentPage }: EditWebsitePr
     queryKey: [`/api/websites/${websiteId}`],
     queryFn: async () => {
       const response = await apiRequest("GET", `/api/websites/${websiteId}`);
-      return response;
+      return response as any;
     },
     retry: false,
   });

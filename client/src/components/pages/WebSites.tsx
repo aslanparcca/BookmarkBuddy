@@ -20,10 +20,11 @@ interface Website {
 }
 
 interface WebSitesProps {
-  setCurrentPage?: (page: any) => void;
+  setCurrentPage: (page: any) => void;
+  setEditWebsiteId: (id: string) => void;
 }
 
-export default function WebSites({ setCurrentPage }: WebSitesProps) {
+export default function WebSites({ setCurrentPage, setEditWebsiteId }: WebSitesProps) {
   const { toast } = useToast();
   const [searchUrl, setSearchUrl] = useState("");
 
@@ -187,13 +188,16 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
                       <td className="font-semibold py-3 pl-4 pr-0 w-12">{index + 1}</td>
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2">
-                          <a 
-                            href={`/account/website/${website.id}`} 
-                            className="text-primary hover:underline"
+                          <button 
+                            onClick={() => {
+                              setEditWebsiteId(website.id.toString());
+                              setCurrentPage('edit-website');
+                            }}
+                            className="text-primary hover:underline text-left"
                             title="Bilgileri Düzenle"
                           >
                             {website.url}
-                          </a>
+                          </button>
                           <a 
                             href={website.url} 
                             target="_blank" 
@@ -235,23 +239,29 @@ export default function WebSites({ setCurrentPage }: WebSitesProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <a 
-                                href={`/account/website/${website.id}`}
-                                className="flex items-center"
-                              >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Düzenle
-                              </a>
+                            <DropdownMenuItem 
+                              onClick={() => {
+                                setEditWebsiteId(website.id.toString());
+                                setCurrentPage('edit-website');
+                              }}
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Düzenle
                             </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <a 
-                                href={`/account/website/${website.id}#gsc-cont`}
-                                className="flex items-center"
-                              >
-                                <Globe className="w-4 h-4 mr-2" />
-                                GSC Entegrasyonu
-                              </a>
+                            <DropdownMenuItem 
+                              onClick={() => {
+                                setEditWebsiteId(website.id.toString());
+                                setCurrentPage('edit-website');
+                                setTimeout(() => {
+                                  const gscElement = document.getElementById('gsc-cont');
+                                  if (gscElement) {
+                                    gscElement.scrollIntoView({ behavior: 'smooth' });
+                                  }
+                                }, 100);
+                              }}
+                            >
+                              <Globe className="w-4 h-4 mr-2" />
+                              GSC Entegrasyonu
                             </DropdownMenuItem>
                             <DropdownMenuItem 
                               onClick={() => handleSyncWebsite(website.id)}
