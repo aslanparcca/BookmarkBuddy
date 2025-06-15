@@ -6,6 +6,7 @@ import {
   userSettings,
   apiKeys,
   websites,
+  seoApiSettings,
   type User,
   type UpsertUser,
   type Article,
@@ -19,6 +20,8 @@ import {
   type InsertApiKey,
   type Website,
   type InsertWebsite,
+  type SeoApiSettings,
+  type InsertSeoApiSettings,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -70,6 +73,10 @@ export interface IStorage {
   updateWebsite(id: number, userId: string, updates: Partial<InsertWebsite>): Promise<Website | undefined>;
   deleteWebsite(id: number, userId: string): Promise<boolean>;
   syncWebsiteCategories(id: number, userId: string): Promise<Website | undefined>;
+  
+  // SEO API settings operations
+  getSeoApiSettings(userId: string): Promise<SeoApiSettings | undefined>;
+  upsertSeoApiSettings(settings: InsertSeoApiSettings): Promise<SeoApiSettings>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -433,6 +440,30 @@ export class DatabaseStorage implements IStorage {
     }
     
     return await this.getWebsiteById(id, userId);
+  }
+
+  // SEO API settings operations
+  async getSeoApiSettings(userId: string): Promise<SeoApiSettings | undefined> {
+    const [settings] = await db
+      .select()
+      .from(seoApiSettings)
+      .where(eq(seoApiSettings.userId, userId));
+    return settings;
+  }
+
+  async upsertSeoApiSettings(settingsData: InsertSeoApiSettings): Promise<SeoApiSettings> {
+    const [settings] = await db
+      .insert(seoApiSettings)
+      .values(settingsData)
+      .onConflictDoUpdate({
+        target: seoApiSettings.userId,
+        set: {
+          ...settingsData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return settings;
   }
 }
 
