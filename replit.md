@@ -194,6 +194,7 @@ Changelog:
 - June 14, 2025. Increased article display limit from 20 to 100 in İçeriklerim section and added comprehensive bulk delete functionality: updated storage interface and database operations to support bulk deletion, added API endpoint for deleting all user articles (/api/articles DELETE), implemented frontend confirmation dialog and red-themed button for safe bulk deletion with loading states
 - June 15, 2025. Completed comprehensive API key management system: created database schema for API keys with service types (OpenAI, Gemini), implemented secure backend CRUD operations with masked key display, added full frontend interface under "Web Sitelerim" menu with add/delete/default selection functionality, integrated proper authentication and error handling
 - June 15, 2025. Enhanced İçeriklerim pagination system: replaced 20-article limit with flexible pagination supporting 25/50/100/200 articles per page, added comprehensive pagination controls with page navigation, article count display, and automatic page reset functionality
+- June 15, 2025. Fixed bulk article generation error handling: resolved "undefined makale oluşturuldu!" display issue when Gemini API quota limits reached, implemented proper quota error detection with informative user messages, added backend quota limit handling to prevent continued failed requests
 ```
 
 ## User Preferences

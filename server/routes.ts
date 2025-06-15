@@ -1810,10 +1810,27 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
           // Track API usage
           await storage.incrementApiUsage(userId, 'gemini', 1, content.length);
 
-        } catch (error) {
+        } catch (error: any) {
           console.error(`Bulk V2 article generation error for ${titleData.title}:`, error);
           failedCount++;
+          
+          // Check if it's a quota error and break the loop to prevent further failures
+          const errorMessage = error?.message || error?.toString() || '';
+          if (errorMessage.includes('quota') || errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+            console.log('Quota limit reached, stopping bulk generation');
+            break;
+          }
         }
+      }
+
+      // If all articles failed due to quota limits, return an error
+      if (successCount === 0 && failedCount > 0) {
+        return res.status(429).json({ 
+          message: "API kullanım limitiniz doldu. Lütfen daha sonra tekrar deneyin veya ücretli API key kullanın.",
+          successCount: 0,
+          failedCount,
+          quotaExceeded: true
+        });
       }
 
       res.json({ 

@@ -207,10 +207,18 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       return await apiRequest("POST", "/api/generate-bulk-articles-v2", data);
     },
     onSuccess: (data: any) => {
-      toast({
-        title: "Başarılı",
-        description: `${data.successCount} makale oluşturuldu!`,
-      });
+      if (data.successCount !== undefined && data.successCount !== null) {
+        toast({
+          title: "Başarılı",
+          description: data.message || `${data.successCount} makale oluşturuldu!`,
+        });
+      } else {
+        toast({
+          title: "Hata",
+          description: "Makale oluşturma işlemi tamamlanamadı",
+          variant: "destructive",
+        });
+      }
       setLoading(false);
     },
     onError: (error: Error) => {
@@ -225,11 +233,22 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         }, 500);
         return;
       }
-      toast({
-        title: "Hata",
-        description: error.message || "Makale oluşturma işlemi başarısız oldu",
-        variant: "destructive",
-      });
+      
+      // Check for quota limit errors
+      const errorMessage = error.message.toLowerCase();
+      if (errorMessage.includes("quota") || errorMessage.includes("rate limit") || errorMessage.includes("429")) {
+        toast({
+          title: "API Limit Aşıldı",
+          description: "Gemini API günlük kullanım limitiniz doldu. Lütfen daha sonra tekrar deneyin veya ücretli API key kullanın.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Hata",
+          description: error.message || "Makale oluşturma işlemi başarısız oldu",
+          variant: "destructive",
+        });
+      }
       setLoading(false);
     },
   });
