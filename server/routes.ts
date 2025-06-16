@@ -2921,11 +2921,39 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
             const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?per_page=100`;
             let categoryId = 1; // Default category ID
             
+            // First check if we have cached categories from database
+            if (website.categories && website.categories.length > 0) {
+              console.log('Using cached categories from database:', website.categories);
+              const matchedCategory = website.categories.find(cat => 
+                cat.name.toLowerCase() === category.toLowerCase() ||
+                cat.slug?.toLowerCase() === category.toLowerCase()
+              );
+              
+              if (matchedCategory) {
+                categoryId = matchedCategory.id;
+                console.log(`✅ Found cached category match: "${matchedCategory.name}" (ID: ${categoryId})`);
+              } else {
+                console.log(`❌ No cached category match for "${category}"`);
+                console.log('Available cached categories:', website.categories.map(cat => `"${cat.name}" (ID: ${cat.id})`));
+              }
+            }
+            
             try {
-              const catResponse = await fetch(categoriesUrl);
+              console.log(`Fetching categories from: ${categoriesUrl}`);
+              console.log(`Looking for category: "${category}"`);
+              
+              const catResponse = await fetch(categoriesUrl, {
+                headers: {
+                  'Authorization': 'Basic ' + Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64'),
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+              });
+              
+              console.log(`Category fetch response status: ${catResponse.status}`);
+              
               if (catResponse.ok) {
                 const categories = await catResponse.json();
-                console.log('Available categories on website:', categories.map(cat => ({ id: cat.id, name: cat.name })));
+                console.log('All categories from WordPress:', categories.map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug })));
                 
                 // Find exact match for category name
                 const matchedCategory = categories.find(cat => 
@@ -2935,11 +2963,15 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                 
                 if (matchedCategory) {
                   categoryId = matchedCategory.id;
-                  console.log(`Found exact category match: "${matchedCategory.name}" (ID: ${categoryId})`);
+                  console.log(`✅ Found exact category match: "${matchedCategory.name}" (ID: ${categoryId})`);
                 } else {
-                  console.log(`No exact match found for category "${category}", using default category ID: ${categoryId}`);
-                  console.log('Available category names:', categories.map(cat => cat.name));
+                  console.log(`❌ No exact match found for category "${category}"`);
+                  console.log('Available category names:', categories.map(cat => `"${cat.name}"`));
+                  console.log(`Using default category ID: ${categoryId}`);
                 }
+              } else {
+                const errorText = await catResponse.text();
+                console.error(`Category fetch failed: ${catResponse.status} - ${errorText}`);
               }
             } catch (catError) {
               console.error("Category fetch error:", catError);
