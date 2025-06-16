@@ -4740,6 +4740,9 @@ Her bölüm için uygun HTML başlıkları (H1, H2, H3) kullan:`;
         return res.status(400).json({ error: 'Gemini API anahtarı bulunamadı. Lütfen API anahtarlarınızı kontrol edin.' });
       }
 
+      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
       const styleMap = {
         detailed: 'detaylı ve açıklayıcı',
         short: 'kısa ve öz',
