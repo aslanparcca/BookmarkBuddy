@@ -3302,16 +3302,20 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                       categories: postData.categories
                     };
                     
-                    response = await fetch(wpApiUrl, {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': securityBypassHeaders.Authorization,
-                        'User-Agent': 'WordPress/6.0; ' + website.url
-                      },
-                      body: JSON.stringify(simplifiedPostData),
-                      timeout: 60000
-                    });
+                    response = await Promise.race([
+                      fetch(wpApiUrl, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': securityBypassHeaders.Authorization,
+                          'User-Agent': 'WordPress/6.0; ' + website.url
+                        },
+                        body: JSON.stringify(simplifiedPostData)
+                      }),
+                      new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Simplified request timeout')), 60000)
+                      )
+                    ]) as Response;
                     
                     if (!response.ok) {
                       throw lastError || delayError;
