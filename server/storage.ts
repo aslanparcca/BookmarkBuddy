@@ -431,13 +431,18 @@ export class DatabaseStorage implements IStorage {
       const auth = Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64');
       console.log(`Syncing categories for website ${id}: ${website.url}`);
       
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
       const response = await fetch(`${website.url}/wp-json/wp/v2/categories?per_page=100`, {
         headers: {
           'Authorization': `Basic ${auth}`,
           'Content-Type': 'application/json'
         },
-        timeout: 10000
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const categories = await response.json();

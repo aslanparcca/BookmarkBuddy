@@ -549,7 +549,16 @@ export default function Articles() {
                               
                               <div className="space-y-2">
                                 <label className="text-sm font-medium">Web Sitesi</label>
-                                <Select value={selectedWebsite} onValueChange={setSelectedWebsite}>
+                                <Select value={selectedWebsite} onValueChange={(value) => {
+                                  setSelectedWebsite(value);
+                                  setSelectedCategory('');
+                                  
+                                  // Auto-sync categories if website has no categories
+                                  const selectedWebsiteData = websites.find(w => w.id.toString() === value);
+                                  if (selectedWebsiteData && (!selectedWebsiteData.categories || selectedWebsiteData.categories.length === 0)) {
+                                    syncCategoriesMutation.mutate(value);
+                                  }
+                                }}>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Site seçin" />
                                   </SelectTrigger>
