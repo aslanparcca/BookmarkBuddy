@@ -364,6 +364,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ${settings.includeSubheadings ? "Alt başlıklar kullanın." : ""}
         ${focusKeywords && focusKeywords.length > 0 ? "Odak anahtar kelimeleri doğal şekilde makalede dağıtın." : ""}
         
+        İÇ LİNK KURALLARI (MUTLAK):
+        - GİRİŞ PARAGRAFI: İlk paragrafta KESİNLİKLE hiç iç link kullanma
+        - BİRİNCİ PARAGRAF: Sadece konu tanıtımı yap, link yerleştirme
+        - ALT BAŞLIKLAR: Sadece H2 bölümlerinde iç link kullan
+        
         Makalenin HTML formatında olmasını istiyorum.
       `;
 
@@ -576,6 +581,12 @@ Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
         - ${settings.h2Count || 8} adet H2 alt başlık ile organize edilmiş içerik
         - Her bölümde detaylı açıklamalar
         - Sonuç ve özet paragrafı
+        
+        İÇ LİNK KURALLARI (MUTLAK):
+        - GİRİŞ PARAGRAFI: İlk paragrafta KESİNLİKLE hiç iç link kullanma
+        - BİRİNCİ PARAGRAF: Sadece konu tanıtımı yap, link yerleştirme
+        - ALT BAŞLIKLAR: Sadece H2 bölümlerinde iç link kullan
+        - UYARI: Giriş paragrafında link olması hata sayılır!
         
         Odak anahtar kelimeyi doğal bir şekilde makale boyunca ${Math.ceil(settings.sectionLength === 'Çok Uzun (1.500-2.000 kelime)' ? 15 : 8)} kez kullan.
         Lütfen sadece makale içeriğini döndür, başka açıklama ekleme.
@@ -989,7 +1000,13 @@ SEO ve YAPISAL GEREKSİNİMLER:
 - Makale boyunca %1-2 anahtar kelime yoğunluğu koruyun
 - Her paragraf 3-4 cümleden oluşsun
 - Meta description uyumlu giriş paragrafı yazın
-- İç linkler için anchor text önerileri
+
+İÇ LİNK YERLEŞTIRME MUTLAK KURALLARI (KRİTİK):
+- GİRİŞ PARAGRAFI: İlk paragrafta KESİNLİKLE hiç iç link kullanma
+- BİRİNCİ PARAGRAF: Sadece konu tanıtımı yap, link ekleme
+- ALT BAŞLIKLAR: Sadece H2 bölümlerinde iç link kullan
+- HATA: Giriş paragrafında link bulunması hata sayılır!
+
 - Resim alt text önerileri ekleyin
 
 GÖRSEL ve MULTİMEDYA:
@@ -1264,6 +1281,11 @@ GEREKSINIMLER:
 5. ${settings.table ? 'Uygun yerlerde tablo ekle' : ''}
 6. ${settings.list ? 'Uygun yerlerde liste kullan' : ''}
 7. ${settings.quote ? 'Alıntı blokları ekle' : ''}
+
+İÇ LİNK KURALLARI (MUTLAK):
+- GİRİŞ PARAGRAFI: İlk paragrafta KESİNLİKLE hiç iç link kullanma
+- BİRİNCİ PARAGRAF: Sadece konu tanıtımı yap, link yerleştirme
+- ALT BAŞLIKLAR: Sadece H2 bölümlerinde iç link kullan
 
 Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
