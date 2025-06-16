@@ -18,20 +18,24 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
   const totalLinks = links.length;
   
+  // Limit internal links to SEO-optimal amounts (10-15 per article)
+  const maxLinks = linkType === 'internal' ? 15 : Math.min(totalLinks, 5);
+  const selectedLinks = links.slice(0, maxLinks);
+  
   // SEO-optimized distribution ratios based on best practices
   const distributionRatio = linkType === 'internal' 
-    ? { intro: 0.2, middle: 0.6, conclusion: 0.2 } // Internal links: more in middle sections
+    ? { intro: 0, middle: 0.7, conclusion: 0.3 } // Internal links: NO links in intro, more in middle/conclusion
     : { intro: 0.3, middle: 0.5, conclusion: 0.2 }; // External links: balanced distribution
   
   // Calculate distribution counts
-  const introCount = Math.ceil(totalLinks * distributionRatio.intro);
-  const conclusionCount = Math.ceil(totalLinks * distributionRatio.conclusion);
-  const middleCount = totalLinks - introCount - conclusionCount;
+  const introCount = Math.ceil(selectedLinks.length * distributionRatio.intro);
+  const conclusionCount = Math.ceil(selectedLinks.length * distributionRatio.conclusion);
+  const middleCount = selectedLinks.length - introCount - conclusionCount;
   
   // Distribute links
-  const intro = links.slice(0, introCount);
-  const middle = links.slice(introCount, introCount + middleCount);
-  const conclusion = links.slice(introCount + middleCount);
+  const intro = selectedLinks.slice(0, introCount);
+  const middle = selectedLinks.slice(introCount, introCount + middleCount);
+  const conclusion = selectedLinks.slice(introCount + middleCount);
   
   return {
     intro,
@@ -55,15 +59,15 @@ function buildLinkInstructions(settings: any): string[] {
       // Intelligent distribution strategy based on article sections
       const linkDistribution = distributeLinksIntelligently(allInternalLinks, 'internal');
       
-      instructions.push('INTERNAL LINKS (Intelligent Distribution):');
-      instructions.push(`- Total internal links available: ${allInternalLinks.length}`);
+      instructions.push('INTERNAL LINKS (SEO-Optimized Distribution):');
+      instructions.push(`- Total internal links available: ${allInternalLinks.length} (using optimal 10-15 per article)`);
       instructions.push('- LINK DISTRIBUTION STRATEGY:');
-      instructions.push(`  * Introduction section: Use ${linkDistribution.intro.length} links - ${linkDistribution.intro.join(', ')}`);
-      instructions.push(`  * Middle sections: Use ${linkDistribution.middle.length} links - ${linkDistribution.middle.join(', ')}`);
-      instructions.push(`  * Conclusion section: Use ${linkDistribution.conclusion.length} links - ${linkDistribution.conclusion.join(', ')}`);
+      instructions.push(`  * Introduction section: NO INTERNAL LINKS (${linkDistribution.intro.length} links) - Keep intro clean and focused`);
+      instructions.push(`  * Middle sections: Use ${linkDistribution.middle.length} links - ${linkDistribution.middle.slice(0, 3).join(', ')}${linkDistribution.middle.length > 3 ? '...' : ''}`);
+      instructions.push(`  * Conclusion section: Use ${linkDistribution.conclusion.length} links - ${linkDistribution.conclusion.slice(0, 3).join(', ')}${linkDistribution.conclusion.length > 3 ? '...' : ''}`);
       instructions.push('- Place links naturally within contextually relevant paragraphs');
       instructions.push('- Use descriptive anchor text that relates to the linked content');
-      instructions.push('- Ensure even distribution - avoid clustering links in one section');
+      instructions.push('- IMPORTANT: Never place internal links in the introduction paragraph');
       instructions.push('- Format: <a href="URL">descriptive anchor text</a>');
     }
   } else if (settings.internalLinks === "Otomatik") {
