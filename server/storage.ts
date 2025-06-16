@@ -421,13 +421,22 @@ export class DatabaseStorage implements IStorage {
         return website;
       }
 
+      // Skip if no WordPress credentials
+      if (!website.wpUsername || !website.wpAppPassword) {
+        console.log(`Website ${id}: Missing WordPress credentials for category sync`);
+        return website;
+      }
+
       // Fetch categories from WordPress
       const auth = Buffer.from(`${website.wpUsername}:${website.wpAppPassword}`).toString('base64');
+      console.log(`Syncing categories for website ${id}: ${website.url}`);
+      
       const response = await fetch(`${website.url}/wp-json/wp/v2/categories?per_page=100`, {
         headers: {
           'Authorization': `Basic ${auth}`,
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 10000
       });
 
       if (response.ok) {
@@ -439,13 +448,16 @@ export class DatabaseStorage implements IStorage {
           count: cat.count
         }));
 
+        console.log(`Website ${id}: Successfully synced ${categoryData.length} categories`);
         return await this.updateWebsite(id, userId, {
           categories: categoryData,
           lastSync: new Date()
         });
+      } else {
+        console.log(`Website ${id}: Category sync failed - HTTP ${response.status}`);
       }
     } catch (error) {
-      console.error('Category sync failed:', error);
+      console.error(`Website ${id}: Category sync failed:`, error);
     }
     
     return await this.getWebsiteById(id, userId);

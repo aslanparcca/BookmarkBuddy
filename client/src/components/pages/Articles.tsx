@@ -51,8 +51,28 @@ export default function Articles() {
   // Categories for selected website
   const categories = useMemo(() => {
     const selectedWebsiteData = websites.find(w => w.id.toString() === selectedWebsite);
-    return selectedWebsiteData?.categories || [];
+    const websiteCategories = selectedWebsiteData?.categories || [];
+    
+    // Handle both array and empty cases
+    if (!Array.isArray(websiteCategories) || websiteCategories.length === 0) {
+      return [];
+    }
+    
+    return websiteCategories;
   }, [websites, selectedWebsite]) as (string | { id?: string | number; name?: string })[];
+
+  // Auto-sync categories when website is selected
+  const syncCategoriesMutation = useMutation({
+    mutationFn: async (websiteId: string) => {
+      return await apiRequest(`/api/websites/${websiteId}/sync`, "POST", {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/websites'] });
+    },
+    onError: (error: Error) => {
+      console.error('Category sync failed:', error);
+    },
+  });
 
   const deleteMutation = useMutation({
     mutationFn: async (articleId: number) => {
