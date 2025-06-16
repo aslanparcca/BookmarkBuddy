@@ -3145,6 +3145,14 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
               }
             };
 
+            console.log(`WordPress Post Data Debug for "${article.title}":`, {
+              status: publishStatus,
+              categoryId: categoryId,
+              categoriesArray: [categoryId],
+              selectedCategory: category,
+              publishSettings: { publishStatus, categoryId }
+            });
+
             try {
               // Enhanced security bypass headers
               const securityBypassHeaders = {
@@ -3209,8 +3217,9 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                   const minimalPostData = {
                     title: postData.title,
                     content: contentChunks[0] || 'Loading content...',
-                    status: 'draft', // Always start as draft
-                    categories: postData.categories
+                    status: publishStatus, // Keep original publish status
+                    categories: [categoryId], // Keep original category ID
+                    excerpt: article.summary || ''
                   };
                   
                   console.log('Attempting chunked submission approach...');
@@ -3243,7 +3252,9 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                           body: JSON.stringify({
                             content: originalContent,
                             status: publishStatus,
-                            meta: postData.meta
+                            categories: [categoryId], // Ensure correct category
+                            meta: postData.meta,
+                            excerpt: article.summary || ''
                           })
                         }),
                         new Promise((_, reject) => 
@@ -3278,7 +3289,8 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                         },
                         body: JSON.stringify({
                           ...postData,
-                          status: 'draft' // Force draft status for security bypass
+                          status: publishStatus, // Keep original publish status
+                          categories: [categoryId] // Ensure correct category
                         })
                       }),
                       new Promise((_, reject) => 
@@ -3298,8 +3310,9 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
                     const simplifiedPostData = {
                       title: postData.title,
                       content: postData.content.substring(0, 5000) + '...', // Truncate content
-                      status: 'draft',
-                      categories: postData.categories
+                      status: publishStatus, // Keep original publish status
+                      categories: [categoryId], // Keep original category ID
+                      excerpt: article.summary || ''
                     };
                     
                     response = await Promise.race([
