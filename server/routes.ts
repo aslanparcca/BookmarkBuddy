@@ -2917,16 +2917,28 @@ Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, 
             // WordPress REST API endpoint for posts
             const wpApiUrl = `${website.url}/wp-json/wp/v2/posts`;
             
-            // Get categories to find category ID
-            const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?search=${encodeURIComponent(category)}`;
+            // Get all categories to find exact category ID match
+            const categoriesUrl = `${website.url}/wp-json/wp/v2/categories?per_page=100`;
             let categoryId = 1; // Default category ID
             
             try {
               const catResponse = await fetch(categoriesUrl);
               if (catResponse.ok) {
                 const categories = await catResponse.json();
-                if (categories.length > 0) {
-                  categoryId = categories[0].id;
+                console.log('Available categories on website:', categories.map(cat => ({ id: cat.id, name: cat.name })));
+                
+                // Find exact match for category name
+                const matchedCategory = categories.find(cat => 
+                  cat.name.toLowerCase() === category.toLowerCase() ||
+                  cat.slug.toLowerCase() === category.toLowerCase()
+                );
+                
+                if (matchedCategory) {
+                  categoryId = matchedCategory.id;
+                  console.log(`Found exact category match: "${matchedCategory.name}" (ID: ${categoryId})`);
+                } else {
+                  console.log(`No exact match found for category "${category}", using default category ID: ${categoryId}`);
+                  console.log('Available category names:', categories.map(cat => cat.name));
                 }
               }
             } catch (catError) {
