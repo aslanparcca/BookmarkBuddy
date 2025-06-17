@@ -156,7 +156,15 @@ export default function ApiKeys() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="openai">OpenAI</SelectItem>
-                      <SelectItem value="gemini">Google Gemini</SelectItem>
+                      <SelectItem value="anthropic">Anthropic</SelectItem>
+                      <SelectItem value="gemini">Google AI</SelectItem>
+                      <SelectItem value="perplexity">Perplexity</SelectItem>
+                      <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
+                      <SelectItem value="runware">Runware</SelectItem>
+                      <SelectItem value="deepl">DeepL</SelectItem>
+                      <SelectItem value="replicate">Replicate</SelectItem>
+                      <SelectItem value="stability_ai">Stability AI</SelectItem>
+                      <SelectItem value="hugging_face">Hugging Face</SelectItem>
                       <SelectItem value="google_search">Google Search API</SelectItem>
                     </SelectContent>
                   </Select>
@@ -220,6 +228,118 @@ export default function ApiKeys() {
                         Gemini API Keys <i className="fas fa-external-link-alt text-xs"></i>
                       </a>{" "}
                       sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.
+                    </p>
+                  )}
+                  {service === 'anthropic' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.anthropic.com/dashboard"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Anthropic Console <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Claude AI modelleri için gereklidir.
+                    </p>
+                  )}
+                  {service === 'perplexity' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://www.perplexity.ai/settings/api"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Perplexity API Settings <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Perplexity AI arama için gereklidir.
+                    </p>
+                  )}
+                  {service === 'elevenlabs' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://elevenlabs.io/app/speech-synthesis"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        ElevenLabs Platform <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Ses sentezi ve dubbing için gereklidir.
+                    </p>
+                  )}
+                  {service === 'runware' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://runware.ai/dashboard"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Runware Dashboard <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. AI görsel üretimi için gereklidir.
+                    </p>
+                  )}
+                  {service === 'deepl' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://www.deepl.com/pro-api"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        DeepL API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Profesyonel çeviri hizmetleri için gereklidir.
+                    </p>
+                  )}
+                  {service === 'replicate' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://replicate.com/account/api-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Replicate API Tokens <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Açık kaynak AI modelleri için gereklidir.
+                    </p>
+                  )}
+                  {service === 'stability_ai' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://platform.stability.ai/account/keys"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Stability AI Platform <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Stable Diffusion görsel üretimi için gereklidir.
+                    </p>
+                  )}
+                  {service === 'hugging_face' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://huggingface.co/settings/tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Hugging Face Tokens <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ulaşabilirsiniz. Hugging Face Hub modelleri için gereklidir.
                     </p>
                   )}
                   {service === 'google_search' && (
