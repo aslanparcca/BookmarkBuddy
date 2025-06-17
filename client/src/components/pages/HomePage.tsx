@@ -201,7 +201,7 @@ export default function HomePage() {
         navigate('/?page=settings'); // WP Makalesi V2
         break;
       case 'bulk-create':
-        navigate('/?page=bulk-template-v2'); // Toplu Makale V2
+        navigate('/?page=bulk-template-v1'); // Toplu Makale V1
         break;
       case 'add-website':
         navigate('/?page=add-website'); // Website Ekle
