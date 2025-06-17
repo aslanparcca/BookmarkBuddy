@@ -119,7 +119,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const [settings, setSettings] = useState<BulkV2Settings>({
     language: "1",
     aiModel: "gemini_2.5_flash",
-    sectionLength: "s",
+    sectionLength: "medium",
     folder: "",
     subheadingType: "h2",
     subheadingCount: "",
@@ -727,7 +727,26 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                 </Select>
               </div>
 
-
+              <div>
+                <Label htmlFor="sectionLength" className="flex items-center gap-2">
+                  Bölüm Uzunluğu
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </Label>
+                <Select value={settings.sectionLength} onValueChange={(value) => setSettings({...settings, sectionLength: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="very_short">Çok Kısa [100-200 kelime]</SelectItem>
+                    <SelectItem value="short">Kısa [150-300 kelime]</SelectItem>
+                    <SelectItem value="medium">Orta [200-400 kelime]</SelectItem>
+                    <SelectItem value="long">Uzun [400-800 kelime]</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Her bir H2 alt başlık altındaki bölümün ortalama kelime sayısını belirtir. Listedeki değerler ortalama değerler olup bu değerlerden daha kısa veya daha uzun metinler de oluşabilir.
+                </p>
+              </div>
 
               <div>
                 <Label htmlFor="folder">Klasör</Label>

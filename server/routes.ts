@@ -2209,6 +2209,13 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
               `- REQUIRED H2 sections (USE THESE EXACT HEADINGS): ${titleData.subheadings.join(', ')}` :
               `- Main H2 sections: ${settings.subheadingCount || '7-10'} sections`,
             `- Subheading type: ${settings.subheadingType === 'h2h3' ? 'Use both H2 and H3 tags (H2 for main sections, H3 for subsections)' : 'Use only H2 tags for main sections'}`,
+            `- Section Length: ${
+              settings.sectionLength === 'very_short' ? 'Each H2 section should be 100-200 words (Very Short)' :
+              settings.sectionLength === 'short' ? 'Each H2 section should be 150-300 words (Short)' :
+              settings.sectionLength === 'medium' ? 'Each H2 section should be 200-400 words (Medium)' :
+              settings.sectionLength === 'long' ? 'Each H2 section should be 400-800 words (Long)' :
+              'Each H2 section should be 200-400 words (Default)'
+            }`,
             `- Writing Style: ${settings.writingStyle || 'Professional and trustworthy'}`,
             hasExcelSubheadings ? '\nIMPORTANT: You MUST use the provided H2 headings in the exact order listed above. Do not change or reorder them.' : '',
             '',
