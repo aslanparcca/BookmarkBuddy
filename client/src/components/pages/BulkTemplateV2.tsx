@@ -124,6 +124,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const [imageSource, setImageSource] = useState("0");
   const [testingCurrentInfo, setTestingCurrentInfo] = useState(false);
   const [testQuery, setTestQuery] = useState("");
+  const [testApiKey, setTestApiKey] = useState("");
   
   const [settings, setSettings] = useState<BulkV2Settings>({
     language: "1",
@@ -1013,19 +1014,33 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                         <p className="text-xs text-muted-foreground">Güncel bilgi toplama sistemini test edin</p>
                       </div>
                       
-                      <div className="grid md:grid-cols-2 gap-3">
-                        <div>
-                          <Label htmlFor="testQuery" className="text-xs">Test Sorgusu</Label>
-                          <Input
-                            id="testQuery"
-                            placeholder="nakliyat hizmetleri"
-                            value={testQuery}
-                            onChange={(e) => setTestQuery(e.target.value)}
-                            className="h-8 text-sm"
-                          />
+                      <div className="grid gap-3">
+                        <div className="grid md:grid-cols-2 gap-3">
+                          <div>
+                            <Label htmlFor="testQuery" className="text-xs">Test Sorgusu</Label>
+                            <Input
+                              id="testQuery"
+                              placeholder="nakliyat hizmetleri"
+                              value={testQuery}
+                              onChange={(e) => setTestQuery(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor="testApiKey" className="text-xs">Google Search API Key</Label>
+                            <Input
+                              id="testApiKey"
+                              type="password"
+                              placeholder="AIzaSyC..."
+                              value={testApiKey}
+                              onChange={(e) => setTestApiKey(e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
                         </div>
                         
-                        <div className="flex items-end">
+                        <div className="flex justify-end">
                           <Button
                             type="button"
                             size="sm"
@@ -1034,6 +1049,11 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                               try {
                                 setTestingCurrentInfo(true);
                                 const query = testQuery || generatedTitles[0]?.focusKeyword || "nakliyat hizmetleri";
+                                
+                                if (!testApiKey.trim()) {
+                                  alert('❌ Lütfen Google Search API Key giriniz');
+                                  return;
+                                }
                                 
                                 const response = await fetch('/api/gather-current-info-v2', {
                                   method: 'POST',
@@ -1046,7 +1066,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                                     searchDate: settings.searchDate || 'all',
                                     excludedUrls: settings.excludedUrls || '',
                                     customUrls: settings.customUrls || '',
-                                    queryType: settings.searchQueryType || 'focus_keyword'
+                                    queryType: settings.searchQueryType || 'focus_keyword',
+                                    testApiKey: testApiKey.trim()
                                   })
                                 });
                                 

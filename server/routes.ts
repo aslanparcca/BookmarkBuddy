@@ -5343,7 +5343,8 @@ Mevcut İçerik: ${content}
         searchDate = 'all',
         excludedUrls = '',
         customUrls = '',
-        queryType = 'focus_keyword'
+        queryType = 'focus_keyword',
+        testApiKey = null
       } = req.body;
       const userId = req.user.claims.sub;
       
@@ -5351,8 +5352,6 @@ Mevcut İçerik: ${content}
         return res.status(400).json({ error: 'Arama sorgusu gereklidir' });
       }
 
-      // Get user's API key for Google Search API (if available)
-      const apiKeys = await storage.getApiKeysByUserId(userId);
       let searchResults = [];
 
       if (searchSource === 'custom' && customUrls?.trim()) {
@@ -5469,11 +5468,12 @@ Mevcut İçerik: ${content}
       // Create summary of gathered information
       let summary = '';
       if (searchResults.length > 0) {
+        const apiKeys = await storage.getApiKeysByUserId(userId);
         const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
                          apiKeys.find(key => key.service === 'gemini');
         
         if (geminiKey) {
-          const { GoogleGenerativeAI } = require('@google/generative-ai');
+          const { GoogleGenerativeAI } = await import('@google/generative-ai');
           const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
           const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
