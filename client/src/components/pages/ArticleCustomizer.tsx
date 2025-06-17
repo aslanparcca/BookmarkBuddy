@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Edit, Info, Youtube } from "lucide-react";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface ArticleCustomizerSettings {
   generateType: string;
@@ -18,6 +19,7 @@ interface ArticleCustomizerSettings {
   postStatus: string;
   competitorUrl: string;
   searchQuery: string;
+  aiModel: string;
 }
 
 export default function ArticleCustomizer() {
@@ -30,7 +32,8 @@ export default function ArticleCustomizer() {
     categoryIds: [],
     postStatus: "publish",
     competitorUrl: "",
-    searchQuery: ""
+    searchQuery: "",
+    aiModel: "gemini-2.0-flash"
   });
 
   const listArticlesMutation = useMutation({
@@ -198,6 +201,14 @@ export default function ArticleCustomizer() {
                   </div>
                 </div>
               )}
+
+              <div className="mt-4">
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
+              </div>
 
               <div className="mt-4">
                 <Label htmlFor="searchQuery">Arama Terimi</Label>
