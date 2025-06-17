@@ -35,6 +35,7 @@ export default function BulkTemplateV1({ setLoading }: BulkTemplateV1Props) {
   const [settings, setSettings] = useState<BulkV1Settings>({
     generateType: "1",
     languageId: "1",
+    aiModel: "gemini-2.0-flash",
     keywords: "",
     keywordType: "1",
     websiteId: "",
@@ -378,6 +379,14 @@ export default function BulkTemplateV1({ setLoading }: BulkTemplateV1Props) {
                     <SelectItem value="5">🇩🇪 Almanca</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div>
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
               </div>
 
               {/* Dynamic Content Based on Generation Type */}

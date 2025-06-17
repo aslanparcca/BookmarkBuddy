@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import FileDropZone from "@/components/FileDropZone";
 import { FileSpreadsheet, Download, Upload, CheckCircle, XCircle, Play, Settings, Image, FileText } from "lucide-react";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface ExcelTemplateProps {
   setLoading: (loading: boolean) => void;
@@ -51,7 +52,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
 
   // İçerik kalite ayarları
   const [settings, setSettings] = useState({
-    aiModel: 'gemini_2.5_flash',
+    aiModel: 'gemini-2.0-flash',
     sectionLength: 'orta',
     writingStyle: 'profesyonel',
     targetAudience: 'genel',
@@ -212,7 +213,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
                   Excel Dosyası Yükle
                 </CardTitle>
               </CardHeader>
-          <CardContent className="space-y-6">
+              <CardContent className="space-y-6">
             <div className="text-center">
               <FileSpreadsheet className="w-16 h-16 mx-auto text-green-500 mb-4" />
               <p className="text-gray-600 mb-4">
