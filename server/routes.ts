@@ -1775,7 +1775,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
         `;
 
         try {
-          const content = await apiManager.generateContentWithRotation(userId, recipePrompt, selectedModel);
+          const content = await apiManager.generateContentWithRotation(userId, recipePrompt, "gemini-1.5-flash");
 
           // Here we would normally save the recipe to the database
           // For now, we'll just count successful generations
@@ -1873,7 +1873,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
         `;
 
         try {
-          const content = await apiManager.generateContentWithRotation(userId, dreamPrompt, selectedModel);
+          const content = await apiManager.generateContentWithRotation(userId, dreamPrompt, "gemini-1.5-flash");
 
           // Here we would normally save the article to the database
           // For now, we'll just count successful generations
@@ -2083,7 +2083,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
                 }
               });
               
-              const mappedCount = titleData.subheadings.filter((_, index) => {
+              const mappedCount = titleData.subheadings.filter((_: string, index: number) => {
                 const altBaslikNumber = (index + 1).toString();
                 return altBaslikImages[altBaslikNumber] || altBaslikImages[titleData.subheadings[index]];
               }).length;
