@@ -482,21 +482,31 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   return (
     <div className="space-y-6">
+      {/* Main Header */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Layers className="w-6 h-6 text-primary" />
+          <h1 className="text-2xl font-bold text-gray-900">Toplu Makale Oluştur V2</h1>
+          <Youtube className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer ml-2" />
+        </div>
+        <div className="flex items-center gap-2 mt-2 md:mt-0">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            API Bağlı
+          </span>
+          <Button variant="outline" size="sm">
+            <Info className="w-4 h-4 mr-1" />
+            Bilgilendirme
+          </Button>
+        </div>
+      </div>
+
       {/* Step 1: Title Generation */}
       <Card className="border-2 border-primary">
         <CardHeader className="border-b">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="w-5 h-5 text-primary" />
-              Toplu Makale Oluştur V2
-              <Youtube className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer" />
-            </CardTitle>
-            
-            <Button variant="outline" size="sm" className="mt-2 md:mt-0">
-              <Info className="w-4 h-4 mr-1" />
-              Bilgilendirme
-            </Button>
-          </div>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+            Makale Başlıkları Oluşturun
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="mt-6">
@@ -716,8 +726,8 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
       {showStep2 && (
         <Card className="border-2 border-primary">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
               Genel Ayarlar
             </CardTitle>
           </CardHeader>
