@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
@@ -228,14 +228,22 @@ export default function Dashboard() {
     }
   };
 
+  // Memoized sidebar to prevent duplicate rendering
+  const sidebarComponent = useMemo(() => (
+    <Sidebar 
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      sidebarOpen={sidebarOpen}
+      setSidebarOpen={setSidebarOpen}
+    />
+  ), [currentPage, sidebarOpen]);
+
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      <Sidebar 
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-      />
+      {/* Single Sidebar - memoized to prevent duplication */}
+      <div key="main-sidebar" className="sidebar-unique">
+        {sidebarComponent}
+      </div>
       
       <div className="flex-1 flex flex-col min-w-0 relative">
         <Header 
