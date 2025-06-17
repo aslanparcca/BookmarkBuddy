@@ -72,7 +72,16 @@ export default function SidebarFixed({ currentPage, setCurrentPage, sidebarOpen,
           </div>
         </div>
 
-        <div className="flex-1 sidebar-scrollable">
+        <div 
+          className="flex-1 overflow-y-auto"
+          style={{ 
+            height: 'calc(100vh - 170px)',
+            overflowY: 'auto'
+          }}
+          onWheel={(e) => {
+            e.currentTarget.scrollTop += e.deltaY;
+          }}
+        >
           {/* Ana Menü */}
           <div className="p-4 space-y-1">
             {mainNavItems.map((item) => (
