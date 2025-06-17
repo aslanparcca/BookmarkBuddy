@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import FileDropZone from "@/components/FileDropZone";
 import { FileSpreadsheet, Download, Upload, CheckCircle, XCircle, Play, Settings, Image, FileText } from "lucide-react";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface ExcelTemplateProps {
   setLoading: (loading: boolean) => void;
@@ -51,7 +52,7 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
 
   // İçerik kalite ayarları
   const [settings, setSettings] = useState({
-    aiModel: 'gemini_2.5_flash',
+    aiModel: 'gemini-2.0-flash',
     sectionLength: 'orta',
     writingStyle: 'profesyonel',
     targetAudience: 'genel',
@@ -271,18 +272,11 @@ export default function ExcelTemplate({ setLoading }: ExcelTemplateProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="ai-model">Yapay Zeka Modeli</Label>
-                  <Select value={settings.aiModel} onValueChange={(value) => setSettings(prev => ({ ...prev, aiModel: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Model seçin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
-                      <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro</SelectItem>
-                      <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash</SelectItem>
-                      <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <AIModelSelector
+                    selectedModel={settings.aiModel}
+                    onModelChange={(model) => setSettings(prev => ({ ...prev, aiModel: model }))}
+                    compact={true}
+                  />
                 </div>
 
                 <div>

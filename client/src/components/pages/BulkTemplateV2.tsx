@@ -15,6 +15,7 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
 import { getTextGenerationModels, getDefaultModelForProvider } from "@shared/ai-models";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 
 interface BulkTemplateV2Props {
@@ -735,57 +736,11 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
           <CardContent>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="aiModel">Yapay Zeka Modeli</Label>
-                <Select value={settings.aiModel} onValueChange={(value) => setSettings({...settings, aiModel: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* OpenAI Models */}
-                    <SelectItem value="openai_header" disabled className="font-semibold text-primary">
-                      — OpenAI —
-                    </SelectItem>
-                    <SelectItem value="o3-mini">o3-mini - Küçük reasoning (31 Ocak 2025)</SelectItem>
-                    <SelectItem value="o3">o3 - Orta seviye reasoning (16 Nisan 2025)</SelectItem>
-                    <SelectItem value="o4-mini">o4-mini - Optimize edilmiş (16 Nisan 2025)</SelectItem>
-                    <SelectItem value="o3-pro">o3-pro - En yüksek güvenilirlik (10 Haziran 2025) 🔥</SelectItem>
-                    <SelectItem value="gpt-4o">GPT-4o - Omni multimodal (13 Mayıs 2024)</SelectItem>
-                    <SelectItem value="gpt-4o-mini">GPT-4o mini - Maliyet dengeli (18 Temmuz 2024)</SelectItem>
-                    <SelectItem value="gpt-4.5">GPT-4.5 (Orion) - En büyük LLM (27 Şubat 2025)</SelectItem>
-                    <SelectItem value="gpt-4.1">GPT-4.1 - Kodlama & uzun bağlam (14 Nisan 2025)</SelectItem>
-                    
-                    {/* Anthropic Models */}
-                    <SelectItem value="anthropic_header" disabled className="font-semibold text-primary mt-2">
-                      — Anthropic —
-                    </SelectItem>
-                    <SelectItem value="claude-4-opus">Claude Opus 4 - Dünyanın en güçlü kodlama modeli (22 Mayıs 2025) 🚀</SelectItem>
-                    <SelectItem value="claude-4-sonnet">Claude Sonnet 4 - Dengeli & verimli (22 Mayıs 2025)</SelectItem>
-                    <SelectItem value="claude-3.5-sonnet">Claude 3.5 Sonnet - Hız & doğruluk dengesi</SelectItem>
-                    <SelectItem value="claude-3-haiku">Claude 3 Haiku - Hızlı & ekonomik</SelectItem>
-                    
-                    {/* Google AI / Gemini Models */}
-                    <SelectItem value="gemini_header" disabled className="font-semibold text-primary mt-2">
-                      — Google AI / Gemini —
-                    </SelectItem>
-                    <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash - Next-gen multimodal (12 Aralık 2024) ⭐</SelectItem>
-                    <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash - "Thinking" özelliği (25 Mart 2025)</SelectItem>
-                    <SelectItem value="gemini-2.5-pro">Gemini 2.5 Pro - En gelişmiş reasoning (25 Mart 2025)</SelectItem>
-                    <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro - Uzun bağlam (15 Şubat 2024)</SelectItem>
-                    <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash - Hızlı & verimli (15 Şubat 2024)</SelectItem>
-                    <SelectItem value="gemini-1.0-ultra">Gemini 1.0 Ultra - Karmaşık problemler (6 Aralık 2023)</SelectItem>
-                    
-                    {/* Perplexity Models */}
-                    <SelectItem value="perplexity_header" disabled className="font-semibold text-primary mt-2">
-                      — Perplexity —
-                    </SelectItem>
-                    <SelectItem value="sonar-pro">Sonar Pro - Derin araştırma (Şubat 2025)</SelectItem>
-                    <SelectItem value="sonar-reasoning-pro">Sonar Reasoning Pro - Gelişmiş mantık (Şubat 2025)</SelectItem>
-                    <SelectItem value="sonar">Sonar - LLaMA 3.3 tabanlı (11 Şubat 2025)</SelectItem>
-                    <SelectItem value="sonar-reasoning">Sonar Reasoning - Hızlı mantık (Şubat 2025)</SelectItem>
-                    <SelectItem value="sonar-deep-research">Sonar Deep Research - Derin veri toplama (Şubat 2025)</SelectItem>
-                    <SelectItem value="perplexity-default">Default - Hızlı web tarama</SelectItem>
-                  </SelectContent>
-                </Select>
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
               </div>
 
               <div>
