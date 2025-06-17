@@ -106,6 +106,93 @@ export default function HomePage() {
     avgReadingTime: 0
   };
 
+  // Calculate real chart data from articles
+  const calculateChartData = () => {
+    if (!articles || !Array.isArray(articles)) {
+      return {
+        weeklyData: [],
+        contentTypeData: [],
+        monthlyTrendData: []
+      };
+    }
+
+    // Calculate weekly data (last 7 days)
+    const today = new Date();
+    const weekDays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+    const weeklyData = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dayName = weekDays[date.getDay()];
+      
+      const dayArticles = articles.filter(article => {
+        const articleDate = new Date(article.createdAt);
+        return articleDate.toDateString() === date.toDateString();
+      });
+      
+      const dayWords = dayArticles.reduce((sum, article) => sum + (article.wordCount || 0), 0);
+      
+      weeklyData.push({
+        day: dayName,
+        articles: dayArticles.length,
+        words: dayWords
+      });
+    }
+
+    // Calculate content type distribution
+    const categories = ['Blog', 'SEO', 'Haber', 'Ürün', 'Diğer'];
+    const categoryMap = new Map();
+    
+    articles.forEach(article => {
+      const category = article.category || 'Diğer';
+      const normalizedCategory = categories.find(cat => 
+        category.toLowerCase().includes(cat.toLowerCase())
+      ) || 'Diğer';
+      
+      categoryMap.set(normalizedCategory, (categoryMap.get(normalizedCategory) || 0) + 1);
+    });
+    
+    const totalArticles = articles.length || 1;
+    const contentTypeData = Array.from(categoryMap.entries()).map(([name, count], index) => ({
+      name: name === 'Blog' ? 'Blog Yazıları' : 
+            name === 'SEO' ? 'SEO Makaleleri' : 
+            name === 'Ürün' ? 'Ürün İncelemeleri' : 
+            name === 'Haber' ? 'Haberler' : 'Diğer İçerikler',
+      value: Math.round((count / totalArticles) * 100),
+      color: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index] || '#64748b'
+    }));
+
+    // Calculate monthly trend (last 6 months)
+    const monthNames = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+    const monthlyTrendData = [];
+    
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(today);
+      date.setMonth(date.getMonth() - i);
+      const monthName = monthNames[date.getMonth()];
+      
+      const monthArticles = articles.filter(article => {
+        const articleDate = new Date(article.createdAt);
+        return articleDate.getMonth() === date.getMonth() && 
+               articleDate.getFullYear() === date.getFullYear();
+      });
+      
+      const monthWords = monthArticles.reduce((sum, article) => sum + (article.wordCount || 0), 0);
+      const estimatedTraffic = monthWords * 2.5; // Rough estimate: 2.5 views per word
+      
+      monthlyTrendData.push({
+        month: monthName,
+        articles: monthArticles.length,
+        traffic: Math.round(estimatedTraffic)
+      });
+    }
+
+    return { weeklyData, contentTypeData, monthlyTrendData };
+  };
+
+  const { weeklyData, contentTypeData, monthlyTrendData } = calculateChartData();
+
   // Quick Actions handlers
   const handleQuickAction = (action: string) => {
     switch (action) {
