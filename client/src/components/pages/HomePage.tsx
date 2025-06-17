@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 import { TrendingUp, FileText, Globe, Target, Users, Clock, Award, Zap, Brain, BarChart3, Eye } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface SEOTip {
   id: number;
@@ -68,34 +69,11 @@ const seoTips: SEOTip[] = [
   }
 ];
 
-const weeklyData = [
-  { day: 'Pzt', articles: 12, words: 18500 },
-  { day: 'Sal', articles: 8, words: 12400 },
-  { day: 'Çar', articles: 15, words: 22100 },
-  { day: 'Per', articles: 10, words: 15800 },
-  { day: 'Cum', articles: 18, words: 28200 },
-  { day: 'Cmt', articles: 6, words: 9200 },
-  { day: 'Paz', articles: 4, words: 6100 }
-];
-
-const contentTypeData = [
-  { name: 'Blog Yazıları', value: 45, color: '#3b82f6' },
-  { name: 'SEO Makaleleri', value: 30, color: '#10b981' },
-  { name: 'Ürün İncelemeleri', value: 15, color: '#f59e0b' },
-  { name: 'Haberler', value: 10, color: '#ef4444' }
-];
-
-const monthlyTrendData = [
-  { month: 'Oca', articles: 45, traffic: 12500 },
-  { month: 'Şub', articles: 52, traffic: 18200 },
-  { month: 'Mar', articles: 67, traffic: 24800 },
-  { month: 'Nis', articles: 43, traffic: 28100 },
-  { month: 'May', articles: 78, traffic: 35600 },
-  { month: 'Haz', articles: 89, traffic: 42300 }
-];
+// Real data calculations will be done in component using actual articles
 
 export default function HomePage() {
   const [timeOfDay, setTimeOfDay] = useState('');
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -109,6 +87,16 @@ export default function HomePage() {
     refetchInterval: 30000 // 30 saniyede bir güncelle
   });
 
+  const { data: articles } = useQuery({
+    queryKey: ['/api/articles'],
+    refetchInterval: 60000 // 1 dakikada bir güncelle
+  });
+
+  const { data: websites } = useQuery({
+    queryKey: ['/api/websites'],
+    refetchInterval: 60000
+  });
+
   const dashboardStats: DashboardStats = (stats as DashboardStats) ?? {
     totalArticles: 0,
     totalWords: 0,
@@ -116,6 +104,26 @@ export default function HomePage() {
     totalWebsites: 0,
     apiCallsThisMonth: 0,
     avgReadingTime: 0
+  };
+
+  // Quick Actions handlers
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'new-article':
+        navigate('/ai-content');
+        break;
+      case 'bulk-create':
+        navigate('/bulk-articles-v2');
+        break;
+      case 'add-website':
+        navigate('/websites/add');
+        break;
+      case 'seo-analyze':
+        navigate('/seo-indexing');
+        break;
+      default:
+        break;
+    }
   };
 
   const getCategoryColor = (category: string) => {
@@ -355,19 +363,35 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => handleQuickAction('new-article')}
+            >
               <FileText className="h-6 w-6" />
               <span className="text-sm">Yeni Makale</span>
             </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => handleQuickAction('bulk-create')}
+            >
               <Users className="h-6 w-6" />
               <span className="text-sm">Toplu Üretim</span>
             </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => handleQuickAction('add-website')}
+            >
               <Globe className="h-6 w-6" />
               <span className="text-sm">Website Ekle</span>
             </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => handleQuickAction('seo-analyze')}
+            >
               <BarChart3 className="h-6 w-6" />
               <span className="text-sm">SEO Analiz</span>
             </Button>

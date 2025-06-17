@@ -5619,6 +5619,35 @@ JSON formatında döndür:
     }
   });
 
+  // Dashboard Statistics API
+  app.get('/api/dashboard-stats', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Get user statistics from storage
+      const userStats = await storage.getUserStats(userId);
+      const websites = await storage.getWebsitesByUserId(userId);
+      
+      // Get current month for API usage
+      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+      const apiUsage = await storage.getApiUsage(userId, currentMonth);
+      
+      const dashboardStats = {
+        totalArticles: userStats.totalArticles,
+        totalWords: userStats.totalWords,
+        monthlyArticles: userStats.monthlyArticles,
+        totalWebsites: websites.length,
+        apiCallsThisMonth: apiUsage?.requestCount || 0,
+        avgReadingTime: Math.ceil(userStats.totalWords / 200) // 200 words per minute average
+      };
+
+      res.json(dashboardStats);
+    } catch (error) {
+      console.error('Dashboard stats error:', error);
+      res.status(500).json({ error: 'Dashboard istatistikleri alınırken hata oluştu' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
