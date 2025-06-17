@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
-import Sidebar from "@/components/Sidebar";
+import SidebarFixed from "@/components/SidebarFixed";
 import Header from "@/components/Header";
 import HomePage from "@/components/pages/HomePage";
 import ModulesPage from "@/components/pages/ModulesPage";

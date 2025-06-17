@@ -8,26 +8,24 @@ interface SidebarProps {
   setSidebarOpen: (open: boolean) => void;
 }
 
-export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setSidebarOpen }: SidebarProps) {
+export default function SidebarFixed({ currentPage, setCurrentPage, sidebarOpen, setSidebarOpen }: SidebarProps) {
   const { user } = useAuth();
 
   const mainNavItems = [
     { id: 'editor' as PageType, icon: 'fas fa-home', label: 'Ana Sayfa', color: 'text-purple-500' },
-    { id: 'articles' as PageType, icon: 'fas fa-file-alt', label: 'İçeriklerim', color: 'text-slate-500' },
-    { id: 'websites' as PageType, icon: 'fas fa-globe', label: 'Web Sitelerim', color: 'text-slate-500' },
-    { id: 'api-keys' as PageType, icon: 'fas fa-key', label: 'Api Keylerim', color: 'text-slate-500' },
-    { id: 'seo-indexing' as PageType, icon: 'fas fa-search', label: 'SEO İndeksleme', color: 'text-blue-500', badge: 'yeni' },
-    { id: 'bulk-editor' as PageType, icon: 'fas fa-layer-group', label: 'Modüller', color: 'text-slate-500' },
-    { id: 'wp-editor' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V1', color: 'text-orange-500' },
-    { id: 'settings' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V2', color: 'text-green-500' },
-    { id: 'url-rewrite' as PageType, icon: 'fas fa-link', label: 'URL Rewrite', color: 'text-slate-500', badge: 'yeni' },
+    { id: 'articles' as PageType, icon: 'fas fa-file-alt', label: 'İçeriklerim', color: 'text-blue-500' },
+    { id: 'wp-editor' as PageType, icon: 'fab fa-wordpress', label: 'WP Makalesi V1', color: 'text-slate-500' },
+    { id: 'settings' as PageType, icon: 'fab fa-wordpress', label: 'WP Makalesi V2', color: 'text-slate-500' },
+    { id: 'url-rewrite' as PageType, icon: 'fas fa-link', label: 'URL Rewrite', color: 'text-slate-500' },
+    { id: 'websites' as PageType, icon: 'fas fa-globe', label: 'Web Sitelerim', color: 'text-green-500' },
+    { id: 'api-keys' as PageType, icon: 'fas fa-key', label: 'Api Keylerim', color: 'text-orange-500' },
+    { id: 'seo-indexing' as PageType, icon: 'fas fa-search', label: 'SEO İndeksleme', color: 'text-red-500' },
   ];
 
   const bulkOperations = [
     { id: 'bulk-articles' as PageType, icon: 'fas fa-file-alt', label: 'Toplu Oluşturulan Makaleler', color: 'text-slate-500' },
     { id: 'bulk-template-v1' as PageType, icon: 'fas fa-layer-group', label: 'Toplu Makale V1', color: 'text-slate-500' },
     { id: 'bulk-template-v2' as PageType, icon: 'fas fa-layer-group', label: 'Toplu Makale V2', color: 'text-slate-500' },
-    { id: 'excel-template' as PageType, icon: 'fas fa-file-excel', label: 'Excel Şablonu', color: 'text-green-600' },
     { id: 'bulk-recipe' as PageType, icon: 'fas fa-utensils', label: 'Toplu Yemek Tarifi', color: 'text-slate-500' },
     { id: 'bulk-dream' as PageType, icon: 'fas fa-moon', label: 'Toplu Rüya Tabiri', color: 'text-slate-500' },
     { id: 'custom-articles' as PageType, icon: 'fas fa-clock', label: 'Özgünleştirilen Makaleler', color: 'text-slate-500' },
@@ -75,6 +73,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
         </div>
 
         <div className="flex-1 overflow-y-auto">
+          {/* Ana Menü */}
           <div className="p-4 space-y-1">
             {mainNavItems.map((item) => (
               <button
@@ -95,15 +94,11 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
                   <i className={`${item.icon} w-4 ${item.color}`}></i>
                   <span>{item.label}</span>
                 </div>
-                {item.badge && (
-                  <span className="bg-green-500 text-white text-xs px-2 py-1 rounded">
-                    {item.badge}
-                  </span>
-                )}
               </button>
             ))}
           </div>
 
+          {/* Toplu İşlemler */}
           <div className="px-4 pb-4">
             <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
               TOPLU İŞLEMLER
@@ -131,6 +126,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             </div>
           </div>
 
+          {/* Seslendirme & Resim */}
           <div className="px-4 pb-4">
             <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
               SESLENDIRME & RESIM
@@ -158,6 +154,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             </div>
           </div>
 
+          {/* Yardım */}
           <div className="px-4 pb-4">
             <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
               YARDIM
@@ -186,21 +183,21 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
           </div>
         </div>
 
+        {/* User Info */}
         <div className="p-4 border-t border-slate-200 flex-shrink-0">
           <div className="flex items-center space-x-3 px-3 py-2 bg-slate-50 rounded-lg">
-            <div className="h-8 w-8 bg-purple-500 rounded-full flex items-center justify-center">
-              <i className="fas fa-user text-white text-sm"></i>
+            <div className="h-8 w-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">
+                {user?.email?.charAt(0).toUpperCase()}
+              </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-slate-900 text-sm font-medium truncate">
-                {user?.email || 'Kullanıcı'}
+              <p className="text-sm font-medium text-slate-900 truncate">
+                {user?.email?.split('@')[0]}
               </p>
-              <button 
-                onClick={() => window.location.href = '/api/logout'}
-                className="text-slate-500 text-xs hover:text-slate-700"
-              >
-                Çıkış Yap
-              </button>
+              <p className="text-xs text-slate-500 truncate">
+                Premium
+              </p>
             </div>
           </div>
         </div>
