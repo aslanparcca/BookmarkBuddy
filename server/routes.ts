@@ -11,8 +11,138 @@ import { upload, generateImageFilename, bufferToDataUrl } from "./imageUpload";
 import { nanoid } from "nanoid";
 import { CurrentInfoGatherer } from "./currentInfoGatherer";
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+// Smart API Key Manager with automatic rotation and quota handling
+class SmartAPIManager {
+  private lastUsedKeyIndex: Map<string, number> = new Map();
+  private keyQuotaExhausted: Map<string, Set<string>> = new Map();
+  
+  async getAvailableAPIKey(userId: string, service: string = 'gemini'): Promise<string | null> {
+    try {
+      // Get all API keys for the user and service
+      const userKeys = await storage.getApiKeysByUserId(userId);
+      const serviceKeys = userKeys.filter(key => 
+        key.service.toLowerCase() === service.toLowerCase()
+      );
+      
+      if (serviceKeys.length === 0) {
+        console.log(`No ${service} API keys found for user ${userId}`);
+        return null;
+      }
+      
+      // Get exhausted keys for this user
+      const exhaustedKeys = this.keyQuotaExhausted.get(userId) || new Set();
+      
+      // Filter out exhausted keys
+      const availableKeys = serviceKeys.filter(key => 
+        !exhaustedKeys.has(key.apiKey)
+      );
+      
+      if (availableKeys.length === 0) {
+        console.log(`All ${service} API keys exhausted for user ${userId}`);
+        return null;
+      }
+      
+      // Sort by default status and get next available key
+      availableKeys.sort((a, b) => {
+        if (a.isDefault && !b.isDefault) return -1;
+        if (!a.isDefault && b.isDefault) return 1;
+        return 0;
+      });
+      
+      // Round-robin selection for load balancing
+      const lastIndex = this.lastUsedKeyIndex.get(`${userId}_${service}`) || 0;
+      const nextIndex = (lastIndex + 1) % availableKeys.length;
+      this.lastUsedKeyIndex.set(`${userId}_${service}`, nextIndex);
+      
+      const selectedKey = availableKeys[nextIndex];
+      console.log(`Selected ${service} API key ${nextIndex + 1}/${availableKeys.length} for user ${userId}`);
+      
+      return selectedKey.apiKey;
+    } catch (error) {
+      console.error('Error getting API key:', error);
+      return null;
+    }
+  }
+  
+  markKeyAsExhausted(userId: string, apiKey: string): void {
+    if (!this.keyQuotaExhausted.has(userId)) {
+      this.keyQuotaExhausted.set(userId, new Set());
+    }
+    this.keyQuotaExhausted.get(userId)!.add(apiKey);
+    console.log(`Marked API key as exhausted for user ${userId}`);
+  }
+  
+  isQuotaError(error: any): boolean {
+    const errorMessage = error?.message?.toLowerCase() || '';
+    const errorStatus = error?.status || 0;
+    
+    return (
+      errorMessage.includes('quota') ||
+      errorMessage.includes('limit') ||
+      errorMessage.includes('usage') ||
+      errorMessage.includes('resource_exhausted') ||
+      errorStatus === 429
+    );
+  }
+  
+  async generateContentWithRotation(userId: string, prompt: string, model: string = 'gemini-1.5-flash'): Promise<any> {
+    const maxRetries = 5; // Try up to 5 different API keys
+    let lastError = null;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const apiKey = await this.getAvailableAPIKey(userId, 'gemini');
+        
+        if (!apiKey) {
+          throw new Error('Gemini API günlük kullanım limitiniz doldu. Lütfen daha sonra tekrar deneyin veya ücretli API key kullanın.');
+        }
+        
+        // Initialize Gemini with current API key
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const geminiModel = genAI.getGenerativeModel({ model });
+        
+        console.log(`Attempting content generation with API key attempt ${attempt + 1}/${maxRetries}`);
+        
+        const result = await geminiModel.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        
+        if (!text || text.trim() === '') {
+          throw new Error('Empty response from Gemini API');
+        }
+        
+        console.log(`✅ Content generation successful with API key attempt ${attempt + 1}`);
+        return text;
+        
+      } catch (error) {
+        console.error(`API key attempt ${attempt + 1} failed:`, error);
+        lastError = error;
+        
+        if (this.isQuotaError(error)) {
+          // Mark current key as exhausted and try next one
+          const currentKey = await this.getAvailableAPIKey(userId, 'gemini');
+          if (currentKey) {
+            this.markKeyAsExhausted(userId, currentKey);
+          }
+          console.log(`Quota exhausted, trying next API key...`);
+          continue;
+        } else {
+          // Non-quota error, don't mark key as exhausted
+          throw error;
+        }
+      }
+    }
+    
+    // All API keys exhausted or failed
+    throw new Error('Gemini API günlük kullanım limitiniz doldu. Lütfen daha sonra tekrar deneyin veya ücretli API key kullanın.');
+  }
+}
+
+// Initialize Smart API Manager
+const apiManager = new SmartAPIManager();
+
+// Legacy Gemini AI initialization (fallback)
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || 'fallback');
 
 // Helper function to intelligently distribute links across article sections
 function distributeLinksIntelligently(links: string[], linkType: 'internal' | 'external') {
@@ -308,29 +438,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // AI content generation
+  // AI content generation with automatic API key rotation
   app.post('/api/generate-content', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { titles, settings, focusKeywords } = req.body;
       
-      // Get user's API keys, prioritizing Gemini keys
-      const userApiKeys = await storage.getApiKeysByUserId(userId);
-      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
-      
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
-      
-      if (geminiKeys.length > 0) {
-        // Try to use default key first, then any available key
-        const defaultKey = geminiKeys.find(key => key.isDefault);
-        const selectedKey = defaultKey || geminiKeys[0];
-        apiKey = selectedKey.apiKey;
-        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
-      } else {
-        console.log('No user Gemini API keys found, using system key');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
         'gemini_2.5_flash': 'gemini-1.5-flash',
@@ -342,7 +455,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'gemini_1.5_pro': 'gemini-1.5-pro'
       };
       const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
-      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       // Create prompt based on titles, settings, and focus keywords
       const keywordsText = focusKeywords && focusKeywords.length > 0 
@@ -372,8 +484,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         Makalenin HTML formatında olmasını istiyorum.
       `;
 
-      const result = await model.generateContent(prompt);
-      const content = result.response.text();
+      // Use smart API manager with automatic rotation
+      const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
       
       // Calculate word count and reading time
       const wordCount = content.split(/\s+/).length;
@@ -392,7 +504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error generating content:", error);
-      res.status(500).json({ message: "Failed to generate content" });
+      res.status(500).json({ message: error.message || "Failed to generate content" });
     }
   });
 
