@@ -5332,6 +5332,194 @@ Mevcut İçerik: ${content}
     }
   });
 
+  // Google Search API for Current Information
+  app.post('/api/gather-current-info-v2', isAuthenticated, async (req: any, res: any) => {
+    try {
+      const { 
+        searchQuery, 
+        searchSource = 'web',
+        searchCountry = 'tr',
+        searchLanguage = 'tr',
+        searchDate = 'all',
+        excludedUrls = '',
+        customUrls = '',
+        queryType = 'focus_keyword'
+      } = req.body;
+      const userId = req.user.claims.sub;
+      
+      if (!searchQuery?.trim()) {
+        return res.status(400).json({ error: 'Arama sorgusu gereklidir' });
+      }
+
+      // Get user's API key for Google Search API (if available)
+      const apiKeys = await storage.getApiKeysByUserId(userId);
+      let searchResults = [];
+
+      if (searchSource === 'custom' && customUrls?.trim()) {
+        // Use custom URLs provided by user
+        const urls = customUrls.split('\n').filter(url => url.trim()).slice(0, 5);
+        
+        for (const url of urls) {
+          try {
+            console.log(`Fetching content from custom URL: ${url.trim()}`);
+            const response = await fetch(url.trim(), {
+              timeout: 10000,
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+              }
+            });
+            
+            if (response.ok) {
+              const html = await response.text();
+              const cheerio = require('cheerio');
+              const $ = cheerio.load(html);
+              
+              // Extract meaningful content
+              $('script, style, nav, header, footer, aside').remove();
+              const title = $('title').text() || $('h1').first().text() || 'Başlık bulunamadı';
+              const content = $('main, article, .content, .post-content, p').text().slice(0, 1000);
+              
+              if (content.length > 100) {
+                searchResults.push({
+                  title: title.slice(0, 200),
+                  content: content,
+                  url: url.trim(),
+                  source: 'custom',
+                  reliability: 8,
+                  publishDate: new Date().toISOString()
+                });
+              }
+            }
+          } catch (error) {
+            console.error(`Error fetching custom URL ${url}:`, error);
+          }
+        }
+      } else {
+        // Use web search simulation with fallback sources
+        const currentInfoGatherer = new (require('./currentInfoGatherer')).CurrentInfoGatherer();
+        const currentInfo = await currentInfoGatherer.gatherCurrentInfo(searchQuery);
+        
+        searchResults = currentInfo.sources.map(source => ({
+          title: source.title,
+          content: source.content,
+          url: source.url,
+          source: source.source,
+          reliability: source.reliability,
+          publishDate: source.publishDate || new Date().toISOString()
+        }));
+      }
+
+      // Filter out excluded URLs
+      if (excludedUrls?.trim()) {
+        const excludedDomains = excludedUrls.split('\n')
+          .filter(url => url.trim())
+          .map(url => {
+            try {
+              return new URL(url.trim()).hostname;
+            } catch {
+              return url.trim();
+            }
+          });
+        
+        searchResults = searchResults.filter(result => {
+          const resultDomain = new URL(result.url).hostname;
+          return !excludedDomains.some(excluded => 
+            resultDomain.includes(excluded) || excluded.includes(resultDomain)
+          );
+        });
+      }
+
+      // Apply date filtering if specified
+      if (searchDate !== 'all') {
+        const cutoffDate = new Date();
+        switch (searchDate) {
+          case 'last_hour':
+            cutoffDate.setHours(cutoffDate.getHours() - 1);
+            break;
+          case 'last_24_hours':
+            cutoffDate.setDate(cutoffDate.getDate() - 1);
+            break;
+          case 'last_week':
+            cutoffDate.setDate(cutoffDate.getDate() - 7);
+            break;
+          case 'last_month':
+            cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+            break;
+          case 'last_year':
+            cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+            break;
+        }
+        
+        searchResults = searchResults.filter(result => 
+          new Date(result.publishDate) >= cutoffDate
+        );
+      }
+
+      // Sort by reliability and limit results
+      searchResults = searchResults
+        .sort((a, b) => b.reliability - a.reliability)
+        .slice(0, 10);
+
+      // Create summary of gathered information
+      let summary = '';
+      if (searchResults.length > 0) {
+        const geminiKey = apiKeys.find(key => key.service === 'gemini' && key.isDefault) || 
+                         apiKeys.find(key => key.service === 'gemini');
+        
+        if (geminiKey) {
+          const { GoogleGenerativeAI } = require('@google/generative-ai');
+          const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+          const sourcesText = searchResults.map(source => 
+            `Kaynak: ${source.title}\nİçerik: ${source.content.slice(0, 500)}...\nURL: ${source.url}\n`
+          ).join('\n---\n');
+
+          const summaryPrompt = `Aşağıdaki güncel bilgi kaynaklarını analiz ederek "${searchQuery}" konusu hakkında kapsamlı bir özet oluştur:
+
+${sourcesText}
+
+Lütfen:
+1. En güncel ve güvenilir bilgileri öne çıkar
+2. Çelişkili bilgiler varsa belirt
+3. Kaynak güvenilirliğini değerlendir
+4. Türkçe olarak yaz
+5. Maksimum 500 kelime kullan
+
+Özet:`;
+
+          try {
+            const result = await model.generateContent(summaryPrompt);
+            const response = await result.response;
+            summary = response.text();
+            
+            // Track API usage
+            await storage.incrementApiUsage(userId, 'gemini', 1, summary.length);
+          } catch (error) {
+            console.error('Error generating summary:', error);
+            summary = `${searchQuery} konusunda ${searchResults.length} güncel kaynak bulundu. Bu bilgiler makale içeriğinde kullanılacaktır.`;
+          }
+        }
+      }
+
+      res.json({
+        success: true,
+        sources: searchResults,
+        summary: summary,
+        lastUpdated: new Date().toISOString(),
+        searchQuery: searchQuery,
+        totalSources: searchResults.length
+      });
+
+    } catch (error) {
+      console.error('Current info gathering error:', error);
+      res.status(500).json({ 
+        error: 'Güncel bilgi toplama hatası: ' + (error as Error).message,
+        success: false 
+      });
+    }
+  });
+
   // Voice Content Enhancement API
   app.post('/api/enhance-voice-content', isAuthenticated, async (req: any, res: any) => {
     try {
