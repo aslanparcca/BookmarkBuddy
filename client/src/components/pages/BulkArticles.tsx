@@ -46,13 +46,7 @@ export default function BulkArticles({ setCurrentPage }: BulkArticlesProps) {
               Toplu Makale Oluştur V1
             </Button>
             
-            <Button
-              onClick={() => setCurrentPage('bulk-template-v2')}
-              className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-0 px-6 py-3"
-              variant="outline"
-            >
-              Toplu Makale Oluştur V2
-            </Button>
+
           </div>
 
           {/* YouTube Video Link */}

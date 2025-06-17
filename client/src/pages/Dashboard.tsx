@@ -11,7 +11,7 @@ import URLRewrite from "@/components/pages/URLRewrite";
 import BulkEditor from "@/components/pages/BulkEditor";
 import BulkArticles from "@/components/pages/BulkArticles";
 import BulkTemplateV1 from "@/components/pages/BulkTemplateV1";
-import BulkTemplateV2 from "@/components/pages/BulkTemplateV2";
+
 import BulkRecipe from "@/components/pages/BulkRecipe";
 import BulkDream from "@/components/pages/BulkDream";
 import ExcelTemplate from "@/components/pages/ExcelTemplateNew";
@@ -50,7 +50,7 @@ import ContentLocalization from "@/pages/ContentLocalization";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
-  'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-template-v2' | 'bulk-recipe' | 
+  'url-rewrite' | 'bulk-articles' | 'bulk-template-v1' | 'bulk-recipe' | 
   'bulk-dream' | 'excel-template' | 'custom-articles' | 'optimize-articles' | 'voice-files' | 'voice-reader' | 
   'my-images' | 'create-image' | 'help-sss' | 'websites' | 'add-website' | 'edit-website' | 'api-keys' | 'seo-indexing' |
   'keyword-generator' | 'wp-comment-generator' | 'title-generator' | 'about-generator' |
@@ -86,7 +86,7 @@ export default function Dashboard() {
     'url-rewrite': 'URL Rewrite',
     'bulk-articles': 'Toplu Oluşturulan Makaleler',
     'bulk-template-v1': 'Toplu Makale V1',
-    'bulk-template-v2': 'Toplu Makale V2',
+
     'bulk-recipe': 'Toplu Yemek Tarifi',
     'bulk-dream': 'Toplu Rüya Tabiri',
     'excel-template': 'Excel Şablonu',
@@ -144,8 +144,7 @@ export default function Dashboard() {
         return <BulkArticles setCurrentPage={setCurrentPage} />;
       case 'bulk-template-v1':
         return <BulkTemplateV1 setLoading={setLoading} />;
-      case 'bulk-template-v2':
-        return <BulkTemplateV2 setLoading={setLoading} />;
+
       case 'bulk-recipe':
         return <BulkRecipe setLoading={setLoading} />;
       case 'bulk-dream':
