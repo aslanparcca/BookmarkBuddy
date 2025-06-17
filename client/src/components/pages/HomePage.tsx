@@ -197,16 +197,16 @@ export default function HomePage() {
   const handleQuickAction = (action: string) => {
     switch (action) {
       case 'new-article':
-        navigate('/ai-content');
+        navigate('/?page=settings'); // WP Makalesi V2
         break;
       case 'bulk-create':
-        navigate('/bulk-articles-v2');
+        navigate('/?page=bulk-template-v2'); // Toplu Makale V2
         break;
       case 'add-website':
-        navigate('/websites/add');
+        navigate('/?page=add-website'); // Website Ekle
         break;
       case 'seo-analyze':
-        navigate('/seo-indexing');
+        navigate('/?page=seo-indexing'); // SEO İndeksleme
         break;
       default:
         break;
