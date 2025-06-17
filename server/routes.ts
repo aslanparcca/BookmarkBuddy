@@ -518,26 +518,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const settings = req.body;
       
-      // Get user's API keys, prioritizing Gemini keys
-      const userApiKeys = await storage.getApiKeysByUserId(userId);
-      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
-      
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
-      
-      if (geminiKeys.length > 0) {
-        // Try to use default key first, then any available key
-        const defaultKey = geminiKeys.find(key => key.isDefault);
-        const selectedKey = defaultKey || geminiKeys[0];
-        apiKey = selectedKey.apiKey;
-        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
-      } else {
-        console.log('No user Gemini API keys found, using system key');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      // Generate main content
+      // Generate main content using smart API manager
       const prompt = `
         Türkçe bir WordPress makalesi oluştur. Odak anahtar kelime: "${settings.focusKeywords}"
         
@@ -556,8 +537,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         Lütfen sadece makale içeriğini döndür, başka açıklama ekleme.
       `;
 
-      const result = await model.generateContent(prompt);
-      const content = result.response.text();
+      const content = await apiManager.generateContentWithRotation(userId, prompt, 'gemini-1.5-flash');
       const title = content.split('\n')[0].replace('#', '').trim();
       
       // Generate additional content based on settings
@@ -566,18 +546,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let youtubeVideo = '';
       
       if (settings.includeMetaDescription) {
-        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
-        metaDescription = metaResult.response.text().trim();
+        metaDescription = await apiManager.generateContentWithRotation(userId, `Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`, 'gemini-1.5-flash');
+        metaDescription = metaDescription.trim();
       }
       
       if (settings.includeSummary) {
-        const summaryResult = await model.generateContent(`Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
-        summary = summaryResult.response.text().trim();
+        summary = await apiManager.generateContentWithRotation(userId, `Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`, 'gemini-1.5-flash');
+        summary = summary.trim();
       }
       
       if (settings.includeYouTube) {
-        const videoResult = await model.generateContent(`Bu makale konusu için YouTube video açıklaması oluştur: "${settings.focusKeywords}". Sadece video açıklamasını döndür.`);
-        youtubeVideo = videoResult.response.text().trim();
+        youtubeVideo = await apiManager.generateContentWithRotation(userId, `Bu makale konusu için YouTube video açıklaması oluştur: "${settings.focusKeywords}". Sadece video açıklamasını döndür.`, 'gemini-1.5-flash');
+        youtubeVideo = youtubeVideo.trim();
       }
 
       // Calculate reading time and word count
@@ -1932,24 +1912,6 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       console.log(`Processing ${titles.length} articles for bulk generation V2`);
 
-      // Get user's API keys, prioritizing Gemini keys
-      const userApiKeys = await storage.getApiKeysByUserId(userId);
-      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
-      
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
-      
-      if (geminiKeys.length > 0) {
-        // Try to use default key first, then any available key
-        const defaultKey = geminiKeys.find(key => key.isDefault);
-        const selectedKey = defaultKey || geminiKeys[0];
-        apiKey = selectedKey.apiKey;
-        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
-      } else {
-        console.log('No user Gemini API keys found, using system key');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
         // 2.5 Series (Most Current) - fallback to 1.5 since 2.5 not yet available
@@ -1965,15 +1927,6 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       };
       
       const selectedModel = settings.aiModel && modelMapping[settings.aiModel] ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
-      const model = genAI.getGenerativeModel({ 
-        model: selectedModel,
-        generationConfig: {
-          temperature: 0.9,
-          topK: 1,
-          topP: 1,
-          maxOutputTokens: 8192,
-        },
-      });
 
       let successCount = 0;
       let failedCount = 0;
@@ -2351,16 +2304,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             setTimeout(() => reject(new Error('Gemini API timeout after 60 seconds')), 60000);
           });
           
-          const result = await Promise.race([
-            model.generateContent(prompt),
-            timeoutPromise
-          ]);
-          
-          if (!result || !result.response) {
-            throw new Error('Invalid response from Gemini API');
-          }
-          
-          let content = result.response.text();
+          // Use smart API manager with automatic rotation
+          let content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
           
           if (!content || content.trim().length === 0) {
             throw new Error('Empty content received from Gemini API');
@@ -2429,8 +2374,8 @@ The summary should:
 Example format: "Bu makale [focus keyword] hakkında kapsamlı bilgiler sunar. [Main benefit 1] ve [main benefit 2] gibi konuları detaylı olarak ele alır."`;
 
             try {
-              const summaryResult = await model.generateContent(summaryPrompt);
-              articleSummary = summaryResult.response.text().trim();
+              articleSummary = await apiManager.generateContentWithRotation(userId, summaryPrompt, selectedModel);
+              articleSummary = articleSummary.trim();
             } catch (error) {
               console.log('Summary generation failed, continuing without summary');
             }
