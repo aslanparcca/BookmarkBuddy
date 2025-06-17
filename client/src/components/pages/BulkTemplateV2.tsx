@@ -42,8 +42,15 @@ interface BulkV2Settings {
   // Güncel Bilgiler
   currentInfo: boolean;
   webSearchSource: string;
+  searchQueryType?: string;
+  searchCountry?: string;
+  searchLanguage?: string;
+  searchDate?: string;
+  excludedUrlsEnabled?: boolean;
   excludedUrls: string;
   customUrls: string;
+  sourceLinksDisplay?: string;
+  linkStructure?: string;
   
   // Görsel Seçenekleri
   imageSource: string;
@@ -798,7 +805,10 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
       {/* Güncel Bilgiler */}
       {showStep2 && (
-        <Card className="border-2 border-primary">
+        <Card className="border-2 border-primary relative">
+          <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+            Yeni
+          </div>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Info className="w-5 h-5 text-primary" />
@@ -808,32 +818,44 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
           <CardContent>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="currentInfo">Güncel Bilgiler</Label>
-                <Select 
-                  value={currentInfoEnabled ? "1" : "0"} 
-                  onValueChange={(value) => {
-                    const enabled = value === "1";
-                    setCurrentInfoEnabled(enabled);
-                    setSettings({...settings, currentInfo: enabled});
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">Evet (Ekstra Kredi)</SelectItem>
-                    <SelectItem value="1">Hayır</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Bu özelliği etkinleştirdiğinizde içerik oluşturulurken önce webde güncel bilgiler aranır, sonra doğrulaması yapılan veriler toplanır ve bu bilgiler kullanılarak içerik üretilir. Bu sayede oluşturulan içerikler en yeni ve en doğru bilgileri içerir.
-                </p>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="currentInfo">Güncel Bilgiler</Label>
+                  <Select 
+                    value={currentInfoEnabled ? "1" : "0"} 
+                    onValueChange={(value) => {
+                      const enabled = value === "1";
+                      setCurrentInfoEnabled(enabled);
+                      setSettings({...settings, currentInfo: enabled});
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Evet (Ekstra Kredi)</SelectItem>
+                      <SelectItem value="0">Hayır</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="col-span-2 flex items-end">
+                  <p className="text-sm text-muted-foreground">
+                    Bu özelliği etkinleştirdiğinizde içerik oluşturulurken önce webde güncel bilgiler aranır, sonra doğrulanan veriler toplanır ve bu bilgiler kullanılarak içerik üretilir. Bu sayede oluşturulan içerikler en yeni ve doğru bilgileri içerir.
+                  </p>
+                </div>
               </div>
 
               {currentInfoEnabled && (
                 <>
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <Alert className="border-blue-200 bg-blue-50">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Fiyatlandırma:</strong> Güncel bilgiler özelliğini kullanmak ekstra kredi gerektirir. İçerik oluştururken kullanılan kredi miktarının <strong>4 katı ek kredi</strong> harcanır. Oluşturulan içeriğin kelime sayısı 1000'den az olsa bile en az 1000 kelime üzerinden hesaplama yapılır.
+                    </AlertDescription>
+                  </Alert>
+
+                  <div className="grid md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="webSearchSource">Arama Kaynağı</Label>
                       <Select value={settings.webSearchSource} onValueChange={(value) => setSettings({...settings, webSearchSource: value})}>
@@ -841,88 +863,167 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                           <SelectValue placeholder="Google Organik Arama" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="google">Google Organik Arama</SelectItem>
+                          <SelectItem value="web">Google Organik Arama</SelectItem>
+                          <SelectItem value="news">Google News</SelectItem>
+                          <SelectItem value="custom">Kendi Linklerim</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
+                    <div className="col-span-2">
+                      <Label htmlFor="searchQueryType">Arama Sorgusu</Label>
+                      <Select value={settings.searchQueryType || "focus_keyword"} onValueChange={(value) => setSettings({...settings, searchQueryType: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Odak anahtar kelime kullanılsın" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="focus_keyword">Odak anahtar kelime kullanılsın</SelectItem>
+                          <SelectItem value="title">Makale başlığı kullanılsın</SelectItem>
+                          <SelectItem value="custom">Özel sorgu kullanılsın</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {settings.webSearchSource !== "custom" && (
+                    <>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="searchCountry">Arama Yapılacak Ülke</Label>
+                          <Select value={settings.searchCountry || "tr"} onValueChange={(value) => setSettings({...settings, searchCountry: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Türkiye" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="tr">Türkiye</SelectItem>
+                              <SelectItem value="us">Amerika Birleşik Devletleri</SelectItem>
+                              <SelectItem value="de">Almanya</SelectItem>
+                              <SelectItem value="gb">Birleşik Krallık</SelectItem>
+                              <SelectItem value="fr">Fransa</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="searchLanguage">Arama Dili</Label>
+                          <Select value={settings.searchLanguage || "tr"} onValueChange={(value) => setSettings({...settings, searchLanguage: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Türkçe" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="tr">Türkçe</SelectItem>
+                              <SelectItem value="en">İngilizce</SelectItem>
+                              <SelectItem value="de">Almanca</SelectItem>
+                              <SelectItem value="fr">Fransızca</SelectItem>
+                              <SelectItem value="es">İspanyolca</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="searchDate">Arama Tarihi</Label>
+                          <Select value={settings.searchDate || "all"} onValueChange={(value) => setSettings({...settings, searchDate: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Hepsi" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">Hepsi</SelectItem>
+                              <SelectItem value="last_hour">Son 1 Saat</SelectItem>
+                              <SelectItem value="last_24_hours">Son 24 Saat</SelectItem>
+                              <SelectItem value="last_week">Son 1 Hafta</SelectItem>
+                              <SelectItem value="last_month">Son 1 Ay</SelectItem>
+                              <SelectItem value="last_year">Son 1 Yıl</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="excludedUrls">Hariç Tutulacak Linkler</Label>
+                          <Select value={settings.excludedUrlsEnabled ? "1" : "0"} onValueChange={(value) => setSettings({...settings, excludedUrlsEnabled: value === "1"})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Yok" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="0">Yok</SelectItem>
+                              <SelectItem value="1">Var</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="sourceLinksDisplay">Linkler Makale Sonuna Eklensin mi?</Label>
+                          <Select value={settings.sourceLinksDisplay || "none"} onValueChange={(value) => setSettings({...settings, sourceLinksDisplay: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Eklenmesin" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">Eklenmesin</SelectItem>
+                              <SelectItem value="url">URL</SelectItem>
+                              <SelectItem value="title">Başlık + URL</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="linkStructure">Link Yapısı</Label>
+                          <Select value={settings.linkStructure || "nofollow"} onValueChange={(value) => setSettings({...settings, linkStructure: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="NoFollow (Tavsiye edilir)" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="dofollow">DoFollow</SelectItem>
+                              <SelectItem value="nofollow">NoFollow (Tavsiye edilir)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {settings.excludedUrlsEnabled && (
+                        <div>
+                          <Label htmlFor="excludedUrls">Hariç Tutulacak Linkler</Label>
+                          <Textarea
+                            id="excludedUrls"
+                            placeholder="Lütfen bir satıra 1 adet URL giriniz."
+                            value={settings.excludedUrls}
+                            onChange={(e) => setSettings({...settings, excludedUrls: e.target.value})}
+                            rows={3}
+                          />
+                          <div className="text-sm text-muted-foreground mt-2">
+                            <ul className="list-disc pl-5">
+                              <li>Lütfen her satıra <span className="text-red-600 underline">1 adet</span> link giriniz.</li>
+                              <li>Lütfen en fazla <span className="text-red-600 underline">10 adet</span> link giriniz.</li>
+                              <li><span className="underline">https://www.site-ismi.com</span> şeklinde bir link girerseniz o domaindeki tüm sayfalar hariç tutulur.</li>
+                              <li><span className="underline">https://www.site-ismi.com/iletisim</span> şeklinde bir link girerseniz sadece ilgili sayfa hariç tutulur.</li>
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {settings.webSearchSource === "custom" && (
                     <div>
-                      <Label htmlFor="searchQuery">Arama Sorgusu</Label>
-                      <Input
-                        id="searchQuery"
-                        placeholder="Odak anahtar kelime kullanılsın"
-                        value={settings.webSearchSource}
-                        onChange={(e) => setSettings({...settings, webSearchSource: e.target.value})}
+                      <Label htmlFor="customUrls">Kendi Linklerim</Label>
+                      <Textarea
+                        id="customUrls"
+                        placeholder="Lütfen her satıra 1 adet URL yazınız."
+                        value={settings.customUrls}
+                        onChange={(e) => setSettings({...settings, customUrls: e.target.value})}
+                        rows={3}
                       />
+                      <div className="text-sm text-muted-foreground mt-2">
+                        <ul className="list-disc pl-5">
+                          <li>Lütfen her satıra <span className="text-red-600 underline">1 adet</span> link giriniz.</li>
+                          <li>Lütfen en fazla <span className="text-red-600 underline">5 adet</span> link giriniz.</li>
+                          <li>Bu linkler sıra ile incelenecek ve içerikleri alınabilen <span className="text-red-600 underline">ilk 3 link</span> kullanılacaktır.</li>
+                          <li>PDF, Word, Excel, JSON, XML gibi dosya linkleri kabul edilmemektedir.</li>
+                          <li>YouTube, X, Facebook, Instagram, Pinterest, TikTok gibi sosyal medya linkleri kabul edilmemektedir.</li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="searchCountry">Arama Yapılacak Ülke</Label>
-                      <Select value={settings.excludedUrls} onValueChange={(value) => setSettings({...settings, excludedUrls: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Türkiye" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="tr">Türkiye</SelectItem>
-                          <SelectItem value="us">Amerika</SelectItem>
-                          <SelectItem value="uk">İngiltere</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="searchLanguage">Arama Dili</Label>
-                      <Select value={settings.customUrls} onValueChange={(value) => setSettings({...settings, customUrls: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Hepsi" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">Hepsi</SelectItem>
-                          <SelectItem value="tr">Türkçe</SelectItem>
-                          <SelectItem value="en">İngilizce</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="excludedLinks">Hariç Tutulacak Linkler</Label>
-                    <Input
-                      id="excludedLinks"
-                      placeholder="Yok"
-                      value={settings.excludedUrls}
-                      onChange={(e) => setSettings({...settings, excludedUrls: e.target.value})}
-                    />
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Linkler Makale Sonuna Eklemesin mi?
-                    </p>
-                  </div>
-
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="linkEffect"
-                        checked={false}
-                        onCheckedChange={() => {}}
-                      />
-                      <Label htmlFor="linkEffect" className="font-medium">Etkinleşmesin</Label>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="linkStructure">Link Yapısı</Label>
-                      <Select value="nofollow" onValueChange={() => {}}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="NoFollow (Tavsiye edilir)" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="nofollow">NoFollow (Tavsiye edilir)</SelectItem>
-                          <SelectItem value="follow">Follow</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                  )}
                 </>
               )}
             </div>
@@ -930,7 +1031,16 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
         </Card>
       )}
 
-      {/* İç & Dış Linkler */}
+      {/* Continue with existing sections... */}
+      {showStep2 && currentInfoEnabled && (
+        <div className="text-sm text-muted-foreground mb-4">
+          <p className="mb-2">
+            <strong>Not:</strong> Güncel bilgiler özelliği aktif edildiğinde makale oluşturma süreci daha uzun sürebilir (2-5 dakika).
+          </p>
+        </div>
+      )}
+
+      {/* Görsel Seçenekleri */}
       {showStep2 && (
         <Card className="border-2 border-primary">
           <CardHeader>
