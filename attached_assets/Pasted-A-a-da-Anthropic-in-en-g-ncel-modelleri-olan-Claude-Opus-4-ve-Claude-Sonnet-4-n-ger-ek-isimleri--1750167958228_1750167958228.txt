@@ -1,0 +1,51 @@
+Aşağıda, Anthropic’in en güncel modelleri olan Claude Opus 4 ve Claude Sonnet 4’ün gerçek isimleri, çıkış tarihleri ve kullanım alanları tablo halinde düzenlenmiştir:
+
+Model	Çıkış Tarihi	Ne işe yarar?
+Claude Opus 4	22 Mayıs 2025 
+anthropic.com
++15
+anthropic.com
++15
+cloud.google.com
++15
+- Dünyanın en güçlü kodlama modeli: uzun süreli, çok adımlı yazılım projelerini bağımsız yürütebilir.
+- Karmaşık araştırma, uzun formlu içerik üretimi, ileri düzey akıl yürütme ve AI ajan görevlerinde kullanılabilir.
+- “Extended thinking with tool use” desteğiyle derin analizler ve dış araç entegrasyonu sağlar.
+Claude Sonnet 4	22 Mayıs 2025	- Dengeli ve verimli; yüksek hız ve uygun maliyet dengesi.
+- Kod inceleme, hata düzeltme, müşteri destek ajanları, veri analizi ve içerik üretimi için ideal.
+- Geniş bağlam, görsel-çözümleme ve “extended thinking” özelliklerini içerir.
+
+🔍 Detaylı Kullanım Alanları
+Claude Opus 4
+Gelişmiş kodlama: Süreç boyunca devam eden projelerde üstün performans ve hata düzeltme kabiliyeti .
+
+Agentic search & workflow: Pazarlama kampanyaları veya araştırmalar gibi çok adımlı ajan görevlerini yönetebilir 
+anthropic.com
++3
+anthropic.com
++3
+blog.promptlayer.com
++3
+.
+
+Uzun formlu analiz: Patent, akademik çalışma veya büyük doküman koleksiyonlarına dair stratejik analizler yapabilir .
+
+Claude Sonnet 4
+Kod geliştirme: Kod gözden geçirme, hata bulma ve uygulama düzeltme gibi işler için güçlü .
+
+Chatbot & destek ajanları: Kullanıcı etkileşimleri, müşteri hizmeti görevleri için uygun ve hızlı 
+anthropic.com
++1
+anthropic.com
++1
+.
+
+Veri ve içerik analizleri: Görselleri anlayabilir, tabloları yorumlayabilir ve uzun metinleri çözümleyebilir .
+
+Yüksek hacimli kullanım: Hem güvenilirlik hem de maliyet açısından yüksek hacimli yük altındaki sistemler için ideal .
+
+Özetle:
+
+Opus 4: En zor ve uzun süreli işlerde, güçlü akıl yürütme ve kod üretimi gereken senaryolarda mükemmel.
+
+Sonnet 4: Hız, maliyet verimliliği ve geniş kullanım alanı gerektiren durumlarda ideal; destek sistemleri, analiz ve müşteri etkileşimi için biçilmiş kaftan.

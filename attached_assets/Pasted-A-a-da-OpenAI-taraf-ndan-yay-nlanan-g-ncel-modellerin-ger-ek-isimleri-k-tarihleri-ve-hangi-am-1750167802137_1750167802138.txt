@@ -1,0 +1,38 @@
+Aşağıda, OpenAI tarafından yayınlanan güncel modellerin gerçek isimleri, çıkış tarihleri ve hangi amaçlarla kullanıldıklarını tablo halinde bulabilirsin:
+
+Model	Çıkış Tarihi	Ne işe yarar?
+o3-mini	31 Ocak 2025 
+techtarget.com
++3
+en.wikipedia.org
++3
+openai.com
++3
+Küçük reasoning modeli; daha hızlı yanıtlar verir, kodlama ve mantık içeren işlemler için hafif kullanım.
+o3	16 Nisan 2025	Orta seviye reasoning; matematik, bilimsel analiz, görsel ve dosya işleme için güçlü ve esnek.
+o4-mini	16 Nisan 2025	o3’ün daha optimize edilmiş, daha güçlü ve daha iyi performanslı versiyonu; hızlı ve güçlü reasoning.
+o3‑pro	10 Haziran 2025	En yüksek güvenilirlik isteyen görevler için; web arama, dosya/görsel analiz, Python kodu çalıştırma, uzun düşünme süreçleri.
+GPT‑4o	13 Mayıs 2024	“Omni” multimodal model; metin, ses ve görsel girdi–çıktı; canlı çeviri, resim ve ses üretimi.
+GPT‑4o mini	18 Temmuz 2024	GPT‑4o’nun hafifletilmiş versiyonu; maliyet/performans dengesi için ideal.
+GPT Image 1	25 Mart 2025 (API: 23 Nisan 2025)	DALL·E 3 yerine geçen resim üretim modeli; hızlı, yüksek kaliteli görsel üretimi.
+GPT‑4.5 (Orion)	27 Şubat 2025	En büyük genel amaçlı LLM; gelişmiş pattern tanıma ve yaratıcı metin üretimi.
+GPT‑4.1 / mini / nano	14 Nisan 2025	Kodlama, mantıksal çözümleme ve uzun bağlam için güçlü; mini/nano versiyonları daha hızlı ve ekonomik.
+Whisper	Eylül 2022 (Large V2) / Kasım 2023 (Large V3)	Çok dilli konuşma tanıma ve transkripsiyon; çeşitli aksanlarda güçlü performans.
+Codex (o3‑tabanlı)	Mayıs 2025 (preview)	Kodlama asistanı; doğal dil ifadelerini Python gibi kodlara dönüştürmede güçlü.
+
+📌 Hangi modeli hangi senaryo için seçmeli?
+o3-mini vs o3 vs o4-mini: o3-mini hızlı ve hafif reasoning; o3 daha güçlü analizler; o4-mini ise maksimum performans ve doğruluk için.
+
+o3‑pro: Kritik işler, bilimsel/muhasebe/kodlama vs gerektiren çok adımlı analizler.
+
+GPT‑4o / GPT‑4o mini: Sesli asistan, görsel içerikle etkileşim, canlı çeviri gibi multimodal kullanım gerektiren senaryolar.
+
+GPT Image 1: Görsel hikâye üretimi, yaratıcı görsel tasarım.
+
+GPT‑4.5: Genel amaçlı derin metin üretimi, yaratıcı düşünce, karmaşık içerik gerektiren kullanım.
+
+GPT‑4.1 ailesi: Yazılım geliştirme, büyük metin analizi, detaylı akıl yürütme için tercih edilmeli.
+
+Whisper: Müzıksiz yakalama, konuşma – yazı dönüşümü.
+
+Codex: Kod yazımı, otomatikleştirme, yazılım üretimi süreçlerinde asistanlık.
