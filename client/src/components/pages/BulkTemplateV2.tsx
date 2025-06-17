@@ -364,12 +364,12 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                       <Label htmlFor="webSearchSource">Arama Kaynağı</Label>
                       <Select value={settings.webSearchSource || "web"} onValueChange={(value) => setSettings({...settings, webSearchSource: value})}>
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue placeholder="Google Organik Arama" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="web">Google Organik Arama</SelectItem>
                           <SelectItem value="news">Google News</SelectItem>
-                          <SelectItem value="custom">Kendi Linklerim</SelectItem>
+                          <SelectItem value="custom">Kendi Linklerimi Gireceğim</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -379,12 +379,12 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                         <Label htmlFor="searchQueryType">Arama Sorgusu</Label>
                         <Select value={settings.searchQueryType || "focus_keyword"} onValueChange={(value) => setSettings({...settings, searchQueryType: value})}>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Odak anahtar kelime kullanılsın" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="focus_keyword">Odak anahtar kelime kullanılsın</SelectItem>
                             <SelectItem value="title">Makale başlığı kullanılsın</SelectItem>
-                            <SelectItem value="custom">Özel sorgu girilsin</SelectItem>
+                            <SelectItem value="custom">Özel sorgu gireceğim</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -428,7 +428,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                         <Label htmlFor="searchDate">Arama Tarihi</Label>
                         <Select value={settings.searchDate || "all"} onValueChange={(value) => setSettings({...settings, searchDate: value})}>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Hepsi" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">Hepsi</SelectItem>
@@ -461,13 +461,14 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                       <Label htmlFor="sourceLinksDisplay">Linkler Makale Sonuna Eklensin mi?</Label>
                       <Select value={settings.sourceLinksDisplay || "none"} onValueChange={(value) => setSettings({...settings, sourceLinksDisplay: value})}>
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue placeholder="Eklenmesin" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">Eklenmesin</SelectItem>
                           <SelectItem value="url">URL</SelectItem>
-                          <SelectItem value="title">Başlık</SelectItem>
-                          <SelectItem value="title_url">Başlık + URL</SelectItem>
+                          <SelectItem value="title">Link Başlığı</SelectItem>
+                          <SelectItem value="title_url">URL + Link Başlığı</SelectItem>
+                          <SelectItem value="link_title_url">Link Başlığı + URL</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
