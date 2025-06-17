@@ -157,6 +157,7 @@ export default function ApiKeys() {
                     <SelectContent>
                       <SelectItem value="openai">OpenAI</SelectItem>
                       <SelectItem value="gemini">Google Gemini</SelectItem>
+                      <SelectItem value="google_search">Google Search API</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -219,6 +220,20 @@ export default function ApiKeys() {
                         Gemini API Keys <i className="fas fa-external-link-alt text-xs"></i>
                       </a>{" "}
                       sayfasından ulaşabilirsiniz. Daha sonra değiştirilemez.
+                    </p>
+                  )}
+                  {service === 'google_search' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.developers.google.com/apis/credentials"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Cloud Console <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Custom Search API aktif ederek ulaşabilirsiniz. Güncel bilgi toplama için gereklidir.
                     </p>
                   )}
                 </div>

@@ -223,7 +223,11 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
 
   const generateArticlesMutation = useMutation({
     mutationFn: async (data: { titles: GeneratedTitle[], settings: BulkV2Settings }) => {
-      return await apiRequest("/api/generate-bulk-articles-v2", "POST", data);
+      const requestData = {
+        ...data,
+        testApiKey: testApiKey || undefined // Include test API key if provided
+      };
+      return await apiRequest("/api/generate-bulk-articles-v2", "POST", requestData);
     },
     onSuccess: (data: any) => {
       if (data.successCount !== undefined && data.successCount !== null) {

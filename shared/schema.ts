@@ -109,7 +109,7 @@ export const apiKeys = pgTable("api_keys", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   title: varchar("title", { length: 255 }).notNull(),
-  service: varchar("service", { length: 20 }).notNull(), // openai, gemini
+  service: varchar("service", { length: 20 }).notNull(), // openai, gemini, google_search
   apiKey: text("api_key").notNull(), // encrypted
   organization: varchar("organization", { length: 255 }), // for OpenAI
   isDefault: boolean("is_default").default(false),
