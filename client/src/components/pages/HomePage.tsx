@@ -191,7 +191,8 @@ export default function HomePage() {
     return { weeklyData, contentTypeData, monthlyTrendData };
   };
 
-  const { weeklyData, contentTypeData, monthlyTrendData } = calculateChartData();
+  const chartData = calculateChartData();
+  const { weeklyData, contentTypeData, monthlyTrendData } = chartData;
 
   // Quick Actions handlers
   const handleQuickAction = (action: string) => {

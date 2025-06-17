@@ -103,9 +103,14 @@ class SmartAPIManager {
         
         console.log(`Attempting content generation with API key attempt ${attempt + 1}/${maxRetries}`);
         
-        const result = await geminiModel.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        // Add timeout protection for API call
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('Gemini API timeout after 90 seconds')), 90000);
+        });
+        
+        const contentPromise = geminiModel.generateContent(prompt).then(result => result.response.text());
+        
+        const text = await Promise.race([contentPromise, timeoutPromise]);
         
         if (!text || text.trim() === '') {
           throw new Error('Empty response from Gemini API');
@@ -502,9 +507,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         metaDescription: settings.includeMetaDescription ? 
           content.substring(0, 160) + "..." : null
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating content:", error);
-      res.status(500).json({ message: error.message || "Failed to generate content" });
+      res.status(500).json({ message: error?.message || "Failed to generate content" });
     }
   });
 
@@ -2298,12 +2303,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           console.log(`Generating content for ${titleData.title} with model ${selectedModel}`);
           console.log('Prompt length:', prompt.length);
           
-          // Add timeout protection for API call
-          const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Gemini API timeout after 60 seconds')), 60000);
-          });
-          
-          // Use smart API manager with automatic rotation
+          // Use smart API manager with automatic rotation (now has built-in timeout)
           let content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
           
           if (!content || content.trim().length === 0) {
@@ -2381,7 +2381,7 @@ Example format: "Bu makale [focus keyword] hakkında kapsamlı bilgiler sunar. [
           }
           
           // Calculate word count from clean HTML content (excluding tags)
-          const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
+          const wordCount = content.replace(/<[^>]*>/g, '').split(/\s+/).filter((word: string) => word.length > 0).length;
           const readingTime = Math.ceil(wordCount / 200);
 
           // Generate SEO-optimized meta description if requested
