@@ -148,16 +148,19 @@ export default function ApiKeys() {
                 {/* Service Selection */}
                 <div>
                   <Label htmlFor="service">
-                    Yapay Zeka Servisi <span className="text-red-500">*</span>
+                    Servis Kategorisi <span className="text-red-500">*</span>
                   </Label>
                   <Select value={service} onValueChange={setService}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="ai_providers" disabled className="font-semibold text-primary">
+                        — AI Sağlayıcıları —
+                      </SelectItem>
                       <SelectItem value="openai">OpenAI</SelectItem>
                       <SelectItem value="anthropic">Anthropic</SelectItem>
-                      <SelectItem value="gemini">Google AI</SelectItem>
+                      <SelectItem value="gemini">Google AI / Gemini</SelectItem>
                       <SelectItem value="perplexity">Perplexity</SelectItem>
                       <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
                       <SelectItem value="runware">Runware</SelectItem>
@@ -165,7 +168,19 @@ export default function ApiKeys() {
                       <SelectItem value="replicate">Replicate</SelectItem>
                       <SelectItem value="stability_ai">Stability AI</SelectItem>
                       <SelectItem value="hugging_face">Hugging Face</SelectItem>
+                      <SelectItem value="google_services" disabled className="font-semibold text-primary mt-2">
+                        — Google Servisleri —
+                      </SelectItem>
                       <SelectItem value="google_search">Google Search API</SelectItem>
+                      <SelectItem value="google_maps">Google Maps API</SelectItem>
+                      <SelectItem value="google_places">Google Places API</SelectItem>
+                      <SelectItem value="google_geocoding">Google Geocoding API</SelectItem>
+                      <SelectItem value="google_directions">Google Directions API</SelectItem>
+                      <SelectItem value="google_streetview">Google Street View API</SelectItem>
+                      <SelectItem value="google_firebase">Firebase APIs</SelectItem>
+                      <SelectItem value="google_cloud">Google Cloud Platform</SelectItem>
+                      <SelectItem value="google_translate">Google Translate API</SelectItem>
+                      <SelectItem value="google_youtube">YouTube Data API</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -353,7 +368,133 @@ export default function ApiKeys() {
                       >
                         Google Cloud Console <i className="fas fa-external-link-alt text-xs"></i>
                       </a>{" "}
-                      sayfasından Custom Search API aktif ederek ulaşabilirsiniz. Güncel bilgi toplama için gereklidir.
+                      sayfasından Custom Search JSON API aktif ederek ulaşabilirsiniz. Güncel bilgi toplama için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_maps' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Maps Platform <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Maps JavaScript API aktif ederek ulaşabilirsiniz. Harita entegrasyonu için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_places' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/places-backend.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Places API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Places API aktif ederek ulaşabilirsiniz. Mekan bilgileri için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_geocoding' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Geocoding API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Geocoding API aktif ederek ulaşabilirsiniz. Adres-koordinat dönüşümü için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_directions' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/directions-backend.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Directions API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Directions API aktif ederek ulaşabilirsiniz. Yol tarifi için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_streetview' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/street-view-image-backend.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Street View API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Street View Static API aktif ederek ulaşabilirsiniz. Sokak görüntüleri için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_firebase' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.firebase.google.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Firebase Console <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Firebase projenizi oluşturup API anahtarınızı alabilirsiniz. Realtime Database, Cloud Firestore, FCM için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_cloud' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/credentials"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Cloud Console <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından ilgili Cloud API'yi aktif ederek ulaşabilirsiniz. Compute Engine, BigQuery, Pub/Sub vb. için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_translate' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/translate.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Translate API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından Cloud Translation API aktif ederek ulaşabilirsiniz. Dil çevirisi için gereklidir.
+                    </p>
+                  )}
+                  {service === 'google_youtube' && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Bu bilgiye{" "}
+                      <a
+                        href="https://console.cloud.google.com/apis/library/youtube.googleapis.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        YouTube Data API <i className="fas fa-external-link-alt text-xs"></i>
+                      </a>{" "}
+                      sayfasından YouTube Data API v3 aktif ederek ulaşabilirsiniz. YouTube verilerine erişim için gereklidir.
                     </p>
                   )}
                 </div>
