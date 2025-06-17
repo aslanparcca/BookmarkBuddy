@@ -282,6 +282,31 @@ aside + aside {
     background: hsl(215, 16%, 47%);
   }
 
+  /* Sidebar specific scrollbar */
+  .sidebar-scrollable {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+  }
+  
+  .sidebar-scrollable::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .sidebar-scrollable::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+  
+  .sidebar-scrollable::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  
+  .sidebar-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
   /* Custom focus states */
   input:focus, textarea:focus, select:focus {
     outline: none;
