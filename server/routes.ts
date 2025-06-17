@@ -1401,14 +1401,13 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       }
       
       if (settings.articleSummary) {
-        const summaryResult = await model.generateContent(`Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
-        summary = summaryResult.response.text().trim();
+        summary = await apiManager.generateContentWithRotation(userId, `Bu makale için 2-3 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`, selectedModel);
+        summary = summary.trim();
       }
 
       // Add FAQ if requested
       if (settings.faqNormal || settings.faqSchema) {
-        const faqResult = await model.generateContent(`Bu makale konusu için 5 adet sıkça sorulan soru ve cevap oluştur: "${title}". ${settings.faqSchema ? 'JSON-LD schema formatında' : 'Normal formatta'} döndür.`);
-        const faqContent = faqResult.response.text();
+        const faqContent = await apiManager.generateContentWithRotation(userId, `Bu makale konusu için 5 adet sıkça sorulan soru ve cevap oluştur: "${title}". ${settings.faqSchema ? 'JSON-LD schema formatında' : 'Normal formatta'} döndür.`, selectedModel);
         content += '\n\n## Sıkça Sorulan Sorular\n\n' + faqContent;
       }
 
@@ -1529,8 +1528,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       // Generate titles using AI if prompt is set
       if (prompt && titles.length === 0) {
-        const result = await model.generateContent(prompt);
-        const content = result.response.text();
+        const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
         
         try {
           // Try to parse JSON response
@@ -1661,8 +1659,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       // Generate titles using AI if prompt is set
       if (prompt && titles.length === 0) {
-        const result = await model.generateContent(prompt);
-        const content = result.response.text();
+        const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
         
         try {
           // Try to parse JSON response
@@ -1778,8 +1775,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
         `;
 
         try {
-          const result = await model.generateContent(recipePrompt);
-          const content = result.response.text();
+          const content = await apiManager.generateContentWithRotation(userId, recipePrompt, selectedModel);
 
           // Here we would normally save the recipe to the database
           // For now, we'll just count successful generations
