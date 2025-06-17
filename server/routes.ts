@@ -1908,7 +1908,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
   app.post('/api/generate-bulk-articles-v2', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { titles, settings } = req.body;
+      const { titles, settings, testApiKey } = req.body;
 
       if (!titles || !Array.isArray(titles) || titles.length === 0) {
         return res.status(400).json({ message: "Başlık listesi gerekli" });
@@ -2175,6 +2175,53 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             imagePlacementInstructions.push('RESIM EKLEME: Bu makale için kullanıcı tarafından resim yüklenmemiş, hiçbir resim ekleme');
           }
           
+          // Gather current information if enabled
+          let currentInfoText = '';
+          if (settings.currentInfo) {
+            console.log(`Gathering current information for: ${titleData.focusKeyword}`);
+            try {
+              // Use gather-current-info-v2 endpoint with test API key support
+              const infoResponse = await fetch(`http://localhost:5000/api/gather-current-info-v2`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${req.headers.authorization?.replace('Bearer ', '')}`
+                },
+                body: JSON.stringify({
+                  query: titleData.focusKeyword,
+                  testApiKey: testApiKey,
+                  webSearchSource: settings.webSearchSource || 'google',
+                  excludedUrls: settings.excludedUrls || '',
+                  customUrls: settings.customUrls || '',
+                  country: 'TR',
+                  language: 'tr'
+                })
+              });
+
+              if (infoResponse.ok) {
+                const currentInfo = await infoResponse.json();
+                if (currentInfo.sources && currentInfo.sources.length > 0) {
+                  currentInfoText = `
+GÜNCEL BİLGİLER (Son güncelleme: ${currentInfo.lastUpdated}):
+${currentInfo.summary}
+
+KAYNAK ÖZETLERİ:
+${currentInfo.sources.slice(0, 5).map((source: any, index: number) => 
+  `${index + 1}. ${source.title} (${source.source}): ${source.content.substring(0, 200)}...`
+).join('\n')}
+`;
+                  console.log(`Current info gathered: ${currentInfo.sources.length} sources`);
+                } else {
+                  console.log('No current information sources found');
+                }
+              } else {
+                console.log('Current info gathering failed:', infoResponse.status);
+              }
+            } catch (error) {
+              console.error('Current info gathering error:', error);
+            }
+          }
+
           // Debug log to see what we're getting
           console.log(`Excel Data Debug for "${titleData.title}":`, {
             hasSubheadings: hasExcelSubheadings,
@@ -2183,7 +2230,9 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             companyName: titleData.companyName,
             contentLength: titleData.contentLength,
             availableImages: subheadingImages.length,
-            imageAssignments: hasExcelSubheadings && subheadingImages.length > 0
+            imageAssignments: hasExcelSubheadings && subheadingImages.length > 0,
+            currentInfoEnabled: settings.currentInfo,
+            currentInfoLength: currentInfoText.length
           });
           
           const promptParts = [
@@ -2196,6 +2245,10 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
             titleData.otherKeywords ? `- Other Keywords: ${titleData.otherKeywords}` : '',
             titleData.companyName ? `- Company Name: ${titleData.companyName}` : '',
             '',
+            currentInfoText ? currentInfoText : '',
+            currentInfoText ? '- Use the above current information naturally throughout the article to provide up-to-date insights' : '',
+            currentInfoText ? '- Cite reliable sources when mentioning current trends or data' : '',
+            currentInfoText ? '' : '',
             'ARTICLE STRUCTURE:',
             `- Target Length: ${
               titleData.contentLength === 'S' ? '800-1,200 words (Short)' :
