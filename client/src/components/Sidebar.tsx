@@ -46,7 +46,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
   ];
 
   return (
-    <>
+    <div className="sidebar-wrapper">
       {sidebarOpen && (
         <div 
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
@@ -205,6 +205,6 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
           </div>
         </div>
       </aside>
-    </>
+    </div>
   );
 }

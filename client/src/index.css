@@ -2,23 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fix duplicate sidebar issue with specific targeting */
-.sidebar-unique:not(:first-of-type) {
+/* Prevent duplicate sidebar rendering */
+.sidebar-wrapper:not(:first-of-type) {
   display: none !important;
 }
 
-/* Hide any duplicate aside elements */
-aside:nth-child(n+2) {
+/* Hide any duplicate sidebar wrappers */
+body .sidebar-wrapper ~ .sidebar-wrapper {
   display: none !important;
 }
 
-/* Ensure only first sidebar container is shown */
-div.sidebar-unique + div.sidebar-unique {
-  display: none !important;
-}
-
-/* Force single sidebar display */
-body aside:not(:first-child) {
+/* Ensure only one sidebar shows at a time */
+aside + aside {
   display: none !important;
 }
 

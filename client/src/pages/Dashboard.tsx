@@ -228,22 +228,14 @@ export default function Dashboard() {
     }
   };
 
-  // Memoized sidebar to prevent duplicate rendering
-  const sidebarComponent = useMemo(() => (
-    <Sidebar 
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage}
-      sidebarOpen={sidebarOpen}
-      setSidebarOpen={setSidebarOpen}
-    />
-  ), [currentPage, sidebarOpen]);
-
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      {/* Single Sidebar - memoized to prevent duplication */}
-      <div key="main-sidebar" className="sidebar-unique">
-        {sidebarComponent}
-      </div>
+      <Sidebar 
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
       
       <div className="flex-1 flex flex-col min-w-0 relative">
         <Header 

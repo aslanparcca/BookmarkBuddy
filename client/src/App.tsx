@@ -26,11 +26,7 @@ function Router() {
       {!isAuthenticated ? (
         <Route path="*" component={Landing} />
       ) : (
-        <>
-          <Route path="/" component={Dashboard} />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="*" component={Dashboard} />
-        </>
+        <Route path="*" component={Dashboard} />
       )}
     </Switch>
   );
