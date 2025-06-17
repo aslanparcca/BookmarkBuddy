@@ -47,6 +47,8 @@ import VoiceToText from "@/pages/VoiceToText";
 import CollaborativeEditor from "@/pages/CollaborativeEditor";
 import AIQualityScorer from "@/pages/AIQualityScorer";
 import ContentLocalization from "@/pages/ContentLocalization";
+import VoiceFiles from "@/components/pages/VoiceFiles";
+import VoiceReader from "@/components/pages/VoiceReader";
 import { Toaster } from "@/components/ui/toaster";
 
 export type PageType = 'editor' | 'wp-editor' | 'bulk-editor' | 'articles' | 'settings' | 
@@ -157,9 +159,9 @@ export default function Dashboard() {
       case 'optimize-articles':
         return <ArticleCustomizer />;
       case 'voice-files':
-        return <PlaceholderPage title="Ses Dosyalarım" description="Oluşturduğunuz ses dosyalarını görüntüleyin ve yönetin" icon="fas fa-volume-up" iconColor="text-blue-600" />;
+        return <VoiceFiles />;
       case 'voice-reader':
-        return <PlaceholderPage title="Metin Seslendir" description="Metinlerinizi sese dönüştürme araçları" icon="fas fa-microphone" iconColor="text-red-600" />;
+        return <VoiceReader />;
       case 'my-images':
         return <PlaceholderPage title="Resimlerim" description="Oluşturduğunuz resimleri görüntüleyin ve yönetin" icon="fas fa-image" iconColor="text-green-600" />;
       case 'create-image':

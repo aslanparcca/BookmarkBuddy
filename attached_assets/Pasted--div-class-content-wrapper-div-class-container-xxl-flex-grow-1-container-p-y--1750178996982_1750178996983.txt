@@ -1,0 +1,237 @@
+<div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    
+                    
+                    <div class="card mb-4">
+        <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-center justify-content-between pt-3 pb-2">
+            <h5 class="m-0 p-0 d-flex flex-row align-items-center"><i class="menu-icon tf-icons bx bxs-microphone"></i> Yeni Metin Seslendir <i class="bx bxl-youtube fs-3 text-black-50 text-hover-danger ms-1 cursor-pointer" title="Yardım Videosu" data-bs-toggle="modal" data-bs-target="#ai-audio-video-modal"></i></h5>
+
+            <div class="p-0 m-0 d-flex flex-row align-content-center">
+                <button type="button" class="btn btn-sm bg-label-secondary fw-medium border-0 me-2" title="Yardım" data-bs-toggle="modal" data-bs-target="#ai-audio-info-modal"><i class="bx bx-info-circle fs-5 text-s me-1"></i> Yardım</button>
+            </div>
+        </div>
+        <div class="card-body mt-4">
+            <form action="https://app.contety.com/audio" method="POST" spellcheck="false" novalidate="">
+                <input type="hidden" name="_token" value="uWTycaofBGd6CflKehpztzOF9tLHPJlQzT3vzLpn" autocomplete="off">
+
+
+<div class="mb-4" style="position: relative;">
+    <label class="form-label d-flex flex-row align-items-center align-content-center" for="topic">
+    <span class="me-1">Metin</span> </label>
+    <textarea name="audio_text" class="form-control auto-size show-max-length" id="audio_text" rows="6" placeholder="Lütfen seslendirmek istediğiniz metni yazınız. Normal kalite için 1 karakter = 1 kredi ve HD kalite için 1 karakter = 2 kredi şeklinde kredilendirme yapılmaktadır." maxlength="2000" spellcheck="false" autofocus="autofocus" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 154px;"></textarea>
+    <span class="fs085 cursor-pointer text-primary" data-bs-toggle="modal" data-bs-target="#ai-audio-info-modal"><i class="bx bx-world"></i> Desteklenen diller</span>
+    <span class="bootstrap-maxlength text-muted" style="display: block; position: absolute; white-space: nowrap; z-index: 1090; top: 1rem; right: 0.8215rem;">0 / 2000</span></div>
+
+<div class="position-relative mb-4">
+    <div class="position-relative mb-4">
+        <label class="form-label" for="audio_model">
+    Kalite </label>
+
+<select class="select2 form-select text-white select2-hidden-accessible" name="model" id="audio_model" data-show-html="1" data-placeholder="Lütfen bir model seçiniz" data-allow-clear="false" data-minimum-results-for-search="Infinity" data-select2-id="audio_model" tabindex="-1" aria-hidden="true">
+    <option value=""></option>
+
+    <option value="tts-1" selected="" title="Normal" data-select2-id="2">
+        &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;Normal&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 karakter = 1 kredi&lt;/div&gt;&lt;/div&gt;
+    </option>
+
+            <option value="tts-1-hd" title="HD">
+            &lt;div class="d-flex flex-row justify-content-between align-items-center"&gt;&lt;div&gt;HD&lt;/div&gt;&lt;div class="badge bg-label-primary fs085"&gt;1 karakter = 2 kredi&lt;/div&gt;&lt;/div&gt;
+        </option>
+    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 952px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-audio_model-container"><span class="select2-selection__rendered" id="select2-audio_model-container" role="textbox" aria-readonly="true" title="Normal">
+        <div class="d-flex flex-row justify-content-between align-items-center"><div>Normal</div><div class="badge bg-label-primary fs085">1 karakter = 1 kredi</div></div>
+    </span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+    </div>
+</div>
+
+<div class="form-label">Ses</div>
+<div class="row mb-5 g-3">
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100 checked" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-alloy">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="alloy" id="voice-alloy" checked="">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/alloy.jpeg" class="img-fluid rounded" title="Alloy" alt="Alloy">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Alloy</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-alloy"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-alloy"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-alloy"><i class="bx bx-play-circle fs-5 me-1" id="i-en-alloy"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-alloy" data-id="tr-alloy" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/alloy-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-alloy" data-id="en-alloy" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/alloy-en.wav" type="audio/wav"></audio>
+        </div>
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-echo">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="echo" id="voice-echo">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/echo.jpeg" class="img-fluid rounded" title="Echo" alt="Echo">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Echo</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-echo"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-echo"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-echo"><i class="bx bx-play-circle fs-5 me-1" id="i-en-echo"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-echo" data-id="tr-echo" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/echo-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-echo" data-id="en-echo" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/echo-en.wav" type="audio/wav"></audio>
+        </div>
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-fable">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="fable" id="voice-fable">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/fable.jpeg" class="img-fluid rounded" title="Fable" alt="Fable">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Fable</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-fable"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-fable"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-fable"><i class="bx bx-play-circle fs-5 me-1" id="i-en-fable"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-fable" data-id="tr-fable" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/fable-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-fable" data-id="en-fable" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/fable-en.wav" type="audio/wav"></audio>
+        </div>
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-onyx">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="onyx" id="voice-onyx">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/onyx.jpeg" class="img-fluid rounded" title="Onyx" alt="Onyx">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Onyx</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-onyx"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-onyx"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-onyx"><i class="bx bx-play-circle fs-5 me-1" id="i-en-onyx"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-onyx" data-id="tr-onyx" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/onyx-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-onyx" data-id="en-onyx" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/onyx-en.wav" type="audio/wav"></audio>
+        </div>
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-nova">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="nova" id="voice-nova">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/nova.jpeg" class="img-fluid rounded" title="Nova" alt="Nova">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Nova</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-nova"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-nova"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-nova"><i class="bx bx-play-circle fs-5 me-1" id="i-en-nova"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-nova" data-id="tr-nova" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/nova-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-nova" data-id="en-nova" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/nova-en.wav" type="audio/wav"></audio>
+        </div>
+            <div class="col-md-6 col-lg-6 col-xxl-4">
+            <div class="form-check custom-option custom-option-basic hover-border-primary h-100" style="border-width: 2px;">
+                <label class="form-check-label custom-option-content ps-1" for="voice-shimmer">
+                    <span class="d-flex flex-row align-items-center justify-content-between">
+                        <span class="d-flex flex-row flex-grow-1 mx-2">
+                            <input name="voice" class="form-check-input d-none" type="radio" value="shimmer" id="voice-shimmer">
+
+                            <span class="rounded w-px-100 me-2">
+                                <img src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/shimmer.jpeg" class="img-fluid rounded" title="Shimmer" alt="Shimmer">
+                            </span>
+
+                            <span class="d-flex flex-column align-items-start justify-content-between">
+                                <span class="h6 mb-2 fw-bold">Shimmer</span>
+                                                                <span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium mb-2 mb-md-0 sample-ai-audio-btn" data-id="tr-shimmer"><i class="bx bx-play-circle fs-5 me-1" id="i-tr-shimmer"></i> Türkçe</span>
+                                    <span class="btn bg-label-secondary border-0 btn-sm text-black fw-medium sample-ai-audio-btn" data-id="en-shimmer"><i class="bx bx-play-circle fs-5 me-1" id="i-en-shimmer"></i> İngilizce</span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+            <audio id="audio-tr-shimmer" data-id="tr-shimmer" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/shimmer-tr.mp3" type="audio/wav"></audio>
+            <audio id="audio-en-shimmer" data-id="en-shimmer" class="sample-audio d-none"><source src="https://contety1.fra1.cdn.digitaloceanspaces.com/web/ai-audio/shimmer-en.wav" type="audio/wav"></audio>
+        </div>
+    </div>
+
+<div class="text-center">
+    <button class="btn btn ib-spn-btnv2 btn-primary btn-lg shadow-none fw-medium" type="button" id="au-ge-btn">
+    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+    <span class="btn-label d-flex flex-row align-items-center spbtn-label">Seslendir</span>
+</button>
+</div>
+            </form>
+        </div>
+    </div>
+
+    <div id="audio-results"></div>
+                </div>
+
+                <footer class="content-footer footer bg-footer-theme">
+    <div class="d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column container-fluid">
+        <div class="mb-2 mb-md-0">
+            © 2025 <a href="https://contety.com" target="_blank">contety</a> versiyon 2.5
+        </div>
+
+        <div class="d-none d-lg-inline-block">
+            <a href="https://app.contety.com/contact" class="footer-link fs085 me-4" title="İletişim">İletişim</a>
+            <a href="https://app.contety.com/api/intro" class="footer-link fs085 me-4" title="contety API">contety API</a>
+            <a href="https://contety.com/sozlesmeler/kullanici-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Kullanıcı Sözleşmesi">Kullanıcı Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/gizlilik-sozlesmesi" class="footer-link fs085 me-4" target="_blank" title="Gizlilik Sözleşmesi">Gizlilik Sözleşmesi</a>
+            <a href="https://contety.com/sozlesmeler/cerez-politikasi" class="footer-link fs085 me-4" target="_blank" title="Çerez Politikası">Çerez Politikası</a>
+        </div>
+    </div>
+</footer>
+
+                <div class="content-backdrop fade"></div>
+            </div>
