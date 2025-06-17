@@ -5362,16 +5362,21 @@ Mevcut İçerik: ${content}
         for (const url of urls) {
           try {
             console.log(`Fetching content from custom URL: ${url.trim()}`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
             const response = await fetch(url.trim(), {
-              timeout: 10000,
+              signal: controller.signal,
               headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
               }
             });
             
+            clearTimeout(timeoutId);
+            
             if (response.ok) {
               const html = await response.text();
-              const cheerio = require('cheerio');
+              const cheerio = await import('cheerio');
               const $ = cheerio.load(html);
               
               // Extract meaningful content
@@ -5396,7 +5401,8 @@ Mevcut İçerik: ${content}
         }
       } else {
         // Use web search simulation with fallback sources
-        const currentInfoGatherer = new (require('./currentInfoGatherer')).CurrentInfoGatherer();
+        const { CurrentInfoGatherer } = await import('./currentInfoGatherer.js');
+        const currentInfoGatherer = new CurrentInfoGatherer();
         const currentInfo = await currentInfoGatherer.gatherCurrentInfo(searchQuery);
         
         searchResults = currentInfo.sources.map(source => ({

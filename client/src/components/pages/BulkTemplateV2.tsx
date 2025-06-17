@@ -123,6 +123,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   const [currentInfoEnabled, setCurrentInfoEnabled] = useState(false);
   const [imageSource, setImageSource] = useState("0");
   const [testingCurrentInfo, setTestingCurrentInfo] = useState(false);
+  const [testQuery, setTestQuery] = useState("");
   
   const [settings, setSettings] = useState<BulkV2Settings>({
     language: "1",
@@ -1004,54 +1005,75 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     </>
                   )}
 
-                  {/* Test Google Search API Button */}
+                  {/* Test Google Search API Section */}
                   <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border">
-                    <div className="flex items-center justify-between">
+                    <div className="space-y-3">
                       <div>
                         <h4 className="font-medium text-sm">Google Search API Test</h4>
                         <p className="text-xs text-muted-foreground">Güncel bilgi toplama sistemini test edin</p>
                       </div>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={async () => {
-                          try {
-                            setTestingCurrentInfo(true);
-                            const testQuery = generatedTitles[0]?.focusKeyword || "nakliyat hizmetleri";
-                            
-                            const response = await fetch('/api/gather-current-info-v2', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                searchQuery: testQuery,
-                                searchSource: settings.webSearchSource || 'web',
-                                searchCountry: settings.searchCountry || 'tr',
-                                searchLanguage: settings.searchLanguage || 'tr',
-                                searchDate: settings.searchDate || 'all',
-                                excludedUrls: settings.excludedUrls || '',
-                                customUrls: settings.customUrls || '',
-                                queryType: settings.searchQueryType || 'focus_keyword'
-                              })
-                            });
-                            
-                            const result = await response.json();
-                            
-                            if (result.success) {
-                              alert(`✅ Test başarılı!\n\nBulunan kaynak sayısı: ${result.totalSources}\nÖzet: ${result.summary.slice(0, 200)}...`);
-                            } else {
-                              alert(`❌ Test hatası: ${result.error}`);
-                            }
-                          } catch (error) {
-                            alert(`❌ Bağlantı hatası: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
-                          } finally {
-                            setTestingCurrentInfo(false);
-                          }
-                        }}
-                        disabled={testingCurrentInfo}
-                      >
-                        {testingCurrentInfo ? 'Test Ediliyor...' : 'Test Et'}
-                      </Button>
+                      
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <div>
+                          <Label htmlFor="testQuery" className="text-xs">Test Sorgusu</Label>
+                          <Input
+                            id="testQuery"
+                            placeholder="nakliyat hizmetleri"
+                            value={testQuery}
+                            onChange={(e) => setTestQuery(e.target.value)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        
+                        <div className="flex items-end">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              try {
+                                setTestingCurrentInfo(true);
+                                const query = testQuery || generatedTitles[0]?.focusKeyword || "nakliyat hizmetleri";
+                                
+                                const response = await fetch('/api/gather-current-info-v2', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    searchQuery: query,
+                                    searchSource: settings.webSearchSource || 'web',
+                                    searchCountry: settings.searchCountry || 'tr',
+                                    searchLanguage: settings.searchLanguage || 'tr',
+                                    searchDate: settings.searchDate || 'all',
+                                    excludedUrls: settings.excludedUrls || '',
+                                    customUrls: settings.customUrls || '',
+                                    queryType: settings.searchQueryType || 'focus_keyword'
+                                  })
+                                });
+                                
+                                const result = await response.json();
+                                
+                                if (result.success) {
+                                  alert(`✅ Test başarılı!\n\nArama sorgusu: ${query}\nBulunan kaynak sayısı: ${result.totalSources}\nKaynak örnekleri: ${result.sources.slice(0, 2).map((s: any) => s.title).join(', ')}\n\nÖzet: ${result.summary.slice(0, 300)}...`);
+                                } else {
+                                  alert(`❌ Test hatası: ${result.error}`);
+                                }
+                              } catch (error) {
+                                alert(`❌ Bağlantı hatası: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
+                              } finally {
+                                setTestingCurrentInfo(false);
+                              }
+                            }}
+                            disabled={testingCurrentInfo}
+                            className="h-8 px-4"
+                          >
+                            {testingCurrentInfo ? 'Test Ediliyor...' : 'Test Et'}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-xs text-muted-foreground">
+                        💡 Bu test mevcut ayarlarınızı kullanarak gerçek web kaynaklarından bilgi toplar
+                      </div>
                     </div>
                   </div>
 
