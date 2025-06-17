@@ -684,8 +684,8 @@ Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
         Lütfen sadece makale içeriğini döndür, başka açıklama ekleme.
       `;
 
-      const result = await model.generateContent(prompt);
-      const content = result.response.text();
+      // Use smart API manager with automatic rotation
+      const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
       const title = settings.articleTitle || content.split('\n')[0].replace('#', '').trim();
       
       // Generate additional content based on settings
@@ -694,18 +694,18 @@ Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
       let youtubeVideo = '';
       
       if (settings.metaDescription) {
-        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
-        metaDescription = metaResult.response.text().trim();
+        metaDescription = await apiManager.generateContentWithRotation(userId, `Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`, selectedModel);
+        metaDescription = metaDescription.trim();
       }
       
       if (settings.articleSummary) {
-        const summaryResult = await model.generateContent(`Bu makale için 3-4 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`);
-        summary = summaryResult.response.text().trim();
+        summary = await apiManager.generateContentWithRotation(userId, `Bu makale için 3-4 cümlelik özet oluştur: "${content.substring(0, 500)}...". Sadece özeti döndür.`, selectedModel);
+        summary = summary.trim();
       }
       
       if (settings.youtubeVideo) {
-        const videoResult = await model.generateContent(`Bu makale konusu için YouTube video script'i oluştur: "${settings.focusKeyword}". Sadece video açıklamasını döndür.`);
-        youtubeVideo = videoResult.response.text().trim();
+        youtubeVideo = await apiManager.generateContentWithRotation(userId, `Bu makale konusu için YouTube video script'i oluştur: "${settings.focusKeyword}". Sadece video açıklamasını döndür.`, selectedModel);
+        youtubeVideo = youtubeVideo.trim();
       }
 
       // Calculate reading time and word count
@@ -792,8 +792,8 @@ Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
                 HTML formatında yazın.
               `;
 
-              const result = await model.generateContent(prompt);
-              const content = result.response.text();
+              // Use smart API manager with automatic rotation
+              const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
               const wordCount = content.split(/\s+/).length;
 
               await storage.createArticle({
@@ -981,23 +981,6 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
         return res.status(400).json({ message: "Makale verileri geçersiz" });
       }
 
-      // Get user's API keys, prioritizing Gemini keys
-      const userApiKeys = await storage.getApiKeysByUserId(userId);
-      const geminiKeys = userApiKeys.filter(key => key.service === 'Gemini');
-      
-      let apiKey = process.env.GOOGLE_GEMINI_API_KEY!; // fallback to system key
-      
-      if (geminiKeys.length > 0) {
-        // Try to use default key first, then any available key
-        const defaultKey = geminiKeys.find(key => key.isDefault);
-        const selectedKey = defaultKey || geminiKeys[0];
-        apiKey = selectedKey.apiKey;
-        console.log(`Using user's ${selectedKey.isDefault ? 'default ' : ''}Gemini API key: ${selectedKey.title}`);
-      } else {
-        console.log('No user Gemini API keys found, using system key');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
       // Map frontend AI model selection to actual model names
       const modelMapping: Record<string, string> = {
         'gemini_2.5_flash': 'gemini-1.5-flash',
@@ -1009,7 +992,6 @@ ${item.subheadings.length > 0 ? `Belirtilen alt başlıkları kullanın: ${item.
         'gemini_1.5_pro': 'gemini-1.5-pro'
       };
       const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
-      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       let generatedCount = 0;
       const results = [];
@@ -1135,13 +1117,8 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
           
           while (retryCount < maxRetries) {
             try {
-              const result = await Promise.race([
-                model.generateContent(prompt),
-                new Promise((_, reject) => 
-                  setTimeout(() => reject(new Error('Request timeout')), 60000) // 60 second timeout
-                )
-              ]) as any;
-              content = result.response.text();
+              // Use smart API manager with automatic rotation
+              content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
               break;
             } catch (error) {
               retryCount++;
@@ -2405,8 +2382,8 @@ Format: Return only the meta description text, no quotes or explanations.
 Example: "${titleData.focusKeyword} hakkında uzman rehberi. Detaylı bilgiler, pratik ipuçları ve güncel önerilerle ${titleData.focusKeyword.toLowerCase()} konusunu keşfedin."`;
 
             try {
-              const metaResult = await model.generateContent(metaPrompt);
-              seoMetaDescription = metaResult.response.text().trim().replace(/["']/g, '');
+              seoMetaDescription = await apiManager.generateContentWithRotation(userId, metaPrompt, selectedModel);
+              seoMetaDescription = seoMetaDescription.trim().replace(/["']/g, '');
               
               // Ensure it's within character limit
               if (seoMetaDescription.length > 160) {
