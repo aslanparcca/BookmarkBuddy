@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Info, Layers, Heading, Settings, Image, Edit, Globe, Link, Youtube, FileText, Send } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
+import { getTextGenerationModels, getDefaultModelForProvider } from "@shared/ai-models";
 
 
 interface BulkTemplateV2Props {
@@ -128,7 +129,7 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
   
   const [settings, setSettings] = useState<BulkV2Settings>({
     language: "1",
-    aiModel: "gemini_2.5_flash",
+    aiModel: "gemini-2.5-flash",
     sectionLength: "medium",
     folder: "",
     subheadingType: "h2",
@@ -730,13 +731,42 @@ export default function BulkTemplateV2({ setLoading }: BulkTemplateV2Props) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
-                    <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro (Deep Think)</SelectItem>
-                    <SelectItem value="gemini_2.0_flash">Gemini 2.0 Flash</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_lite">Gemini 2.0 Flash Lite</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_thinking">Gemini 2.0 Flash Thinking (Deneysel)</SelectItem>
-                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash (Emekli Edilecek)</SelectItem>
-                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro (Emekli Edilecek)</SelectItem>
+                    {/* OpenAI Models */}
+                    <SelectItem value="openai_header" disabled className="font-semibold text-primary">
+                      — OpenAI —
+                    </SelectItem>
+                    <SelectItem value="o3-mini">o3-mini (En Güncel - 31 Ocak 2025)</SelectItem>
+                    <SelectItem value="o3">o3 (16 Nisan 2025)</SelectItem>
+                    <SelectItem value="o4-mini">o4-mini (16 Nisan 2025)</SelectItem>
+                    <SelectItem value="o3-pro">o3-pro (10 Haziran 2025)</SelectItem>
+                    <SelectItem value="gpt-4.5">GPT-4.5</SelectItem>
+                    
+                    {/* Anthropic Models */}
+                    <SelectItem value="anthropic_header" disabled className="font-semibold text-primary mt-2">
+                      — Anthropic —
+                    </SelectItem>
+                    <SelectItem value="claude-4-opus">Claude 4 Opus (22 Mayıs 2025)</SelectItem>
+                    <SelectItem value="claude-4-sonnet">Claude 4 Sonnet (22 Mayıs 2025)</SelectItem>
+                    <SelectItem value="claude-3.5-sonnet">Claude 3.5 Sonnet</SelectItem>
+                    <SelectItem value="claude-3-haiku">Claude 3 Haiku</SelectItem>
+                    
+                    {/* Google AI / Gemini Models */}
+                    <SelectItem value="gemini_header" disabled className="font-semibold text-primary mt-2">
+                      — Google AI / Gemini —
+                    </SelectItem>
+                    <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash (Varsayılan)</SelectItem>
+                    <SelectItem value="gemini-ultra">Gemini Ultra (Aralık 2023)</SelectItem>
+                    <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
+                    <SelectItem value="gemini-nano">Gemini Nano</SelectItem>
+                    <SelectItem value="gemma-2">Gemma 2</SelectItem>
+                    
+                    {/* Perplexity Models */}
+                    <SelectItem value="perplexity_header" disabled className="font-semibold text-primary mt-2">
+                      — Perplexity —
+                    </SelectItem>
+                    <SelectItem value="sonar-huge">Sonar Huge (Pro)</SelectItem>
+                    <SelectItem value="sonar-large">Sonar Large</SelectItem>
+                    <SelectItem value="sonar-small">Sonar Small (Hızlı)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
