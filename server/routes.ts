@@ -1873,8 +1873,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
         `;
 
         try {
-          const result = await model.generateContent(dreamPrompt);
-          const content = result.response.text();
+          const content = await apiManager.generateContentWithRotation(userId, dreamPrompt, selectedModel);
 
           // Here we would normally save the article to the database
           // For now, we'll just count successful generations
@@ -4049,12 +4048,7 @@ Talimatlar:
 
 Anahtar Kelimeler:`;
 
-      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const text = await apiManager.generateContentWithRotation(userId, prompt, 'gemini-1.5-flash');
 
       // Parse keywords from response
       const keywords = text
@@ -4140,12 +4134,7 @@ JSON Format:
 
 Sadece JSON array'ini döndür, başka açıklama yapma:`;
 
-      const genAI = new GoogleGenerativeAI(geminiKey.apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const text = await apiManager.generateContentWithRotation(userId, prompt, 'gemini-1.5-flash');
 
       // Parse JSON response
       let comments = [];
