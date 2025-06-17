@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface WordPressEditorProps {
   setLoading: (loading: boolean) => void;
