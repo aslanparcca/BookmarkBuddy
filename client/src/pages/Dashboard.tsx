@@ -232,7 +232,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      <Sidebar 
+      <SidebarFixed 
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         sidebarOpen={sidebarOpen}
