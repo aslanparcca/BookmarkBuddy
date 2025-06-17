@@ -618,8 +618,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log('No user Gemini API keys found, using system key');
       }
 
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      // Map frontend AI model selection to actual model names
+      const modelMapping: Record<string, string> = {
+        'gemini_2.5_flash': 'gemini-1.5-flash',
+        'gemini_2.5_pro': 'gemini-1.5-pro', 
+        'gemini_2.0_flash': 'gemini-1.5-flash',
+        'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+        'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+        'gemini_1.5_flash': 'gemini-1.5-flash',
+        'gemini_1.5_pro': 'gemini-1.5-pro'
+      };
+      const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
       
       // Gather current information if enabled
       let currentInfoText = '';
@@ -772,8 +781,17 @@ Bu güncel bilgileri makale içerisinde doğal bir şekilde entegre et.`;
           const userSettings = await storage.getUserSettings(userId);
           if (!userSettings?.geminiApiKey) return;
 
-          const genAI = new GoogleGenerativeAI(userSettings.geminiApiKey);
-          const model = genAI.getGenerativeModel({ model: userSettings.geminiModel || "gemini-1.5-flash" });
+          // Map frontend AI model selection to actual model names
+          const modelMapping: Record<string, string> = {
+            'gemini_2.5_flash': 'gemini-1.5-flash',
+            'gemini_2.5_pro': 'gemini-1.5-pro', 
+            'gemini_2.0_flash': 'gemini-1.5-flash',
+            'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+            'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+            'gemini_1.5_flash': 'gemini-1.5-flash',
+            'gemini_1.5_pro': 'gemini-1.5-pro'
+          };
+          const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
 
           let completed = 0;
           let failed = 0;
@@ -1327,8 +1345,17 @@ Lütfen bu kriterlere göre kapsamlı, uzman seviyesinde, SEO optimizasyonlu mak
         console.log('No user Gemini API keys found, using system key');
       }
 
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      // Map frontend AI model selection to actual model names
+      const modelMapping: Record<string, string> = {
+        'gemini_2.5_flash': 'gemini-1.5-flash',
+        'gemini_2.5_pro': 'gemini-1.5-pro', 
+        'gemini_2.0_flash': 'gemini-1.5-flash',
+        'gemini_2.0_flash_lite': 'gemini-1.5-flash',
+        'gemini_2.0_flash_thinking': 'gemini-1.5-flash',
+        'gemini_1.5_flash': 'gemini-1.5-flash',
+        'gemini_1.5_pro': 'gemini-1.5-pro'
+      };
+      const selectedModel = (settings?.aiModel && modelMapping[settings.aiModel]) ? modelMapping[settings.aiModel] : 'gemini-1.5-flash';
 
       // Create comprehensive prompt for URL rewriting
       let prompt = `Sen deneyimli bir içerik editörü ve yazarsın. Aşağıdaki metni tamamen yeniden yazman gerekiyor.
@@ -1358,8 +1385,8 @@ GEREKSINIMLER:
 
 Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
-      const result = await model.generateContent(prompt);
-      let content = result.response.text();
+      // Use smart API manager with automatic rotation
+      let content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
       
       // Extract title from rewritten content
       const title = content.split('\n')[0].replace(/[#*]/g, '').trim();
@@ -1369,8 +1396,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
       let summary = '';
       
       if (settings.metaDescription) {
-        const metaResult = await model.generateContent(`Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`);
-        metaDescription = metaResult.response.text().trim();
+        metaDescription = await apiManager.generateContentWithRotation(userId, `Bu makale için 150-160 karakter arasında SEO uyumlu meta açıklama oluştur. Makale başlığı: "${title}". Sadece meta açıklamayı döndür.`, selectedModel);
+        metaDescription = metaDescription.trim();
       }
       
       if (settings.articleSummary) {
