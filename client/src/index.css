@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Sidebar specific styles to prevent duplication */
+.sidebar-container {
+  display: contents;
+}
+
+.sidebar-nav {
+  flex-shrink: 0;
+}
+
+/* Ensure only one sidebar is visible */
+body .sidebar-container:not(:first-child) {
+  display: none !important;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(240, 10%, 3.9%);

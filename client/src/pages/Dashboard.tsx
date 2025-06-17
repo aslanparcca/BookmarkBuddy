@@ -229,7 +229,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
       <Sidebar 
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -237,7 +237,7 @@ export default function Dashboard() {
         setSidebarOpen={setSidebarOpen}
       />
       
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 relative">
         <Header 
           title={pageTitles[currentPage]}
           setSidebarOpen={setSidebarOpen}
