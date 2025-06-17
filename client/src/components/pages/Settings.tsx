@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 export default function Settings() {
   const [showApiKey, setShowApiKey] = useState(false);
@@ -21,7 +22,7 @@ export default function Settings() {
 
   const [formData, setFormData] = useState({
     geminiApiKey: '',
-    geminiModel: 'gemini-1.5-flash',
+    geminiModel: 'gemini-2.0-flash',
     wordpressUrl: '',
     wordpressUsername: '',
     wordpressAppPassword: '',

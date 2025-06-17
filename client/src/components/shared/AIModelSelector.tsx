@@ -106,7 +106,7 @@ export default function AIModelSelector({
                     <div className="flex items-center justify-between w-full">
                       <span className="truncate">{model.name}</span>
                       <Badge className={`ml-2 text-xs ${getModelBadgeColor(model.provider)}`}>
-                        {model.type}
+                        {model.category}
                       </Badge>
                     </div>
                   </SelectItem>
@@ -118,7 +118,7 @@ export default function AIModelSelector({
 
         {selectedModel && (
           <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded border">
-            {AI_MODELS.find(m => m.id === selectedModel)?.description}
+            {aiModels.find((m: AIModel) => m.id === selectedModel)?.description}
           </div>
         )}
       </div>
@@ -172,7 +172,7 @@ export default function AIModelSelector({
                       </span>
                     </div>
                     <Badge className={`ml-2 text-xs ${getModelBadgeColor(model.provider)}`}>
-                      {model.type}
+                      {model.category}
                     </Badge>
                   </div>
                 </SelectItem>
@@ -184,14 +184,14 @@ export default function AIModelSelector({
         {selectedModel && (
           <div className="p-3 bg-slate-50 rounded-md border">
             <div className="text-sm font-medium text-slate-700 mb-1">
-              Seçili Model: {AI_MODELS.find(m => m.id === selectedModel)?.name}
+              Seçili Model: {aiModels.find((m: AIModel) => m.id === selectedModel)?.name}
             </div>
             <div className="text-xs text-slate-500">
-              {AI_MODELS.find(m => m.id === selectedModel)?.description}
+              {aiModels.find((m: AIModel) => m.id === selectedModel)?.description}
             </div>
-            {AI_MODELS.find(m => m.id === selectedModel)?.releaseDate && (
+            {aiModels.find((m: AIModel) => m.id === selectedModel)?.releaseDate && (
               <div className="text-xs text-slate-400 mt-1">
-                Çıkış Tarihi: {AI_MODELS.find(m => m.id === selectedModel)?.releaseDate}
+                Çıkış Tarihi: {aiModels.find((m: AIModel) => m.id === selectedModel)?.releaseDate}
               </div>
             )}
           </div>

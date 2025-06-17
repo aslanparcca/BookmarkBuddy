@@ -37,7 +37,7 @@ export default function WordPressEditor({ setLoading }: WordPressEditorProps) {
     focusKeywords: '',
     writingStyle: '',
     language: 'Türkçe',
-    aiModel: 'Gemini 2.5 Flash Preview',
+    aiModel: 'gemini-2.0-flash',
     length: 'Uzun',
     faqType: 'Hayır',
     title: '',
@@ -154,6 +154,14 @@ export default function WordPressEditor({ setLoading }: WordPressEditorProps) {
                     <SelectItem value="Türkçe">🇹🇷 Türkçe</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="col-span-2">
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
               </div>
 
               <div>
