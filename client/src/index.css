@@ -2,17 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Sidebar specific styles to prevent duplication */
-.sidebar-container {
-  display: contents;
+/* Fix duplicate sidebar issue */
+aside + aside {
+  display: none !important;
 }
 
-.sidebar-nav {
-  flex-shrink: 0;
+/* Ensure unique sidebar rendering */
+.sidebar-duplicate-fix {
+  counter-reset: sidebar-count;
 }
 
-/* Ensure only one sidebar is visible */
-body .sidebar-container:not(:first-child) {
+aside {
+  counter-increment: sidebar-count;
+}
+
+aside:not(:nth-of-type(1)) {
   display: none !important;
 }
 
