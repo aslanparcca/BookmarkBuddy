@@ -10,6 +10,8 @@ import { z } from "zod";
 import { upload, generateImageFilename, bufferToDataUrl } from "./imageUpload";
 import { nanoid } from "nanoid";
 import { CurrentInfoGatherer } from "./currentInfoGatherer";
+import { getModelById, mapLegacyModel, getDefaultModelForProvider } from "../shared/ai-models";
+import { getGeminiModelConfig, logModelUsage, getModelDisplayName } from "./aiModelMapper";
 
 // Smart API Key Manager with automatic rotation and quota handling
 class SmartAPIManager {
@@ -85,9 +87,15 @@ class SmartAPIManager {
     );
   }
   
-  async generateContentWithRotation(userId: string, prompt: string, model: string = 'gemini-1.5-flash'): Promise<any> {
+  async generateContentWithRotation(userId: string, prompt: string, model: string = 'gemini-2.5-flash'): Promise<any> {
     const maxRetries = 5; // Try up to 5 different API keys
     let lastError = null;
+    
+    // Get the Gemini model configuration from the model mapping
+    const modelConfig = getGeminiModelConfig(model);
+    const actualGeminiModel = modelConfig.geminiModelId;
+    
+    console.log(`Model mapping: ${model} -> ${actualGeminiModel} (${getModelDisplayName(model)})`);
     
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
@@ -97,11 +105,19 @@ class SmartAPIManager {
           throw new Error('Gemini API günlük kullanım limitiniz doldu. Lütfen daha sonra tekrar deneyin veya ücretli API key kullanın.');
         }
         
-        // Initialize Gemini with current API key
+        // Initialize Gemini with current API key and mapped model
         const genAI = new GoogleGenerativeAI(apiKey);
-        const geminiModel = genAI.getGenerativeModel({ model });
+        const geminiModel = genAI.getGenerativeModel({ 
+          model: actualGeminiModel,
+          generationConfig: {
+            temperature: modelConfig.temperature || 0.7,
+            maxOutputTokens: modelConfig.maxTokens || 8192,
+            topP: modelConfig.topP || 0.95,
+            topK: modelConfig.topK || 40
+          }
+        });
         
-        console.log(`Attempting content generation with API key attempt ${attempt + 1}/${maxRetries}`);
+        console.log(`Attempting content generation with ${getModelDisplayName(model)} (${actualGeminiModel}) - attempt ${attempt + 1}/${maxRetries}`);
         
         // Add timeout protection for API call
         const timeoutPromise = new Promise<never>((_, reject) => {
@@ -115,6 +131,9 @@ class SmartAPIManager {
         if (!text || text.trim() === '') {
           throw new Error('Empty response from Gemini API');
         }
+        
+        // Log successful model usage
+        logModelUsage(model, userId, text.length);
         
         console.log(`✅ Content generation successful with API key attempt ${attempt + 1}`);
         return text;
