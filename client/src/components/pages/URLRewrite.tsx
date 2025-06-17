@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface URLRewriteSettings {
   // URL
@@ -65,7 +66,7 @@ export default function URLRewrite() {
   const [settings, setSettings] = useState<URLRewriteSettings>({
     url: "",
     language: "Türkçe",
-    aiModel: "Gemini 2.5 Flash Preview",
+    aiModel: "gemini-2.0-flash",
     classifier: "",
     writingStyle: "",
     targetAudience: "Genel",
@@ -235,22 +236,12 @@ export default function URLRewrite() {
                 </Select>
               </div>
 
-              <div>
-                <Label htmlFor="aiModel">Yapay Zeka Modeli</Label>
-                <Select value={settings.aiModel} onValueChange={(value) => setSettings({...settings, aiModel: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
-                    <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro (Deep Think)</SelectItem>
-                    <SelectItem value="gemini_2.0_flash">Gemini 2.0 Flash</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_lite">Gemini 2.0 Flash Lite</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_thinking">Gemini 2.0 Flash Thinking (Deneysel)</SelectItem>
-                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash (Emekli Edilecek)</SelectItem>
-                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro (Emekli Edilecek)</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="md:col-span-2">
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
               </div>
 
               <div>

@@ -165,19 +165,13 @@ export default function Settings() {
             <p className="text-slate-500 text-xs mt-2">API anahtarınız güvenli olarak şifrelenir</p>
           </div>
           
-          <div>
-            <Label htmlFor="gemini-model">Model Seçimi</Label>
-            <Select value={formData.geminiModel} onValueChange={(value) => setFormData({...formData, geminiModel: value})}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="gemini-1.5-flash">gemini-1.5-flash (En Hızlı)</SelectItem>
-                <SelectItem value="gemini-1.5-pro">gemini-1.5-pro (En Güçlü)</SelectItem>
-                <SelectItem value="gemini-1.0-pro">gemini-1.0-pro</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <AIModelSelector
+            selectedModel={formData.geminiModel}
+            onModelChange={(model) => setFormData({...formData, geminiModel: model})}
+            title="AI Model Seçimi"
+            description="Makale üretimi için kullanılacak AI model"
+            compact={true}
+          />
           
           <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
             <div className="flex items-center space-x-3">
