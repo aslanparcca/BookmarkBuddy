@@ -57,10 +57,10 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
       )}
       
       <aside className={`
-        bg-white border-r border-slate-200 w-64 flex-shrink-0 h-screen
-        transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-30
+        bg-white border-r border-slate-200 w-64 h-screen flex flex-col
+        transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        fixed inset-y-0 left-0 z-30 lg:static lg:transform-none
       `}>
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center space-x-3">

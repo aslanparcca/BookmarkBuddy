@@ -237,7 +237,7 @@ export default function Dashboard() {
         setSidebarOpen={setSidebarOpen}
       />
       
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
+      <div className="flex-1 flex flex-col min-w-0">
         <Header 
           title={pageTitles[currentPage]}
           setSidebarOpen={setSidebarOpen}
