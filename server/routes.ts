@@ -1528,7 +1528,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       // Generate titles using AI if prompt is set
       if (prompt && titles.length === 0) {
-        const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
+        const content = await apiManager.generateContentWithRotation(userId, prompt, "gemini-1.5-flash");
         
         try {
           // Try to parse JSON response
@@ -1536,8 +1536,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           titles = JSON.parse(cleanContent);
         } catch (parseError) {
           // Fallback: create titles from response text
-          const lines = content.split('\n').filter(line => line.trim());
-          titles = lines.slice(0, settings.titleCount).map((line, index) => ({
+          const lines = content.split('\n').filter((line: string) => line.trim());
+          titles = lines.slice(0, settings.titleCount).map((line: string, index: number) => ({
             title: line.replace(/^\d+\.?\s*/, '').trim(),
             focusKeyword: `keyword${index + 1}`
           }));
@@ -1659,7 +1659,7 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
 
       // Generate titles using AI if prompt is set
       if (prompt && titles.length === 0) {
-        const content = await apiManager.generateContentWithRotation(userId, prompt, selectedModel);
+        const content = await apiManager.generateContentWithRotation(userId, prompt, "gemini-1.5-flash");
         
         try {
           // Try to parse JSON response
@@ -1667,8 +1667,8 @@ Sadece yeniden yazılmış makaleyi döndür, başka açıklama ekleme.`;
           titles = JSON.parse(cleanContent);
         } catch (parseError) {
           // Fallback: create titles from response text
-          const lines = content.split('\n').filter(line => line.trim());
-          titles = lines.slice(0, settings.titleCount).map((line, index) => ({
+          const lines = content.split('\n').filter((line: string) => line.trim());
+          titles = lines.slice(0, settings.titleCount).map((line: string, index: number) => ({
             title: line.replace(/^\d+\.?\s*/, '').trim(),
             focusKeyword: `keyword${index + 1}`,
             imageKeyword: `image${index + 1}`

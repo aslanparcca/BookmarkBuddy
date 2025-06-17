@@ -119,7 +119,7 @@ export default function HomePage() {
     // Calculate weekly data (last 7 days)
     const today = new Date();
     const weekDays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
-    const weeklyData = [];
+    const weeklyData: Array<{day: string; articles: number; words: number}> = [];
     
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today);
