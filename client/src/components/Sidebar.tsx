@@ -20,7 +20,6 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
     { id: 'bulk-editor' as PageType, icon: 'fas fa-layer-group', label: 'Modüller', color: 'text-slate-500' },
     { id: 'wp-editor' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V1', color: 'text-orange-500' },
     { id: 'settings' as PageType, icon: 'fas fa-star', label: 'WP Makalesi V2', color: 'text-green-500' },
-
     { id: 'url-rewrite' as PageType, icon: 'fas fa-link', label: 'URL Rewrite', color: 'text-slate-500', badge: 'yeni' },
   ];
 
@@ -48,20 +47,19 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
 
   return (
     <>
-      {/* Mobile backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
       
       <aside className={`
-        bg-white border-r border-slate-200 w-64 flex flex-col
-        transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'fixed inset-y-0 left-0 z-30 translate-x-0' : 'fixed inset-y-0 left-0 z-30 -translate-x-full'}
+        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 
+        transform transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:relative lg:translate-x-0 lg:z-auto
-        h-screen
+        flex flex-col h-screen
       `}>
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center space-x-3">
@@ -106,12 +104,10 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             ))}
           </div>
 
-          {/* Bulk Operations Section */}
-          <div className="px-4 py-2">
-            <div className="px-3 py-2">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                TOPLU İŞLEMLER
-              </h3>
+          {/* Bulk Operations */}
+          <div className="px-4 pb-4">
+            <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
+              Toplu İşlemler
             </div>
             <div className="space-y-1">
               {bulkOperations.map((item) => (
@@ -136,12 +132,10 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             </div>
           </div>
 
-          {/* Voice & Media Section */}
-          <div className="px-4 py-2">
-            <div className="px-3 py-2">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                SESLENDİRME & RESİM
-              </h3>
+          {/* Voice & Media */}
+          <div className="px-4 pb-4">
+            <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
+              Ses & Medya
             </div>
             <div className="space-y-1">
               {voiceAndMedia.map((item) => (
@@ -167,11 +161,9 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
           </div>
 
           {/* Help Section */}
-          <div className="px-4 py-2">
-            <div className="px-3 py-2">
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                YARDIM
-              </h3>
+          <div className="px-4 pb-4">
+            <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
+              Yardım
             </div>
             <div className="space-y-1">
               {helpSection.map((item) => (
@@ -204,7 +196,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-slate-900 text-sm font-medium truncate">
-                {user?.firstName ? `${user.firstName} ${user.lastName}` : user?.email || 'Kullanıcı'}
+                {user?.email || 'Kullanıcı'}
               </p>
               <button 
                 onClick={() => window.location.href = '/api/logout'}
