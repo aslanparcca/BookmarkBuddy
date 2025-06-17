@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { ChefHat, Info, Youtube } from "lucide-react";
 import FileDropZone from "@/components/FileDropZone";
+import AIModelSelector from "@/components/shared/AIModelSelector";
 
 interface BulkRecipeProps {
   setLoading: (loading: boolean) => void;
@@ -70,7 +71,7 @@ export default function BulkRecipe({ setLoading }: BulkRecipeProps) {
     generateType: "recipe-manual",
     customRecipes: "",
     language: "1",
-    aiModel: "gemini_2.5_flash",
+    aiModel: "gemini-2.0-flash",
     imageSource: "0",
     folder: "",
     
@@ -437,21 +438,11 @@ export default function BulkRecipe({ setLoading }: BulkRecipeProps) {
               </div>
 
               <div>
-                <Label htmlFor="aiModel">Yapay Zeka Modeli</Label>
-                <Select value={settings.aiModel} onValueChange={(value) => setSettings({...settings, aiModel: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="gemini_2.5_flash">Gemini 2.5 Flash (En Güncel)</SelectItem>
-                    <SelectItem value="gemini_2.5_pro">Gemini 2.5 Pro (Deep Think)</SelectItem>
-                    <SelectItem value="gemini_2.0_flash">Gemini 2.0 Flash</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_lite">Gemini 2.0 Flash Lite</SelectItem>
-                    <SelectItem value="gemini_2.0_flash_thinking">Gemini 2.0 Flash Thinking (Deneysel)</SelectItem>
-                    <SelectItem value="gemini_1.5_flash">Gemini 1.5 Flash (Emekli Edilecek)</SelectItem>
-                    <SelectItem value="gemini_1.5_pro">Gemini 1.5 Pro (Emekli Edilecek)</SelectItem>
-                  </SelectContent>
-                </Select>
+                <AIModelSelector
+                  selectedModel={settings.aiModel}
+                  onModelChange={(model) => setSettings({...settings, aiModel: model})}
+                  compact={true}
+                />
               </div>
 
               <div>
