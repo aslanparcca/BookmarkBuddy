@@ -133,7 +133,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
 
           <div className="px-4 pb-4">
             <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
-              Ses & Medya
+              SESLENDIRME & RESIM
             </div>
             <div className="space-y-1">
               {voiceAndMedia.map((item) => (
@@ -160,7 +160,7 @@ export default function Sidebar({ currentPage, setCurrentPage, sidebarOpen, setS
 
           <div className="px-4 pb-4">
             <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 px-3">
-              Yardım
+              YARDIM
             </div>
             <div className="space-y-1">
               {helpSection.map((item) => (
